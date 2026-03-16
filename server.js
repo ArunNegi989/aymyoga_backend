@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -8,13 +9,21 @@ const path = require("path");
 
 const connectDB = require("./config/db");
 
-connectDB();
-
 const app = express();
 
+/* =========================
+   DATABASE CONNECTION
+========================= */
+connectDB();
+
+/* =========================
+   TRUST PROXY
+========================= */
 app.set("trust proxy", 1);
 
-/* CORS */
+/* =========================
+   CORS
+========================= */
 app.use(
   cors({
     origin: true,
@@ -22,38 +31,59 @@ app.use(
   })
 );
 
-/* Body Parser */
+/* =========================
+   BODY PARSER
+========================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* Cookies */
+/* =========================
+   COOKIE PARSER
+========================= */
 app.use(cookieParser());
 
-/* Security — crossOriginResourcePolicy disable kiya taaki images load ho sakein */
+/* =========================
+   SECURITY (HELMET)
+========================= */
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
 
-/* Logger */
+/* =========================
+   LOGGER
+========================= */
 app.use(morgan("dev"));
 
-/* Static Folder for Images */
+/* =========================
+   STATIC FILES (UPLOADS)
+========================= */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* API Routes */
+/* =========================
+   API ROUTES
+========================= */
 app.use("/api", require("./routes"));
 
-/* Test Route */
+/* =========================
+   HEALTH CHECK
+========================= */
 app.get("/", (req, res) => {
-  res.send("API is running 🚀");
+  res.json({
+    success: true,
+    message: "API is running 🚀",
+  });
 });
 
-/* Error Middleware */
+/* =========================
+   ERROR HANDLER
+========================= */
 app.use(require("./middleware/errorMiddleware"));
 
-/* Server */
+/* =========================
+   SERVER START
+========================= */
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {

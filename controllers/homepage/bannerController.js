@@ -4,7 +4,6 @@ const Banner = require("../../models/homepage/Banner");
 exports.createBanner = async (req, res) => {
   try {
     const { bannerName, link } = req.body;
-
     const image = req.file?.filename;
 
     if (!image) {
@@ -14,10 +13,14 @@ exports.createBanner = async (req, res) => {
       });
     }
 
+    // last order find karo
+    const lastBanner = await Banner.findOne().sort({ order: -1 });
+
     const banner = await Banner.create({
       bannerName,
       link,
       image,
+      order: lastBanner ? lastBanner.order + 1 : 1,
     });
 
     res.status(201).json({
@@ -36,13 +39,16 @@ exports.createBanner = async (req, res) => {
 /* GET ALL BANNERS */
 exports.getAllBanners = async (req, res) => {
   try {
-    const banners = await Banner.find().sort({ createdAt: -1 });
+
+    // yaha change karna hai
+    const banners = await Banner.find().sort({ order: 1 });
 
     res.status(200).json({
       success: true,
       count: banners.length,
       data: banners,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -131,6 +137,34 @@ exports.deleteBanner = async (req, res) => {
       success: true,
       message: "Banner deleted successfully",
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/* UPDATE BANNER ORDER */
+exports.updateBannerOrder = async (req, res) => {
+  try {
+    const { banners } = req.body; 
+    // banners = [{id, order}]
+
+    const bulkOps = banners.map((b) => ({
+      updateOne: {
+        filter: { _id: b.id },
+        update: { order: b.order },
+      },
+    }));
+
+    await Banner.bulkWrite(bulkOps);
+
+    res.status(200).json({
+      success: true,
+      message: "Banner order updated",
+    });
+
   } catch (error) {
     res.status(500).json({
       success: false,
