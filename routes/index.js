@@ -25,6 +25,12 @@ router.use("/gallery-sections", require("./galleryRoutes"));
    ACCREDITATION ROUTES
 ========================= */
 router.use("/accreditation", require("./accreditationRoutes"));
+
+/* =========================
+   YOGA COURSES ROUTES 🔥 (ADD THIS)
+========================= */
+router.use("/yoga-courses", require("./yogaCoursesRoutes"));
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
