@@ -22,6 +22,13 @@ const badgeSchema = new mongoose.Schema({
 
 const accreditationSchema = new mongoose.Schema(
   {
+
+    singleton: {
+      type: String,
+      default: "ONLY_ONE",
+      unique: true,
+    },
+    
     sectionTitle: { type: String, required: true },
 
     authPara1: { type: String, required: true },

@@ -5,25 +5,34 @@ const Accreditation = require("../../models/homepage/Accreditation");
 ========================= */
 exports.createAccreditation = async (req, res) => {
   try {
+    // 🔥 COUNT check (best approach)
+    const count = await Accreditation.countDocuments();
+
+    if (count >= 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Only one Accreditation section is allowed. Please update or delete existing one."
+      });
+    }
+
     const data = req.body;
 
-    
-
-    // parse arrays (important)
+    // parse arrays
     if (typeof data.certs === "string") data.certs = JSON.parse(data.certs);
     if (typeof data.badges === "string") data.badges = JSON.parse(data.badges);
 
-   if (req.files?.mainImage) {
-  data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/"); // 🔥 FIX
-}
-
-if (req.files?.certImages) {
-  req.files.certImages.forEach((file, index) => {
-    if (data.certs[index]) {
-      data.certs[index].image = file.path.replace(/\\/g, "/"); // 🔥 FIX
+    // images
+    if (req.files?.mainImage) {
+      data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
     }
-  });
-}
+
+    if (req.files?.certImages) {
+      req.files.certImages.forEach((file, index) => {
+        if (data.certs[index]) {
+          data.certs[index].image = file.path.replace(/\\/g, "/");
+        }
+      });
+    }
 
     const created = await Accreditation.create(data);
 
@@ -31,11 +40,11 @@ if (req.files?.certImages) {
       success: true,
       data: created,
     });
+
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
 /* =========================
    GET ALL
 ========================= */
