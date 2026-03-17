@@ -4,7 +4,8 @@ const Banner = require("../../models/homepage/Banner");
 exports.createBanner = async (req, res) => {
   try {
     const { bannerName, link } = req.body;
-    const image = req.file?.filename;
+
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
 
     if (!image) {
       return res.status(400).json({
@@ -13,7 +14,6 @@ exports.createBanner = async (req, res) => {
       });
     }
 
-    // last order find karo
     const lastBanner = await Banner.findOne().sort({ order: -1 });
 
     const banner = await Banner.create({
@@ -35,7 +35,6 @@ exports.createBanner = async (req, res) => {
     });
   }
 };
-
 /* GET ALL BANNERS */
 exports.getAllBanners = async (req, res) => {
   try {
@@ -92,7 +91,7 @@ exports.updateBanner = async (req, res) => {
     };
 
     if (req.file) {
-      updateData.image = req.file.filename;
+      updateData.image = `/uploads/${req.file.filename}`;
     }
 
     const banner = await Banner.findByIdAndUpdate(
