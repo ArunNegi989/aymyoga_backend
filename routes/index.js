@@ -17,6 +17,11 @@ router.use("/banners", require("./bannerRoutes"));
 router.use("/home-about", require("./homeAboutRoutes"));
 
 /* ===========================
+   GALLERY ROUTES
+=========================== */
+router.use("/gallery-sections", require("./galleryRoutes"));
+
+/* ===========================
    API HEALTH CHECK
 =========================== */
 router.get("/", (req, res) => {
