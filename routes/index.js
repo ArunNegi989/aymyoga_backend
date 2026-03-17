@@ -21,6 +21,10 @@ router.use("/home-about", require("./homeAboutRoutes"));
 =========================== */
 router.use("/gallery-sections", require("./galleryRoutes"));
 
+/* =========================
+   ACCREDITATION ROUTES
+========================= */
+router.use("/accreditation", require("./accreditationRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */

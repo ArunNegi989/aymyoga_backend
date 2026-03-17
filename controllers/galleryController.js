@@ -176,14 +176,15 @@ const reorderSections = async (req, res) => {
   try {
     const { items } = req.body;
 
-    for (let item of items) {
-      await GallerySection.findByIdAndUpdate(item.id, {
-        order: item.order,
-      });
-    }
+    await Promise.all(
+      items.map((item) =>
+        GallerySection.findByIdAndUpdate(item.id, {
+          order: item.order,
+        })
+      )
+    );
 
     res.json({ success: true, message: "Reordered" });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
