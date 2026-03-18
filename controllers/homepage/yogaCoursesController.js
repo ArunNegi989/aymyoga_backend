@@ -229,6 +229,31 @@ exports.updateSection = async (req, res) => {
     const payload = parseBody(req);
     const files   = req.files || {};
 
+    /* 🔥🔥🔥 IMPORTANT VALIDATION START 🔥🔥🔥 */
+
+    // 👉 COURSES restriction
+    if (section === "courses") {
+      // agar already course exist hai aur user new add kar raha hai
+      if (page.courses.length >= 1 && payload.length > page.courses.length) {
+        return res.status(400).json({
+          success: false,
+          message: "Course already exists. Please edit or delete first.",
+        });
+      }
+    }
+
+    // 👉 TEACHERS restriction (optional)
+    if (section === "teachers") {
+      if (page.teachers.length >= 1 && payload.length > page.teachers.length) {
+        return res.status(400).json({
+          success: false,
+          message: "Teacher already exists. Please edit or delete first.",
+        });
+      }
+    }
+
+    /* 🔥🔥🔥 VALIDATION END 🔥🔥🔥 */
+
     // Build only the requested section
     const full = buildDocument(
       {
@@ -252,16 +277,20 @@ exports.updateSection = async (req, res) => {
     });
   } catch (err) {
     console.error("YogaCoursesPage section update error:", err.message);
+
     if (err.name === "ValidationError") {
       const details = Object.entries(err.errors)
         .map(([k, v]) => `${k}: ${v.message}`)
         .join(", ");
-      return res.status(400).json({ success: false, message: `Validation failed: ${details}` });
+      return res.status(400).json({
+        success: false,
+        message: `Validation failed: ${details}`
+      });
     }
+
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
 /* =========================
    DELETE
 ========================= */

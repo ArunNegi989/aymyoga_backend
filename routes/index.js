@@ -30,7 +30,13 @@ router.use("/accreditation", require("./accreditationRoutes"));
    YOGA COURSES ROUTES 🔥 (ADD THIS)
 ========================= */
 router.use("/yoga-courses", require("./yogaCoursesRoutes"));
-
+/* =========================
+   CLASS CAMPUS AMENITIES ROUTES 🔥
+========================= */
+router.use(
+  "/class-campus-amenities",
+  require("./classCampusAmenitiesRoutes")
+);
 /* ===========================
    API HEALTH CHECK
 =========================== */
