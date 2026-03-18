@@ -51,6 +51,11 @@ router.use(
    OUR MISSION ROUTES 🔥
 ========================= */
 router.use("/our-mission", require("./ourMissionRoutes"));
+
+/* =========================
+   WHY AYM ROUTES 🔥
+========================= */
+router.use("/why-aym", require("./whyAYMRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
