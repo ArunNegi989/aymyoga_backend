@@ -166,6 +166,39 @@ exports.update = async (req, res) => {
 };
 
 /* =========================
+   GET ONE
+========================= */
+exports.getOne = async (req, res) => {
+  try {
+    const data = await Model.findById(req.params.id);
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "Data not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        ...data._doc,
+        classSizeImage: getFullUrl(req, data.classSizeImage),
+        amenityImage: getFullUrl(req, data.amenityImage),
+        campusImages: data.campusImages.map((img) =>
+          getFullUrl(req, img)
+        ),
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+/* =========================
    DELETE
 ========================= */
 exports.remove = async (req, res) => {
