@@ -47,7 +47,10 @@ router.use(
   require("./aymFullPageRoutes")
 );
 
-
+/* =========================
+   OUR MISSION ROUTES 🔥
+========================= */
+router.use("/our-mission", require("./ourMissionRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
