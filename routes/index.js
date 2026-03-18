@@ -27,23 +27,34 @@ router.use("/gallery-sections", require("./galleryRoutes"));
 router.use("/accreditation", require("./accreditationRoutes"));
 
 /* =========================
-   YOGA COURSES ROUTES 🔥 (ADD THIS)
+   YOGA COURSES ROUTES
 ========================= */
 router.use("/yoga-courses", require("./yogaCoursesRoutes"));
+
 /* =========================
-   CLASS CAMPUS AMENITIES ROUTES 🔥
+   CLASS CAMPUS AMENITIES ROUTES
 ========================= */
 router.use(
   "/class-campus-amenities",
   require("./classCampusAmenitiesRoutes")
 );
+
+/* ===========================
+   AYM FULL PAGE ROUTES 🔥
+=========================== */
+router.use(
+  "/aym-full-page",
+  require("./aymFullPageRoutes")
+);
+
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
 router.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "API working 🚀"
+    message: "API working 🚀",
   });
 });
 
