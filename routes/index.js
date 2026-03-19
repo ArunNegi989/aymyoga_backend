@@ -60,6 +60,11 @@ router.use("/why-aym", require("./whyAYMRoutes"));
 router.use("/testimonials/videos", require("./Videotestimonialroutes"));
 router.use("/testimonials/text", require("./Textreviewroutes"));
 
+
+/* =========================
+   FOUNDER ROUTES
+========================= */
+router.use("/founder", require("./founderRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
