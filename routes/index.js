@@ -65,6 +65,15 @@ router.use("/testimonials/text", require("./Textreviewroutes"));
    FOUNDER ROUTES
 ========================= */
 router.use("/founder", require("./founderRoutes"));
+/* =========================
+   TEACHERS ROUTES
+========================= */
+router.use("/teachers", require("./teacherRoutes"));
+
+/* =========================
+   GUEST TEACHER ROUTES 
+========================= */
+router.use("/guest-teachers", require("./guestTeacherRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */

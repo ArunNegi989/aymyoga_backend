@@ -8,7 +8,7 @@ const {
   getFounder,
   update,
   remove,
-} = require("../controllers/founderController");
+} = require("../controllers/ourTeachers/founderController");
 
 /* =========================
    ROUTES

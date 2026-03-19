@@ -1,4 +1,4 @@
-const Founder = require("../models/founderModel");
+const Founder = require("../../models/ourTeachers/founderModel");
 const fs = require("fs");
 const path = require("path");
 
