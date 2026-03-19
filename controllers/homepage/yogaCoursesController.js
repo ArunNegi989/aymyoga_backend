@@ -3,28 +3,21 @@ const YogaCoursesPage = require("../../models/homepage/YogaCoursesPage");
 /* =========================
    HELPER — Build public URL
 ========================= */
-const toPublicUrl = (filename) =>
-  `/uploads/${filename}`;
+const toPublicUrl = (filename) => `/uploads/${filename}`;
 
 /* =========================
    HELPER — Resolve image
-   Checks if a __upload_xxx placeholder exists in uploaded files,
-   replaces it with the actual saved file URL.
-   Falls back to the original value if no file uploaded.
 ========================= */
 const resolveImg = (value, fieldName, files) => {
   if (files && files[fieldName] && files[fieldName][0]) {
     return toPublicUrl(files[fieldName][0].filename);
   }
-  // If value was a __upload_ placeholder but no file came through, return ""
   if (typeof value === "string" && value.startsWith("__upload_")) return "";
   return value || "";
 };
 
 /* =========================
    HELPER — Parse body
-   Frontend sends JSON in FormData's "data" field when files are present,
-   or plain JSON body when no files (application/json).
 ========================= */
 const parseBody = (req) => {
   if (req.body && req.body.data) {
@@ -39,7 +32,6 @@ const parseBody = (req) => {
 
 /* =========================
    HELPER — Build full document
-   Merges payload fields + resolved image URLs
 ========================= */
 const buildDocument = (payload, files) => {
   const {
@@ -54,22 +46,25 @@ const buildDocument = (payload, files) => {
   return {
     sectionHeader,
 
-    courses: courses.map((c, i) => ({
-      hours:       c.hours,
-      days:        c.days,
-      name:        c.name,
-      style:       c.style,
-      duration:    c.duration,
-      certificate: c.certificate,
-      feeShared:   c.feeShared,
-      feePrivate:  c.feePrivate,
-      color:       c.color || "#8B5E3C",
-      imgUrl:      resolveImg(c.imgUrl, `courseImg_${i}`, files),
-      detailsLink: c.detailsLink || "#",
-      bookLink:    c.bookLink    || "#",
-    })),
+    courses: Array.isArray(courses)
+      ? courses.map((c, i) => ({
+          ...(c._id ? { _id: c._id } : {}),
+          hours:       c.hours,
+          days:        c.days,
+          name:        c.name,
+          style:       c.style,
+          duration:    c.duration,
+          certificate: c.certificate,
+          feeShared:   c.feeShared,
+          feePrivate:  c.feePrivate,
+          color:       c.color || "#8B5E3C",
+          imgUrl:      resolveImg(c.imgUrl, `courseImg_${i}`, files),
+          detailsLink: c.detailsLink || "#",
+          bookLink:    c.bookLink    || "#",
+        }))
+      : [],
 
-    who: {
+    who: who ? {
       eyebrow:      who.eyebrow,
       sectionTitle: who.sectionTitle,
       para1:        who.para1,
@@ -80,9 +75,9 @@ const buildDocument = (payload, files) => {
       chips:        who.chips || [],
       quoteText:    who.quoteText,
       quoteAttrib:  who.quoteAttrib,
-    },
+    } : undefined,
 
-    teachersHeader: {
+    teachersHeader: teachersHeader ? {
       eyebrow:             teachersHeader.eyebrow,
       sectionTitle:        teachersHeader.sectionTitle,
       introPara1:          teachersHeader.introPara1,
@@ -91,9 +86,9 @@ const buildDocument = (payload, files) => {
       introPara2Highlight: teachersHeader.introPara2Highlight,
       ctaBtnText:          teachersHeader.ctaBtnText,
       ctaBtnLink:          teachersHeader.ctaBtnLink,
-    },
+    } : undefined,
 
-    founder: {
+    founder: founder ? {
       eyebrow:        founder.eyebrow,
       name:           founder.name,
       imgUrl:         resolveImg(founder.imgUrl, "founderImg", files),
@@ -106,13 +101,16 @@ const buildDocument = (payload, files) => {
       detailsBtnLink: founder.detailsBtnLink || "#",
       bookBtnText:    founder.bookBtnText,
       bookBtnLink:    founder.bookBtnLink    || "#",
-    },
+    } : undefined,
 
-    teachers: teachers.map((t, i) => ({
-      name:    t.name,
-      surname: t.surname,
-      imgUrl:  resolveImg(t.imgUrl, `teacherImg_${i}`, files),
-    })),
+    teachers: Array.isArray(teachers)
+      ? teachers.map((t, i) => ({
+          ...(t._id ? { _id: t._id } : {}),
+          name:    t.name,
+          surname: t.surname,
+          imgUrl:  resolveImg(t.imgUrl, `teacherImg_${i}`, files),
+        }))
+      : [],
   };
 };
 
@@ -129,9 +127,9 @@ exports.createYogaCourses = async (req, res) => {
       });
     }
 
-    const payload  = parseBody(req);
-    const files    = req.files || {};
-    const docData  = buildDocument(payload, files);
+    const payload = parseBody(req);
+    const files   = req.files || {};
+    const docData = buildDocument(payload, files);
 
     const page = await YogaCoursesPage.create(docData);
 
@@ -142,7 +140,6 @@ exports.createYogaCourses = async (req, res) => {
     });
   } catch (err) {
     console.error("YogaCoursesPage create error:", err.message);
-    // Include Mongoose validation details
     if (err.name === "ValidationError") {
       const details = Object.entries(err.errors)
         .map(([k, v]) => `${k}: ${v.message}`)
@@ -178,9 +175,9 @@ exports.updateYogaCourses = async (req, res) => {
       return res.status(404).json({ success: false, message: "Data not found" });
     }
 
-    const payload  = parseBody(req);
-    const files    = req.files || {};
-    const docData  = buildDocument(payload, files);
+    const payload = parseBody(req);
+    const files   = req.files || {};
+    const docData = buildDocument(payload, files);
 
     const updated = await YogaCoursesPage.findByIdAndUpdate(
       page._id,
@@ -199,7 +196,10 @@ exports.updateYogaCourses = async (req, res) => {
       const details = Object.entries(err.errors)
         .map(([k, v]) => `${k}: ${v.message}`)
         .join(", ");
-      return res.status(400).json({ success: false, message: `Validation failed: ${details}` });
+      return res.status(400).json({
+        success: false,
+        message: `Validation failed: ${details}`,
+      });
     }
     res.status(500).json({ success: false, message: err.message });
   }
@@ -207,6 +207,15 @@ exports.updateYogaCourses = async (req, res) => {
 
 /* =========================
    PATCH — TAB-WISE UPDATE
+   ─────────────────────────────────────────────────────
+   ROOT CAUSE FIX:
+   Frontend "courses" tab sends:  { sectionHeader:{...}, courses:[...] }
+   Old code did:  courses: section === "courses" ? payload : page.courses
+   → payload is the whole object, NOT an array → courses.map is not a function
+
+   Fix: extract the sub-array from payload when section === "courses"
+        and also save sectionHeader at the same time (since the tab sends both).
+   ─────────────────────────────────────────────────────
 ========================= */
 exports.updateSection = async (req, res) => {
   try {
@@ -229,12 +238,26 @@ exports.updateSection = async (req, res) => {
     const payload = parseBody(req);
     const files   = req.files || {};
 
-    /* 🔥🔥🔥 IMPORTANT VALIDATION START 🔥🔥🔥 */
+    /* ── "courses" tab sends BOTH sectionHeader + courses array ── */
+    const incomingCourses =
+      section === "courses"
+        ? Array.isArray(payload.courses) ? payload.courses : []
+        : null;
 
-    // 👉 COURSES restriction
-    if (section === "courses") {
-      // agar already course exist hai aur user new add kar raha hai
-      if (page.courses.length >= 1 && payload.length > page.courses.length) {
+    const incomingSectionHeader =
+      section === "courses"
+        ? payload.sectionHeader ?? page.sectionHeader
+        : null;
+
+    /* ── "teachers" tab sends a plain array ── */
+    const incomingTeachers =
+      section === "teachers"
+        ? Array.isArray(payload) ? payload : []
+        : null;
+
+    /* ── Restriction: no adding beyond existing count via PATCH ── */
+    if (section === "courses" && page.courses.length >= 1) {
+      if (incomingCourses.length > page.courses.length) {
         return res.status(400).json({
           success: false,
           message: "Course already exists. Please edit or delete first.",
@@ -242,9 +265,8 @@ exports.updateSection = async (req, res) => {
       }
     }
 
-    // 👉 TEACHERS restriction (optional)
-    if (section === "teachers") {
-      if (page.teachers.length >= 1 && payload.length > page.teachers.length) {
+    if (section === "teachers" && page.teachers.length >= 1) {
+      if (incomingTeachers.length > page.teachers.length) {
         return res.status(400).json({
           success: false,
           message: "Teacher already exists. Please edit or delete first.",
@@ -252,22 +274,46 @@ exports.updateSection = async (req, res) => {
       }
     }
 
-    /* 🔥🔥🔥 VALIDATION END 🔥🔥🔥 */
-
-    // Build only the requested section
+    /* ── Build only the requested section ── */
     const full = buildDocument(
       {
-        sectionHeader:  section === "sectionHeader" ? payload : page.sectionHeader,
-        courses:        section === "courses"        ? payload : page.courses,
-        who:            section === "who"            ? payload : page.who,
-        teachersHeader: section === "teachersHeader" ? payload : page.teachersHeader,
-        founder:        section === "founder"        ? payload : page.founder,
-        teachers:       section === "teachers"       ? payload : page.teachers,
+        // "courses" tab: use extracted sub-fields
+        sectionHeader:
+          section === "courses"
+            ? incomingSectionHeader
+            : page.sectionHeader,
+
+        courses:
+          section === "courses"
+            ? incomingCourses
+            : page.courses,
+
+        who:
+          section === "who" ? payload : page.who,
+
+        teachersHeader:
+          section === "teachersHeader" ? payload : page.teachersHeader,
+
+        founder:
+          section === "founder" ? payload : page.founder,
+
+        teachers:
+          section === "teachers"
+            ? incomingTeachers
+            : page.teachers,
       },
       files
     );
 
-    page[section] = full[section];
+    /* ── Save only the changed fields ── */
+    if (section === "courses") {
+      // Save both courses array AND sectionHeader (sent together from UI)
+      page.courses       = full.courses;
+      page.sectionHeader = full.sectionHeader;
+    } else {
+      page[section] = full[section];
+    }
+
     await page.save();
 
     res.json({
@@ -284,13 +330,14 @@ exports.updateSection = async (req, res) => {
         .join(", ");
       return res.status(400).json({
         success: false,
-        message: `Validation failed: ${details}`
+        message: `Validation failed: ${details}`,
       });
     }
 
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 /* =========================
    DELETE
 ========================= */

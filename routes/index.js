@@ -32,7 +32,7 @@ router.use("/accreditation", require("./accreditationRoutes"));
 router.use("/yoga-courses", require("./yogaCoursesRoutes"));
 
 /* =========================
-   CLASS CAMPUS AMENITIES ROUTES
+   CLASS CAMPUS AMENITIES
 ========================= */
 router.use(
   "/class-campus-amenities",
@@ -40,22 +40,26 @@ router.use(
 );
 
 /* ===========================
-   AYM FULL PAGE ROUTES 🔥
+   AYM FULL PAGE ROUTES
 =========================== */
-router.use(
-  "/aym-full-page",
-  require("./aymFullPageRoutes")
-);
+router.use("/aym-full-page", require("./aymFullPageRoutes"));
 
 /* =========================
-   OUR MISSION ROUTES 🔥
+   OUR MISSION ROUTES
 ========================= */
 router.use("/our-mission", require("./ourMissionRoutes"));
 
 /* =========================
-   WHY AYM ROUTES 🔥
+   WHY AYM ROUTES
 ========================= */
 router.use("/why-aym", require("./whyAYMRoutes"));
+
+/* =========================
+   TESTIMONIAL ROUTES (🔥 CLEAN STRUCTURE)
+========================= */
+router.use("/testimonials/videos", require("./Videotestimonialroutes"));
+router.use("/testimonials/text", require("./Textreviewroutes"));
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
