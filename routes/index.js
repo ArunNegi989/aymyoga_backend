@@ -83,6 +83,13 @@ router.use("/blogs", require("./blogRoutes"));
    100HR SEATS ROUTES
 ========================= */
 router.use("/100hr-seats", require("./100hrSeatsRoutes"));
+/* =========================
+   100HR CONTENT ROUTES
+========================= */
+router.use("/100hr-content", require("./100hrContentRoutes"));
+
+/* ✅ ADD THIS */
+router.use("/email", require("./emailRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
