@@ -78,6 +78,11 @@ router.use("/guest-teachers", require("./guestTeacherRoutes"));
    BLOG ROUTES
 ========================= */
 router.use("/blogs", require("./blogRoutes"));
+
+/* =========================
+   100HR SEATS ROUTES
+========================= */
+router.use("/100hr-seats", require("./100hrSeatsRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
