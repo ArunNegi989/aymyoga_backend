@@ -29,6 +29,8 @@ router.put("/update-batch/:id", controller.update);
 router.delete("/delete-batch/:id", controller.remove);
 
 
+router.post("/book-seat", controller.bookSeat);
+
 
 
 module.exports = router;

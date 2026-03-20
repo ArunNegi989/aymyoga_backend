@@ -104,3 +104,47 @@ exports.remove = async (req, res) => {
   }
 };
 
+
+
+/* =========================
+   BOOK SEAT (🔥 NEW)
+========================= */
+exports.bookSeat = async (req, res) => {
+  try {
+    const { batchId } = req.body;
+
+    const batch = await Seats.findById(batchId);
+
+    if (!batch) {
+      return res.status(404).json({
+        success: false,
+        message: "Batch not found",
+      });
+    }
+
+    // ❌ FULL CHECK
+    if (batch.bookedSeats >= batch.totalSeats) {
+      return res.status(400).json({
+        success: false,
+        message: "No seats available",
+      });
+    }
+
+    // ✅ INCREMENT
+    batch.bookedSeats += 1;
+
+    await batch.save();
+
+    res.json({
+      success: true,
+      message: "Seat booked successfully",
+      data: batch,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
