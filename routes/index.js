@@ -97,8 +97,10 @@ router.use("/email", require("./emailRoutes"));
 router.use("/200hr-seats", require("./twoHundredBatchRoutes"));
 
 
+router.use("/yoga-200hr", require("./yoga200Routes"));
 
 
+router.use("/registration", require("./registrationRoutes"));
 /* ===========================
    API HEALTH CHECK
 =========================== */
