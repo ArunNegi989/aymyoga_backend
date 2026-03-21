@@ -90,6 +90,15 @@ router.use("/100hr-content", require("./100hrContentRoutes"));
 
 /* ✅ ADD THIS */
 router.use("/email", require("./emailRoutes"));
+
+/* =========================
+   200HR BATCH ROUTES
+========================= */
+router.use("/200hr-seats", require("./twoHundredBatchRoutes"));
+
+
+
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
