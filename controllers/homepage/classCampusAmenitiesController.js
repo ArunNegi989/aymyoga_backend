@@ -14,11 +14,13 @@ const deleteFile = (filePath) => {
 
 /* =========================
    HELPER: IMAGE URL
+   ✅ FIX: Use x-forwarded-proto so https works behind Nginx/load balancers on live
 ========================= */
 const getFullUrl = (req, filePath) => {
   if (!filePath) return "";
   const cleanPath = filePath.startsWith("/") ? filePath : `/uploads/${filePath}`;
-  return `${req.protocol}://${req.get("host")}${cleanPath}`;
+  const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+  return `${protocol}://${req.get("host")}${cleanPath}`;
 };
 
 /* =========================
@@ -154,10 +156,16 @@ exports.update = async (req, res) => {
       { new: true }
     );
 
+    // ✅ FIX: wrap image paths with getFullUrl — same as getOne/getAll
     res.json({
       success: true,
       message: "Updated successfully ✏️",
-      data: updated,
+      data: {
+        ...updated._doc,
+        classSizeImage: getFullUrl(req, updated.classSizeImage),
+        amenityImage:   getFullUrl(req, updated.amenityImage),
+        campusImages:   updated.campusImages.map((img) => getFullUrl(req, img)),
+      },
     });
 
   } catch (err) {
@@ -184,10 +192,8 @@ exports.getOne = async (req, res) => {
       data: {
         ...data._doc,
         classSizeImage: getFullUrl(req, data.classSizeImage),
-        amenityImage: getFullUrl(req, data.amenityImage),
-        campusImages: data.campusImages.map((img) =>
-          getFullUrl(req, img)
-        ),
+        amenityImage:   getFullUrl(req, data.amenityImage),
+        campusImages:   data.campusImages.map((img) => getFullUrl(req, img)),
       },
     });
   } catch (err) {
