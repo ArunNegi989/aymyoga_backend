@@ -76,15 +76,22 @@ const Yoga200Content1Schema = new mongoose.Schema(
       weekGrid: Array,
     },
 
-    hatha: {
-      h2: String,
-      subtitle: String,
-      desc: String,
-      image: String,
-      imgAlt: String,
-      pills: [String],
-      asanas: Array,
+   hatha: {
+  h2: String,
+  subtitle: String,
+  desc: String,
+  image: String,
+  imgAlt: String,
+  pills: [String],
+  asanas: [
+    {
+      n: String,        // ← was being cast to Number, force it to String
+      name: String,
+      sub: String,
+      filter: String,
     },
+  ],
+},
   },
   { timestamps: true }
 );
