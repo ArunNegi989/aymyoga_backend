@@ -55,16 +55,16 @@ router.use("/our-mission", require("./ourMissionRoutes"));
 router.use("/why-aym", require("./whyAYMRoutes"));
 
 /* =========================
-   TESTIMONIAL ROUTES (🔥 CLEAN STRUCTURE)
+   TESTIMONIAL ROUTES
 ========================= */
 router.use("/testimonials/videos", require("./Videotestimonialroutes"));
 router.use("/testimonials/text", require("./Textreviewroutes"));
-
 
 /* =========================
    FOUNDER ROUTES
 ========================= */
 router.use("/founder", require("./founderRoutes"));
+
 /* =========================
    TEACHERS ROUTES
 ========================= */
@@ -74,6 +74,7 @@ router.use("/teachers", require("./teacherRoutes"));
    GUEST TEACHER ROUTES 
 ========================= */
 router.use("/guest-teachers", require("./guestTeacherRoutes"));
+
 /* =========================
    BLOG ROUTES
 ========================= */
@@ -83,29 +84,37 @@ router.use("/blogs", require("./blogRoutes"));
    100HR SEATS ROUTES
 ========================= */
 router.use("/100hr-seats", require("./100hrSeatsRoutes"));
+
 /* =========================
    100HR CONTENT ROUTES
 ========================= */
 router.use("/100hr-content", require("./100hrContentRoutes"));
 
-/* ✅ ADD THIS */
+/* =========================
+   EMAIL ROUTES
+========================= */
 router.use("/email", require("./emailRoutes"));
 
 /* =========================
-   200HR BATCH ROUTES
+   200HR SEATS ROUTES
 ========================= */
 router.use("/200hr-seats", require("./twoHundredBatchRoutes"));
-
 
 /* =========================
    200HR CONTENT PART 1
 ========================= */
-// AFTER:
 router.use("/yoga-200hr/content1", require("./yoga200Content1.routes"));
 
+/* =========================
+   🔥 200HR CONTENT PART 2 (ADD THIS)
+========================= */
+router.use("/yoga-200hr/content2", require("./yoga200Content2routes"));
 
-
+/* =========================
+   REGISTRATION ROUTES
+========================= */
 router.use("/registration", require("./registrationRoutes"));
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
