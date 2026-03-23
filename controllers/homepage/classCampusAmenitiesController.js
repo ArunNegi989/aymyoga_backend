@@ -3,35 +3,16 @@ const fs = require("fs");
 const path = require("path");
 
 /* =========================
-   HELPER: DELETE FILE
+   DELETE FILE HELPER
 ========================= */
 const deleteFile = (filePath) => {
   if (!filePath) return;
-  const fileName = filePath.replace(/^\/uploads\//, "");
+
+  const fileName = filePath.replace("/uploads/", "");
   const fullPath = path.join(__dirname, "../../uploads", fileName);
-  if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-};
 
-/* =========================
-   HELPER: IMAGE URL
-   ✅ FIX: Use x-forwarded-proto so https works behind Nginx/load balancers on live
-========================= */
-const getFullUrl = (req, filePath) => {
-  if (!filePath) return "";
-  const cleanPath = filePath.startsWith("/") ? filePath : `/uploads/${filePath}`;
-  const protocol = req.headers["x-forwarded-proto"] || req.protocol;
-  return `${protocol}://${req.get("host")}${cleanPath}`;
-};
-
-/* =========================
-   HELPER: SINGLE RECORD GUARD
-========================= */
-const ensureSingleRecord = async () => {
-  const exists = await Model.findOne();
-  if (exists) {
-    const err = new Error("Section already exists. Please edit or delete first.");
-    err.statusCode = 400;
-    throw err;
+  if (fs.existsSync(fullPath)) {
+    fs.unlinkSync(fullPath);
   }
 };
 
@@ -40,12 +21,10 @@ const ensureSingleRecord = async () => {
 ========================= */
 exports.create = async (req, res) => {
   try {
-    // 🔥 SINGLE RECORD CHECK
-    await ensureSingleRecord();
-
     const body = req.body;
-    const files = req.files;
+    const files = req.files || {};
 
+    /* IMAGE PATHS */
     const classSizeImage = files.classSizeImage?.[0]?.filename
       ? `/uploads/${files.classSizeImage[0].filename}`
       : "";
@@ -59,6 +38,7 @@ exports.create = async (req, res) => {
       campusImages.push(`/uploads/${files["campusImage_0"][0].filename}`);
     }
 
+    /* ARRAY FIX */
     let amenities = body.amenities;
     if (!Array.isArray(amenities)) amenities = [amenities];
 
@@ -73,16 +53,11 @@ exports.create = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Created successfully ✅",
-      data: {
-        ...data._doc,
-        classSizeImage: getFullUrl(req, data.classSizeImage),
-        amenityImage: getFullUrl(req, data.amenityImage),
-        campusImages: data.campusImages.map((img) => getFullUrl(req, img)),
-      },
+      data,
     });
 
   } catch (err) {
-    res.status(err.statusCode || 500).json({
+    res.status(500).json({
       success: false,
       message: err.message,
     });
@@ -96,80 +71,16 @@ exports.getAll = async (req, res) => {
   try {
     const data = await Model.find().sort({ createdAt: -1 });
 
-    const formatted = data.map((item) => ({
-      ...item._doc,
-      classSizeImage: getFullUrl(req, item.classSizeImage),
-      amenityImage: getFullUrl(req, item.amenityImage),
-      campusImages: item.campusImages.map((img) => getFullUrl(req, img)),
-    }));
-
-    res.json({ success: true, data: formatted });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-/* =========================
-   UPDATE
-========================= */
-exports.update = async (req, res) => {
-  try {
-    const { id } = req.body;
-    const body = req.body;
-    const files = req.files;
-
-    const existing = await Model.findById(id);
-    if (!existing) {
-      return res.status(404).json({ success: false, message: "Data not found" });
-    }
-
-    let classSizeImage = existing.classSizeImage;
-    if (files?.classSizeImage?.[0]) {
-      deleteFile(existing.classSizeImage);
-      classSizeImage = `/uploads/${files.classSizeImage[0].filename}`;
-    }
-
-    let amenityImage = existing.amenityImage;
-    if (files?.amenityImage?.[0]) {
-      deleteFile(existing.amenityImage);
-      amenityImage = `/uploads/${files.amenityImage[0].filename}`;
-    }
-
-    let campusImages = [...existing.campusImages];
-    if (files?.["campusImage_0"]?.[0]) {
-      if (campusImages[0]) deleteFile(campusImages[0]);
-      campusImages[0] = `/uploads/${files["campusImage_0"][0].filename}`;
-    }
-
-    let amenities = body.amenities;
-    if (!Array.isArray(amenities)) amenities = [amenities];
-
-    const updated = await Model.findByIdAndUpdate(
-      id,
-      {
-        ...body,
-        amenities,
-        classSizeImage,
-        amenityImage,
-        campusImages,
-      },
-      { new: true }
-    );
-
-    // ✅ FIX: wrap image paths with getFullUrl — same as getOne/getAll
     res.json({
       success: true,
-      message: "Updated successfully ✏️",
-      data: {
-        ...updated._doc,
-        classSizeImage: getFullUrl(req, updated.classSizeImage),
-        amenityImage:   getFullUrl(req, updated.amenityImage),
-        campusImages:   updated.campusImages.map((img) => getFullUrl(req, img)),
-      },
+      data,
     });
 
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -189,13 +100,77 @@ exports.getOne = async (req, res) => {
 
     res.json({
       success: true,
-      data: {
-        ...data._doc,
-        classSizeImage: getFullUrl(req, data.classSizeImage),
-        amenityImage:   getFullUrl(req, data.amenityImage),
-        campusImages:   data.campusImages.map((img) => getFullUrl(req, img)),
-      },
+      data,
     });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+/* =========================
+   UPDATE
+========================= */
+exports.update = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const body = req.body;
+    const files = req.files || {};
+
+    const existing = await Model.findById(id);
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Data not found",
+      });
+    }
+
+    /* IMAGE UPDATE */
+
+    let classSizeImage = existing.classSizeImage;
+    if (files?.classSizeImage?.[0]) {
+      deleteFile(existing.classSizeImage);
+      classSizeImage = `/uploads/${files.classSizeImage[0].filename}`;
+    }
+
+    let amenityImage = existing.amenityImage;
+    if (files?.amenityImage?.[0]) {
+      deleteFile(existing.amenityImage);
+      amenityImage = `/uploads/${files.amenityImage[0].filename}`;
+    }
+
+    let campusImages = [...(existing.campusImages || [])];
+    if (files?.["campusImage_0"]?.[0]) {
+      if (campusImages[0]) deleteFile(campusImages[0]);
+      campusImages[0] = `/uploads/${files["campusImage_0"][0].filename}`;
+    }
+
+    /* ARRAY FIX */
+    let amenities = body.amenities;
+    if (!Array.isArray(amenities)) amenities = [amenities];
+
+    const updated = await Model.findByIdAndUpdate(
+      id,
+      {
+        ...body,
+        amenities,
+        classSizeImage,
+        amenityImage,
+        campusImages,
+      },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Updated successfully ✏️",
+      data: updated,
+    });
+
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -212,18 +187,28 @@ exports.remove = async (req, res) => {
     const data = await Model.findById(req.params.id);
 
     if (!data) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Not found",
+      });
     }
 
+    /* DELETE FILES */
     deleteFile(data.classSizeImage);
     deleteFile(data.amenityImage);
-    data.campusImages.forEach(deleteFile);
+    data.campusImages?.forEach(deleteFile);
 
     await Model.findByIdAndDelete(req.params.id);
 
-    res.json({ success: true, message: "Deleted successfully 🗑️" });
+    res.json({
+      success: true,
+      message: "Deleted successfully 🗑️",
+    });
 
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
