@@ -97,7 +97,12 @@ router.use("/email", require("./emailRoutes"));
 router.use("/200hr-seats", require("./twoHundredBatchRoutes"));
 
 
-router.use("/yoga-200hr", require("./yoga200Routes"));
+/* =========================
+   200HR CONTENT PART 1
+========================= */
+// AFTER:
+router.use("/yoga-200hr/content1", require("./yoga200Content1.routes"));
+
 
 
 router.use("/registration", require("./registrationRoutes"));
