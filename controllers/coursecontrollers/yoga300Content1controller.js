@@ -6,13 +6,13 @@ const Yoga300 = require("../../models/courses/yoga300Content1model");
 const parseData = (req, existingImage = "") => {
   const body = req.body;
 
-  // image
+  /* ========= IMAGE ========= */
   let heroImage = existingImage;
   if (req.files?.heroImage) {
     heroImage = "/uploads/" + req.files.heroImage[0].filename;
   }
 
-  // fees
+  /* ========= FEES ========= */
   const includedFee = Array.isArray(body.includedFee)
     ? body.includedFee
     : body.includedFee
@@ -25,36 +25,58 @@ const parseData = (req, existingImage = "") => {
     ? [body.notIncludedFee]
     : [];
 
-  // paragraphs
+  /* ========= PARAGRAPHS (BEST METHOD) ========= */
   const introParagraphs = [];
   const topParagraphs = [];
 
-  Object.keys(body)
-    .sort()
-    .forEach((key) => {
-      if (key.startsWith("introPara")) introParagraphs.push(body[key]);
-      if (key.startsWith("topPara")) topParagraphs.push(body[key]);
-    });
+  const introCount = Number(body.introParagraphCount || 0);
+  const topCount = Number(body.topParagraphCount || 0);
 
-  // overview
-  const overviewFields = JSON.parse(body.overviewFields || "[]").map(
-    ({ label, value, multiline }) => ({
-      label,
-      value,
-      multiline,
-    })
-  );
+  // intro
+  for (let i = 1; i <= introCount; i++) {
+    const val = body[`introPara${i}`];
+    if (val && val.trim()) {
+      introParagraphs.push(val);
+    }
+  }
 
-  // modules
-  const modules = JSON.parse(body.modules || "[]").map((m) => ({
-    num: m.num,
-    label: m.label,
-    title: m.title,
-    content: m.content,
-    subTitle: m.subTitle,
-    listItems: m.listItems || [],
-    twoCol: m.twoCol || false,
-  }));
+  // top
+  for (let i = 1; i <= topCount; i++) {
+    const val = body[`topPara${i}`];
+    if (val && val.trim()) {
+      topParagraphs.push(val);
+    }
+  }
+
+  /* ========= OVERVIEW ========= */
+  let overviewFields = [];
+  try {
+    overviewFields = JSON.parse(body.overviewFields || "[]").map(
+      ({ label, value, multiline }) => ({
+        label,
+        value,
+        multiline,
+      })
+    );
+  } catch {
+    overviewFields = [];
+  }
+
+  /* ========= MODULES ========= */
+  let modules = [];
+  try {
+    modules = JSON.parse(body.modules || "[]").map((m) => ({
+      num: m.num,
+      label: m.label,
+      title: m.title,
+      content: m.content,
+      subTitle: m.subTitle,
+      listItems: m.listItems || [],
+      twoCol: m.twoCol || false,
+    }));
+  } catch {
+    modules = [];
+  }
 
   return {
     ...body,
@@ -74,6 +96,7 @@ const parseData = (req, existingImage = "") => {
 exports.create = async (req, res) => {
   try {
     const existing = await Yoga300.findOne();
+
     if (existing) {
       return res.status(400).json({
         success: false,
@@ -97,26 +120,41 @@ exports.create = async (req, res) => {
 };
 
 /* =========================
-   GET ALL (LIST PAGE)
+   GET ALL
 ========================= */
 exports.get = async (req, res) => {
   try {
     const data = await Yoga300.find().sort({ createdAt: -1 });
-    res.json({ success: true, data });
+
+    res.json({
+      success: true,
+      data,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
 /* =========================
-   GET SINGLE BY ID
+   GET SINGLE
 ========================= */
 exports.getSingle = async (req, res) => {
   try {
     const { id } = req.params;
+
     const data = await Yoga300.findById(id);
 
-    res.json({ success: true, data });
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "Record not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -130,8 +168,12 @@ exports.update = async (req, res) => {
     const { id } = req.params;
 
     const existing = await Yoga300.findById(id);
+
     if (!existing) {
-      return res.status(404).json({ message: "No record found" });
+      return res.status(404).json({
+        success: false,
+        message: "No record found",
+      });
     }
 
     const parsedData = parseData(req, existing.heroImage);
@@ -142,7 +184,11 @@ exports.update = async (req, res) => {
       { new: true }
     );
 
-    res.json({ success: true, data: updated });
+    res.json({
+      success: true,
+      message: "Updated successfully",
+      data: updated,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -154,6 +200,15 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const existing = await Yoga300.findById(id);
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "No record found",
+      });
+    }
 
     await Yoga300.findByIdAndDelete(id);
 
