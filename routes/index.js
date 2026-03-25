@@ -115,7 +115,21 @@ router.use("/yoga-200hr/content2", require("./yoga200Content2routes"));
 ========================= */
 router.use("/300hr-seats", require("./threeHundredBatchRoutes"));
 
+/* =========================
+   300HR CONTENT PART 1
+========================= */
+router.use(
+  "/yoga-300hr/content1",
+  require("./yoga300Content1routes")
+);
 
+/* =========================
+   🔥 300HR CONTENT PART 2 (ADD THIS)
+========================= */
+router.use(
+  "/yoga-300hr/content2",
+  require("./yoga300Content2routes")
+);
 /* =========================
    500HR SEATS ROUTES
 ========================= */
