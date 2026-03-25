@@ -136,6 +136,10 @@ router.use(
 router.use("/500hr-seats", require("./fiveHundredBatchRoutes"));
 
 /* =========================
+   🌍 WORLDWIDE CONTENT ROUTES
+========================= */
+router.use("/worldwide/content", require("./worldwideroutes"));
+/* =========================
    REGISTRATION ROUTES
 ========================= */
 router.use("/registration", require("./registrationRoutes"));
