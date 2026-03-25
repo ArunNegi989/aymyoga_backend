@@ -107,6 +107,7 @@ youtubeVideos: [
     id: String, // 🔥 ADD THIS
     title: String,
     type: { type: String, enum: ["url", "file"] },
+    videoId: String,
     videoFile: String,
   },
 ],
