@@ -34,10 +34,7 @@ router.use("/yoga-courses", require("./yogaCoursesRoutes"));
 /* =========================
    CLASS CAMPUS AMENITIES
 ========================= */
-router.use(
-  "/class-campus-amenities",
-  require("./classCampusAmenitiesRoutes")
-);
+router.use("/class-campus-amenities", require("./classCampusAmenitiesRoutes"));
 
 /* ===========================
    AYM FULL PAGE ROUTES
@@ -118,18 +115,12 @@ router.use("/300hr-seats", require("./threeHundredBatchRoutes"));
 /* =========================
    300HR CONTENT PART 1
 ========================= */
-router.use(
-  "/yoga-300hr/content1",
-  require("./yoga300Content1routes")
-);
+router.use("/yoga-300hr/content1", require("./yoga300Content1routes"));
 
 /* =========================
    🔥 300HR CONTENT PART 2 (ADD THIS)
 ========================= */
-router.use(
-  "/yoga-300hr/content2",
-  require("./yoga300Content2routes")
-);
+router.use("/yoga-300hr/content2", require("./yoga300Content2routes"));
 /* =========================
    500HR SEATS ROUTES
 ========================= */
