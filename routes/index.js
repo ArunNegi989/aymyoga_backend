@@ -126,6 +126,8 @@ router.use("/yoga-300hr/content2", require("./yoga300Content2routes"));
 ========================= */
 router.use("/500hr-seats", require("./fiveHundredBatchRoutes"));
 
+router.use("/yoga-500hr/content", require("./yoga500ContentRoutes"));
+
 router.use("/bali-page", require("./baliPageRoutes"));
 
 router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
