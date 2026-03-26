@@ -128,6 +128,8 @@ router.use("/500hr-seats", require("./fiveHundredBatchRoutes"));
 
 router.use("/yoga-500hr/content", require("./yoga500ContentRoutes"));
 
+router.use("/yoga-ttc-india", require("./yogaTTCIndiaRoutes"));
+
 router.use("/bali-page", require("./baliPageRoutes"));
 
 router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
