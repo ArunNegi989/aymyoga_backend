@@ -138,6 +138,8 @@ router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
 
 
 router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
+
+router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
 /* =========================
    🌍 WORLDWIDE CONTENT ROUTES
 ========================= */
