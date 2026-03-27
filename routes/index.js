@@ -135,6 +135,9 @@ router.use("/bali-page", require("./baliPageRoutes"));
 router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
 
 router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
+
+
+router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
 /* =========================
    🌍 WORLDWIDE CONTENT ROUTES
 ========================= */
