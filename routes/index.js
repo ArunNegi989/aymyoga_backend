@@ -136,7 +136,10 @@ router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
 
 router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
 
-
+/* =========================
+   KUNDALINI SEATS ROUTES
+========================= */
+router.use("/kundalini-seats", require("./kundaliniSeatsRoutes"));
 router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
 
 router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
