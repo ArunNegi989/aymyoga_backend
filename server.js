@@ -85,7 +85,7 @@ app.use(require("./middleware/errorMiddleware"));
    SERVER START
 ========================= */
 const PORT = process.env.PORT || 5000;
-
+console.log("MONGO_URI:", process.env.MONGO_URI);
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
