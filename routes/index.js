@@ -136,10 +136,13 @@ router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
 
 router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
 
+
+
 /* =========================
    PRENATAL SEATS ROUTES
 ========================= */
 router.use("/prenatal-seats", require("./prenatalSeatsRoutes"));
+router.use("/prenatal-page", require("./prenatalPageRoutes"));
 
 /* =========================
    KUNDALINI SEATS ROUTES
