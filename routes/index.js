@@ -150,17 +150,27 @@ router.use("/prenatal-page", require("./prenatalPageRoutes"));
 router.use("/kundalini-seats", require("./kundaliniSeatsRoutes"));
 router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
 
+
+/* =========================
+    Rishikes CONTENT ROUTES
+========================= */
 router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
 
-
+/* =========================
+    Hathayoga CONTENT ROUTES
+========================= */
 router.use("/hathayoga-seats", require("./hathaYogaSeatsRoutes"));
 router.use("/hatha-yoga", require("./hathaYogaRoutes"));
 
 
-
+/* =========================
+   Goa CONTENT ROUTES
+========================= */
 router.use("/goa-200hr-seats", require("./goa200hrSeatsRoutes"));
 router.use("/goa-300hr-seats", require("./goa300hrSeatsRoutes"));
 router.use("/goa-500hr-seats", require("./goa500hrSeatsRoutes"));
+router.use("/goa-yoga-page", require("./goaYogaRoutes"));
+
 /* =========================
    🌍 WORLDWIDE CONTENT ROUTES
 ========================= */
