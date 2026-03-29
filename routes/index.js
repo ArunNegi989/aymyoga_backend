@@ -151,6 +151,9 @@ router.use("/kundalini-seats", require("./kundaliniSeatsRoutes"));
 router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
 
 router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
+
+
+router.use("/hathayoga-seats", require("./hathaYogaSeatsRoutes"));
 /* =========================
    🌍 WORLDWIDE CONTENT ROUTES
 ========================= */
