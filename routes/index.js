@@ -154,6 +154,7 @@ router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
 
 
 router.use("/hathayoga-seats", require("./hathaYogaSeatsRoutes"));
+router.use("/hatha-yoga", require("./hathaYogaRoutes"));
 /* =========================
    🌍 WORLDWIDE CONTENT ROUTES
 ========================= */
