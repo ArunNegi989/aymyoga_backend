@@ -135,6 +135,7 @@ router.use("/bali-page", require("./baliPageRoutes"));
 router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
 
 router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
+router.use("/vinyasa-seats", require("./vinyasaSeatsRoutes"));
 
 
 
