@@ -5,13 +5,13 @@ const Accreditation = require("../../models/homepage/Accreditation");
 ========================= */
 exports.createAccreditation = async (req, res) => {
   try {
-    // 🔥 COUNT check (best approach)
     const count = await Accreditation.countDocuments();
 
     if (count >= 1) {
       return res.status(400).json({
         success: false,
-        message: "Only one Accreditation section is allowed. Please update or delete existing one."
+        message:
+          "Only one Accreditation section is allowed. Please update or delete existing one.",
       });
     }
 
@@ -21,40 +21,51 @@ exports.createAccreditation = async (req, res) => {
     if (typeof data.certs === "string") data.certs = JSON.parse(data.certs);
     if (typeof data.badges === "string") data.badges = JSON.parse(data.badges);
 
-    // images
+    // certImageIndexes tells us which cert index each uploaded file belongs to
+    // e.g. "0,2,4"  →  certImages[0] → certs[0], certImages[1] → certs[2], etc.
+    let certImageIndexes = [];
+    if (data.certImageIndexes) {
+      certImageIndexes = String(data.certImageIndexes)
+        .split(",")
+        .map((n) => parseInt(n, 10));
+    }
+
+    // main image
     if (req.files?.mainImage) {
       data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
     }
 
+    // cert images — map using indexes if provided, else fall back to positional
     if (req.files?.certImages) {
-      req.files.certImages.forEach((file, index) => {
-        if (data.certs[index]) {
-          data.certs[index].image = file.path.replace(/\\/g, "/");
+      req.files.certImages.forEach((file, uploadIdx) => {
+        const certIdx =
+          certImageIndexes.length > uploadIdx
+            ? certImageIndexes[uploadIdx]
+            : uploadIdx;
+
+        if (data.certs[certIdx]) {
+          data.certs[certIdx].image = file.path.replace(/\\/g, "/");
         }
       });
     }
 
     const created = await Accreditation.create(data);
 
-    res.status(201).json({
-      success: true,
-      data: created,
-    });
-
+    res.status(201).json({ success: true, data: created });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 /* =========================
    GET ALL
 ========================= */
 exports.getAll = async (req, res) => {
   try {
     const data = await Accreditation.find().sort({ createdAt: -1 });
-
     res.json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -71,7 +82,7 @@ exports.getOne = async (req, res) => {
 
     res.json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -85,17 +96,35 @@ exports.updateAccreditation = async (req, res) => {
     if (typeof data.certs === "string") data.certs = JSON.parse(data.certs);
     if (typeof data.badges === "string") data.badges = JSON.parse(data.badges);
 
-   if (req.files?.mainImage) {
-  data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
-}
-
-if (req.files?.certImages) {
-  req.files.certImages.forEach((file, index) => {
-    if (data.certs[index]) {
-      data.certs[index].image = file.path.replace(/\\/g, "/");
+    // certImageIndexes — which cert slot each uploaded image belongs to
+    let certImageIndexes = [];
+    if (data.certImageIndexes) {
+      certImageIndexes = String(data.certImageIndexes)
+        .split(",")
+        .map((n) => parseInt(n, 10));
     }
-  });
-}
+
+    // main image — only replace if a new file was uploaded
+    if (req.files?.mainImage) {
+      data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
+    }
+
+    // cert images
+    if (req.files?.certImages) {
+      req.files.certImages.forEach((file, uploadIdx) => {
+        const certIdx =
+          certImageIndexes.length > uploadIdx
+            ? certImageIndexes[uploadIdx]
+            : uploadIdx;
+
+        if (data.certs[certIdx]) {
+          data.certs[certIdx].image = file.path.replace(/\\/g, "/");
+        }
+      });
+    }
+
+    // Remove helper field before saving
+    delete data.certImageIndexes;
 
     const updated = await Accreditation.findByIdAndUpdate(
       req.params.id,
@@ -105,7 +134,7 @@ if (req.files?.certImages) {
 
     res.json({ success: true, data: updated });
   } catch (err) {
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -115,9 +144,8 @@ if (req.files?.certImages) {
 exports.deleteAccreditation = async (req, res) => {
   try {
     await Accreditation.findByIdAndDelete(req.params.id);
-
     res.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: err.message });
   }
 };

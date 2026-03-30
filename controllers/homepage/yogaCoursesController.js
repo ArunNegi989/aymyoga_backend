@@ -207,15 +207,6 @@ exports.updateYogaCourses = async (req, res) => {
 
 /* =========================
    PATCH — TAB-WISE UPDATE
-   ─────────────────────────────────────────────────────
-   ROOT CAUSE FIX:
-   Frontend "courses" tab sends:  { sectionHeader:{...}, courses:[...] }
-   Old code did:  courses: section === "courses" ? payload : page.courses
-   → payload is the whole object, NOT an array → courses.map is not a function
-
-   Fix: extract the sub-array from payload when section === "courses"
-        and also save sectionHeader at the same time (since the tab sends both).
-   ─────────────────────────────────────────────────────
 ========================= */
 exports.updateSection = async (req, res) => {
   try {
@@ -255,29 +246,9 @@ exports.updateSection = async (req, res) => {
         ? Array.isArray(payload) ? payload : []
         : null;
 
-    /* ── Restriction: no adding beyond existing count via PATCH ── */
-    if (section === "courses" && page.courses.length >= 1) {
-      if (incomingCourses.length > page.courses.length) {
-        return res.status(400).json({
-          success: false,
-          message: "Course already exists. Please edit or delete first.",
-        });
-      }
-    }
-
-    if (section === "teachers" && page.teachers.length >= 1) {
-      if (incomingTeachers.length > page.teachers.length) {
-        return res.status(400).json({
-          success: false,
-          message: "Teacher already exists. Please edit or delete first.",
-        });
-      }
-    }
-
     /* ── Build only the requested section ── */
     const full = buildDocument(
       {
-        // "courses" tab: use extracted sub-fields
         sectionHeader:
           section === "courses"
             ? incomingSectionHeader
@@ -307,7 +278,6 @@ exports.updateSection = async (req, res) => {
 
     /* ── Save only the changed fields ── */
     if (section === "courses") {
-      // Save both courses array AND sectionHeader (sent together from UI)
       page.courses       = full.courses;
       page.sectionHeader = full.sectionHeader;
     } else {

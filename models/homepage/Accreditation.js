@@ -6,9 +6,9 @@ const mongoose = require("mongoose");
 
 const certSchema = new mongoose.Schema({
   label: { type: String, required: true },
-  tag: { type: String, required: true },
-  alt: { type: String },
-  image: { type: String }, // uploaded file path
+  tag:   { type: String, required: true },
+  alt:   { type: String },
+  image: { type: String }, // stored file path, e.g. "uploads/certs/abc.jpg"
 });
 
 const badgeSchema = new mongoose.Schema({
@@ -22,13 +22,13 @@ const badgeSchema = new mongoose.Schema({
 
 const accreditationSchema = new mongoose.Schema(
   {
-
+    // Singleton guard — only one document allowed
     singleton: {
       type: String,
       default: "ONLY_ONE",
       unique: true,
     },
-    
+
     sectionTitle: { type: String, required: true },
 
     authPara1: { type: String, required: true },
@@ -37,15 +37,15 @@ const accreditationSchema = new mongoose.Schema(
     authPara4: { type: String, required: true },
 
     imageCaption: String,
-    mainImage: String,
+    mainImage:    String, // stored file path
 
     pullQuote: { type: String, required: true },
 
     videoSrc: { type: String, required: true },
 
-    immerseTitle: { type: String, required: true },
-    immersePara1: { type: String, required: true },
-    immersePara2: String,
+    immerseTitle:  { type: String, required: true },
+    immersePara1:  { type: String, required: true },
+    immersePara2:  String,
 
     immerseCtaText: { type: String, required: true },
     immerseCtaLink: { type: String, required: true },
@@ -54,7 +54,7 @@ const accreditationSchema = new mongoose.Schema(
     recognitionPara1: { type: String, required: true },
     recognitionPara2: String,
 
-    certs: [certSchema],
+    certs:  [certSchema],
     badges: [badgeSchema],
   },
   { timestamps: true }
