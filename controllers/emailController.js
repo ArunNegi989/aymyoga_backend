@@ -128,7 +128,7 @@ exports.sendEmail = async (req, res) => {
               ${row("Location", data.location)}
               ${row("Start Date", formatDate(data.startDate))}
               ${row("End Date", formatDate(data.endDate))}
-              ${row("Coupon Code", data.coupon || "None")}
+             ${row("Room Type", data.roomType)}
               ${row("How They Found Us", data.howKnow)}
             </table>
           </td>

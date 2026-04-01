@@ -56,6 +56,7 @@ router.use("/why-aym", require("./whyAYMRoutes"));
 ========================= */
 router.use("/testimonials/videos", require("./Videotestimonialroutes"));
 router.use("/testimonials/text", require("./Textreviewroutes"));
+router.use("/courses-section", require("./courseSectionRoutes"));
 
 /* =========================
    FOUNDER ROUTES

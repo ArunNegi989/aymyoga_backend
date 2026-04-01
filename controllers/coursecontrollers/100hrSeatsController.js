@@ -111,9 +111,9 @@ exports.remove = async (req, res) => {
 ========================= */
 exports.bookSeat = async (req, res) => {
   try {
-    const { batchId } = req.body;
+    const { id } = req.params; // ✅ from URL: /book-seat/:id
 
-    const batch = await Seats.findById(batchId);
+    const batch = await Seats.findById(id);
 
     if (!batch) {
       return res.status(404).json({
@@ -122,7 +122,6 @@ exports.bookSeat = async (req, res) => {
       });
     }
 
-    // ❌ FULL CHECK
     if (batch.bookedSeats >= batch.totalSeats) {
       return res.status(400).json({
         success: false,
@@ -130,14 +129,12 @@ exports.bookSeat = async (req, res) => {
       });
     }
 
-    // ✅ INCREMENT
     batch.bookedSeats += 1;
-
     await batch.save();
 
     res.json({
       success: true,
-      message: "Seat booked successfully",
+      message: "Seat booked successfully ✅",
       data: batch,
     });
 
