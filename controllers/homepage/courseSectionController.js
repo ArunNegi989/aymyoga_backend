@@ -131,10 +131,40 @@ const deleteCourse = async (req, res) => {
   }
 };
 
+/* =========================
+   BOOK SEAT
+========================= */
+const bookSeat = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    if (course.availableSeats <= 0) {
+      return res.status(400).json({ success: false, message: "No seats available" });
+    }
+
+    course.availableSeats -= 1;
+    await course.save();
+
+    res.json({
+      success: true,
+      message: "Seat booked successfully ✅",
+      data: course,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 module.exports = {
   createCourse,
   getAllCourses,
   getSingleCourse,
   updateCourse,
   deleteCourse,
+  bookSeat, 
 };

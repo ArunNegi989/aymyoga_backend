@@ -17,6 +17,8 @@ const registrationSchema = new mongoose.Schema(
     location: String,
     coupon: String,
     batchId: String,
+    courseId: String,
+    type: String,
   },
   { timestamps: true }
 );
