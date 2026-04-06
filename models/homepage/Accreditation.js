@@ -8,12 +8,7 @@ const certSchema = new mongoose.Schema({
   label: { type: String, required: true },
   tag:   { type: String, required: true },
   alt:   { type: String },
-  image: { type: String }, // stored file path, e.g. "uploads/certs/abc.jpg"
-});
-
-const badgeSchema = new mongoose.Schema({
-  icon: { type: String, required: true },
-  text: { type: String, required: true },
+  image: { type: String },
 });
 
 /* =========================
@@ -22,7 +17,6 @@ const badgeSchema = new mongoose.Schema({
 
 const accreditationSchema = new mongoose.Schema(
   {
-    // Singleton guard — only one document allowed
     singleton: {
       type: String,
       default: "ONLY_ONE",
@@ -37,7 +31,7 @@ const accreditationSchema = new mongoose.Schema(
     authPara4: { type: String, required: true },
 
     imageCaption: String,
-    mainImage:    String, // stored file path
+    mainImage:    String,
 
     pullQuote: { type: String, required: true },
 
@@ -54,8 +48,8 @@ const accreditationSchema = new mongoose.Schema(
     recognitionPara1: { type: String, required: true },
     recognitionPara2: String,
 
-    certs:  [certSchema],
-    badges: [badgeSchema],
+    courseCerts: [certSchema],
+    awardCerts:  [certSchema],
   },
   { timestamps: true }
 );
