@@ -72,7 +72,7 @@ exports.create = async (req, res) => {
     body.promoCard1 = safeParse(body.promoCard1, {});
     body.promoCard2 = safeParse(body.promoCard2, {});
 
-    /* IMAGES */
+    /* MAIN IMAGES */
     if (req.files?.bodyPlanesImage) {
       body.bodyPlanesImage = getFilePath(req.files.bodyPlanesImage[0]);
     }
@@ -80,6 +80,16 @@ exports.create = async (req, res) => {
     if (req.files?.outdoorImage) {
       body.outdoorImage = getFilePath(req.files.outdoorImage[0]);
     }
+
+    /* ✅ FACILITY IMAGES */
+    body.campusFacilities = body.campusFacilities.map((item, i) => {
+      const file = req.files?.[`facilityImage_${i}`]?.[0];
+
+      return {
+        ...item,
+        imageUrl: file ? getFilePath(file) : "",
+      };
+    });
 
     const data = await Model.create(body);
 
@@ -95,7 +105,6 @@ exports.create = async (req, res) => {
     });
   }
 };
-
 /* =========================
    GET SINGLE
 ========================= */
@@ -141,7 +150,7 @@ exports.update = async (req, res) => {
     body.promoCard1 = safeParse(body.promoCard1, {});
     body.promoCard2 = safeParse(body.promoCard2, {});
 
-    /* IMAGE UPDATE */
+    /* MAIN IMAGE UPDATE */
     body.bodyPlanesImage = req.files?.bodyPlanesImage
       ? getFilePath(req.files.bodyPlanesImage[0])
       : existing.bodyPlanesImage;
@@ -149,6 +158,18 @@ exports.update = async (req, res) => {
     body.outdoorImage = req.files?.outdoorImage
       ? getFilePath(req.files.outdoorImage[0])
       : existing.outdoorImage;
+
+    /* ✅ FACILITY IMAGES UPDATE */
+    body.campusFacilities = body.campusFacilities.map((item, i) => {
+      const file = req.files?.[`facilityImage_${i}`]?.[0];
+
+      return {
+        ...item,
+        imageUrl: file
+          ? getFilePath(file)
+          : existing.campusFacilities?.[i]?.imageUrl || "",
+      };
+    });
 
     const updated = await Model.findByIdAndUpdate(existing._id, body, {
       new: true,

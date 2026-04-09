@@ -9,6 +9,8 @@ const BodyPlaneSchema = new mongoose.Schema({
 const CampusFacilitySchema = new mongoose.Schema({
   bold: String,
   text: String,
+  imageUrl: String,    
+  imageAlt: String, 
 });
 
 const PromoCardSchema = new mongoose.Schema({
