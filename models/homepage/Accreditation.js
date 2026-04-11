@@ -1,20 +1,41 @@
 const mongoose = require("mongoose");
 
 /* =========================
-   SUB SCHEMAS
+   SUB SCHEMA (CERT / AWARD)
 ========================= */
-
 const certSchema = new mongoose.Schema({
   label: { type: String, required: true },
-  tag:   { type: String, required: true },
-  alt:   { type: String },
+  tag: { type: String, required: true },
+  alt: { type: String },
   image: { type: String },
+
+  /* ===== AWARD EXTRA FIELDS ===== */
+  descPara1: String,
+  descPara2: String,
+
+  metaPoint1: String,
+  metaPoint2: String,
+  metaPoint3: String,
+  metaPoint4: String,
+
+  pullQuote: String,
+
+  ayushSubtitle: String,
+
+  ayushCourses: [
+    {
+      icon: String,
+      level: String,
+      name: String,
+    },
+  ],
+
+  ayushFooter: String,
 });
 
 /* =========================
    MAIN SCHEMA
 ========================= */
-
 const accreditationSchema = new mongoose.Schema(
   {
     singleton: {
@@ -31,15 +52,15 @@ const accreditationSchema = new mongoose.Schema(
     authPara4: { type: String, required: true },
 
     imageCaption: String,
-    mainImage:    String,
+    mainImage: String,
 
     pullQuote: { type: String, required: true },
 
     videoSrc: { type: String, required: true },
 
-    immerseTitle:  { type: String, required: true },
-    immersePara1:  { type: String, required: true },
-    immersePara2:  String,
+    immerseTitle: { type: String, required: true },
+    immersePara1: { type: String, required: true },
+    immersePara2: String,
 
     immerseCtaText: { type: String, required: true },
     immerseCtaLink: { type: String, required: true },
@@ -49,7 +70,7 @@ const accreditationSchema = new mongoose.Schema(
     recognitionPara2: String,
 
     courseCerts: [certSchema],
-    awardCerts:  [certSchema],
+    awardCerts: [certSchema],
   },
   { timestamps: true }
 );

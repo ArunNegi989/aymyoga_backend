@@ -14,15 +14,15 @@ const {
    MULTI FILE UPLOAD
 ========================= */
 const multiUpload = upload.fields([
-  { name: "mainImage",        maxCount: 1 },
+  { name: "mainImage", maxCount: 1 },
   { name: "courseCertImages", maxCount: 4 },
-  { name: "awardCertImages",  maxCount: 4 },
+  { name: "awardCertImages", maxCount: 3 }, // ✅ LIMIT FIX
 ]);
 
-router.post("/",    multiUpload, createAccreditation);
-router.get("/",     getAll);
-router.get("/:id",  getOne);
-router.put("/:id",  multiUpload, updateAccreditation);
+router.post("/", multiUpload, createAccreditation);
+router.get("/", getAll);
+router.get("/:id", getOne);
+router.put("/:id", multiUpload, updateAccreditation);
 router.delete("/:id", deleteAccreditation);
 
 module.exports = router;

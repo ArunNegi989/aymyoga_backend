@@ -1,5 +1,7 @@
 const Accreditation = require("../../models/homepage/Accreditation");
 
+const MAX_AWARDS = 3;
+
 /* =========================
    CREATE
 ========================= */
@@ -10,56 +12,62 @@ exports.createAccreditation = async (req, res) => {
     if (count >= 1) {
       return res.status(400).json({
         success: false,
-        message:
-          "Only one Accreditation section is allowed. Please update or delete existing one.",
+        message: "Only one Accreditation section allowed",
       });
     }
 
     const data = req.body;
 
-    // parse arrays
-    if (typeof data.courseCerts === "string") data.courseCerts = JSON.parse(data.courseCerts);
-    if (typeof data.awardCerts  === "string") data.awardCerts  = JSON.parse(data.awardCerts);
+    // parse JSON
+    if (typeof data.courseCerts === "string")
+      data.courseCerts = JSON.parse(data.courseCerts);
 
-    // main image
+    if (typeof data.awardCerts === "string")
+      data.awardCerts = JSON.parse(data.awardCerts);
+
+    /* ✅ AWARD LIMIT */
+    if (data.awardCerts && data.awardCerts.length > MAX_AWARDS) {
+      return res.status(400).json({
+        success: false,
+        message: `Maximum ${MAX_AWARDS} awards allowed`,
+      });
+    }
+
+    /* ===== MAIN IMAGE ===== */
     if (req.files?.mainImage) {
       data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
     }
 
-    // course cert images
-    let courseCertIndexes = [];
+    /* ===== COURSE CERT IMAGES ===== */
+    let courseIndexes = [];
     if (data.courseCertImageIndexes) {
-      courseCertIndexes = String(data.courseCertImageIndexes)
+      courseIndexes = String(data.courseCertImageIndexes)
         .split(",")
-        .map((n) => parseInt(n, 10));
+        .map((n) => parseInt(n));
     }
+
     if (req.files?.courseCertImages) {
-      req.files.courseCertImages.forEach((file, uploadIdx) => {
-        const certIdx =
-          courseCertIndexes.length > uploadIdx
-            ? courseCertIndexes[uploadIdx]
-            : uploadIdx;
-        if (data.courseCerts[certIdx]) {
-          data.courseCerts[certIdx].image = file.path.replace(/\\/g, "/");
+      req.files.courseCertImages.forEach((file, i) => {
+        const idx = courseIndexes[i] ?? i;
+        if (data.courseCerts[idx]) {
+          data.courseCerts[idx].image = file.path.replace(/\\/g, "/");
         }
       });
     }
 
-    // award cert images
-    let awardCertIndexes = [];
+    /* ===== AWARD CERT IMAGES ===== */
+    let awardIndexes = [];
     if (data.awardCertImageIndexes) {
-      awardCertIndexes = String(data.awardCertImageIndexes)
+      awardIndexes = String(data.awardCertImageIndexes)
         .split(",")
-        .map((n) => parseInt(n, 10));
+        .map((n) => parseInt(n));
     }
+
     if (req.files?.awardCertImages) {
-      req.files.awardCertImages.forEach((file, uploadIdx) => {
-        const certIdx =
-          awardCertIndexes.length > uploadIdx
-            ? awardCertIndexes[uploadIdx]
-            : uploadIdx;
-        if (data.awardCerts[certIdx]) {
-          data.awardCerts[certIdx].image = file.path.replace(/\\/g, "/");
+      req.files.awardCertImages.forEach((file, i) => {
+        const idx = awardIndexes[i] ?? i;
+        if (data.awardCerts[idx]) {
+          data.awardCerts[idx].image = file.path.replace(/\\/g, "/");
         }
       });
     }
@@ -68,6 +76,7 @@ exports.createAccreditation = async (req, res) => {
     delete data.awardCertImageIndexes;
 
     const created = await Accreditation.create(data);
+
     res.status(201).json({ success: true, data: created });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -87,12 +96,13 @@ exports.getAll = async (req, res) => {
 };
 
 /* =========================
-   GET SINGLE
+   GET ONE
 ========================= */
 exports.getOne = async (req, res) => {
   try {
     const data = await Accreditation.findById(req.params.id);
     if (!data) return res.status(404).json({ message: "Not found" });
+
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -106,48 +116,55 @@ exports.updateAccreditation = async (req, res) => {
   try {
     const data = req.body;
 
-    if (typeof data.courseCerts === "string") data.courseCerts = JSON.parse(data.courseCerts);
-    if (typeof data.awardCerts  === "string") data.awardCerts  = JSON.parse(data.awardCerts);
+    if (typeof data.courseCerts === "string")
+      data.courseCerts = JSON.parse(data.courseCerts);
 
-    // main image — only replace if a new file was uploaded
+    if (typeof data.awardCerts === "string")
+      data.awardCerts = JSON.parse(data.awardCerts);
+
+    /* ✅ AWARD LIMIT */
+    if (data.awardCerts && data.awardCerts.length > MAX_AWARDS) {
+      return res.status(400).json({
+        success: false,
+        message: `Maximum ${MAX_AWARDS} awards allowed`,
+      });
+    }
+
+    /* ===== MAIN IMAGE ===== */
     if (req.files?.mainImage) {
       data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
     }
 
-    // course cert images
-    let courseCertIndexes = [];
+    /* ===== COURSE CERT IMAGES ===== */
+    let courseIndexes = [];
     if (data.courseCertImageIndexes) {
-      courseCertIndexes = String(data.courseCertImageIndexes)
+      courseIndexes = String(data.courseCertImageIndexes)
         .split(",")
-        .map((n) => parseInt(n, 10));
+        .map((n) => parseInt(n));
     }
+
     if (req.files?.courseCertImages) {
-      req.files.courseCertImages.forEach((file, uploadIdx) => {
-        const certIdx =
-          courseCertIndexes.length > uploadIdx
-            ? courseCertIndexes[uploadIdx]
-            : uploadIdx;
-        if (data.courseCerts[certIdx]) {
-          data.courseCerts[certIdx].image = file.path.replace(/\\/g, "/");
+      req.files.courseCertImages.forEach((file, i) => {
+        const idx = courseIndexes[i] ?? i;
+        if (data.courseCerts[idx]) {
+          data.courseCerts[idx].image = file.path.replace(/\\/g, "/");
         }
       });
     }
 
-    // award cert images
-    let awardCertIndexes = [];
+    /* ===== AWARD CERT IMAGES ===== */
+    let awardIndexes = [];
     if (data.awardCertImageIndexes) {
-      awardCertIndexes = String(data.awardCertImageIndexes)
+      awardIndexes = String(data.awardCertImageIndexes)
         .split(",")
-        .map((n) => parseInt(n, 10));
+        .map((n) => parseInt(n));
     }
+
     if (req.files?.awardCertImages) {
-      req.files.awardCertImages.forEach((file, uploadIdx) => {
-        const certIdx =
-          awardCertIndexes.length > uploadIdx
-            ? awardCertIndexes[uploadIdx]
-            : uploadIdx;
-        if (data.awardCerts[certIdx]) {
-          data.awardCerts[certIdx].image = file.path.replace(/\\/g, "/");
+      req.files.awardCertImages.forEach((file, i) => {
+        const idx = awardIndexes[i] ?? i;
+        if (data.awardCerts[idx]) {
+          data.awardCerts[idx].image = file.path.replace(/\\/g, "/");
         }
       });
     }
