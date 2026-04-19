@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+// New schema for intro items (each with para and image)
+const IntroItemSchema = new mongoose.Schema({
+  paragraph: { type: String, required: true },
+  image: { type: String, default: "" },
+  imageAlt: { type: String, default: "" },
+});
+
 const Yoga500Schema = new mongoose.Schema(
   {
     slug: { type: String, required: true, unique: true },
@@ -41,8 +48,12 @@ const Yoga500Schema = new mongoose.Schema(
 
     indianFeeH3: String,
 
-    // Arrays
+    // NEW: Enhanced intro section with alternating image-text layout
+    introItems: [IntroItemSchema],
+
+    // Keep old introParas for backward compatibility (will be converted)
     introParas: [String],
+
     standApartParas: [String],
     gainsParas: [String],
     credibilityParas: [String],
@@ -75,6 +86,15 @@ const Yoga500Schema = new mongoose.Schema(
 
     accomImages: [String],
     foodImages: [String],
+    // In yoga500ContentModel.js, update the introItems schema:
+introItems: [
+  {
+    paragraph: String,
+    media: String,      // Changed from 'image' to 'media'
+    mediaAlt: String,   // Changed from 'imageAlt' to 'mediaAlt'
+    mediaType: { type: String, default: "image" }, // New field for image/video
+  }
+],
   },
   { timestamps: true }
 );

@@ -25,8 +25,30 @@ exports.createContent = async (req, res) => {
 
     const body = req.body;
 
+    // Parse introItems from form data - DECLARE ONCE
+    let introItems = parseJSON(body.introItems);
+    
+    // Handle intro media files
+    if (req.files && req.files.introMedia && req.files.introMedia.length > 0) {
+      const introMediaFiles = req.files.introMedia;
+      let mediaIndex = 0;
+      
+      introItems = introItems.map((item) => {
+        if (item.media === "new_upload" && introMediaFiles[mediaIndex]) {
+          const newItem = { 
+            ...item, 
+            media: "/uploads/" + introMediaFiles[mediaIndex].filename 
+          };
+          mediaIndex++;
+          return newItem;
+        }
+        return item;
+      });
+    }
+
     const data = {
       ...body,
+      introItems: introItems,
       introParas: parseJSON(body.introParas),
       standApartParas: parseJSON(body.standApartParas),
       gainsParas: parseJSON(body.gainsParas),
@@ -89,20 +111,39 @@ exports.updateContent = async (req, res) => {
 
     // ── Paths the frontend chose to KEEP (not deleted by user) ──
     const parsedAccom = parseJSON(body.existingAccomImages);
-const parsedFood = parseJSON(body.existingFoodImages);
+    const parsedFood = parseJSON(body.existingFoodImages);
 
-const keptAccom =
-  parsedAccom.length > 0 ? parsedAccom : existing.accomImages;
-
-const keptFood =
-  parsedFood.length > 0 ? parsedFood : existing.foodImages;
+    const keptAccom = parsedAccom.length > 0 ? parsedAccom : existing.accomImages;
+    const keptFood = parsedFood.length > 0 ? parsedFood : existing.foodImages;
 
     // ── Final = kept old + newly uploaded ──
     const finalAccom = [...keptAccom, ...newAccom];
     const finalFood = [...keptFood, ...newFood];
 
+    // Parse introItems - DECLARE ONCE
+    let introItems = parseJSON(body.introItems);
+    
+    // Handle intro media files
+    if (req.files && req.files.introMedia && req.files.introMedia.length > 0) {
+      const introMediaFiles = req.files.introMedia;
+      let mediaIndex = 0;
+      
+      introItems = introItems.map((item) => {
+        if (item.media === "new_upload" && introMediaFiles[mediaIndex]) {
+          const newItem = { 
+            ...item, 
+            media: "/uploads/" + introMediaFiles[mediaIndex].filename 
+          };
+          mediaIndex++;
+          return newItem;
+        }
+        return item;
+      });
+    }
+
     const updated = {
       ...body,
+      introItems: introItems,
       introParas: parseJSON(body.introParas),
       standApartParas: parseJSON(body.standApartParas),
       gainsParas: parseJSON(body.gainsParas),
