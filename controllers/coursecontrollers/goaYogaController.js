@@ -8,7 +8,15 @@ const parseJSON = (val) => {
     return [];
   }
 };
+/* ========================= */
+const stripHtml = (html) => {
+  if (!html) return "";
+  return html.replace(/<[^>]+>/g, "");
+};
 
+const cleanArray = (arr = []) => {
+  return arr.map((item) => stripHtml(item));
+};
 /* ========================= */
 const mapFiles = (filesArray = []) => {
   const files = {};
@@ -45,12 +53,14 @@ const buildData = (req, existing = {}) => {
       ? "/uploads/" + files.scheduleImage[0].filename
       : existing.scheduleImage,
 
-    introParagraphs: parseJSON(body.introParagraphs),
+    introParagraphs: cleanArray(parseJSON(body.introParagraphs)),
+learnings: cleanArray(parseJSON(body.learnings)),
+mainFocus: cleanArray(parseJSON(body.mainFocus)),
+focusBodyText: stripHtml(body.focusBodyText),
     corePrograms: parseJSON(body.corePrograms),
     specialPrograms: parseJSON(body.specialPrograms),
     highlights: parseJSON(body.highlights),
-    learnings: parseJSON(body.learnings),
-    mainFocus: parseJSON(body.mainFocus),
+   
     scheduleRows: parseJSON(body.scheduleRows),
     applyFields: parseJSON(body.applyFields),
 
