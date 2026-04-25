@@ -6,8 +6,104 @@ const Content = require("../../models/courses/100hrContentModel");
 const parseBody = (req) => {
   let body = req.body;
   if (typeof body.data === "string") {
-    body = JSON.parse(body.data);
+    try { body = { ...JSON.parse(body.data) }; } catch { /* keep as-is */ }
   }
+  return body;
+};
+
+/* Helper: map uploaded file → /uploads/filename path */
+const filePath = (req, fieldName) =>
+  req.files?.[fieldName]?.[0]?.filename
+    ? `/uploads/${req.files[fieldName][0].filename}`
+    : null;
+
+/* =========================
+   APPLY ALL MEDIA FIELDS
+   Images + all 4 video sections
+========================= */
+const applyMedia = (body, req) => {
+
+  /* ── IMAGE FIELDS ── */
+  const imageFields = [
+    "bannerImage",
+    "transformImage",
+    "scheduleImage",
+    "soulShineImage",
+    "suitableImage1",
+    "suitableImage2",
+    "suitableImage3",
+    "syllabusImage1",
+    "syllabusImage2",
+    "enrollImage",
+    "certImage",
+    "registrationImage",
+  ];
+
+  imageFields.forEach((f) => {
+    const fp = filePath(req, f);
+    if (fp) {
+      body[f] = fp;
+    } else if (req.body[`${f}Url`]) {
+      // URL pasted in form
+      body[f] = req.body[`${f}Url`];
+    }
+    // else: keep whatever came in JSON payload (body[f])
+  });
+
+  /* ══════════════════════════════════════════════
+     VIDEO FIELDS
+     Each section sends its own url & file fields.
+     Priority: uploaded file > URL string > keep existing
+  ══════════════════════════════════════════════ */
+
+  // ── 1. MAIN PAGE VIDEO ──
+  const mainFilePath = filePath(req, "videoFile");
+  if (mainFilePath) {
+    body.videoFile = mainFilePath;
+    body.videoUrl  = "";
+  } else {
+    // videoUrl comes either from multipart field or JSON body
+    const url = req.body.videoUrl ?? body.videoUrl ?? "";
+    body.videoUrl  = url;
+    body.videoFile = "";
+  }
+
+  // ── 2. SYLLABUS VIDEO ──
+  // Form sends: syllabusVideoFile (mp4 upload) or syllabusVideoUrl (link)
+  const sylFilePath = filePath(req, "syllabusVideoFile");
+  if (sylFilePath) {
+    body.syllabusVideo = sylFilePath;
+  } else {
+    const url = req.body.syllabusVideoUrl ?? body.syllabusVideoUrl ?? body.syllabusVideo ?? "";
+    body.syllabusVideo = url;
+  }
+
+  // ── 3. SCHEDULE VIDEO ──
+  const schedFilePath = filePath(req, "scheduleVideoFile");
+  if (schedFilePath) {
+    body.scheduleVideo = schedFilePath;
+  } else {
+    const url = req.body.scheduleVideoUrl ?? body.scheduleVideoUrl ?? body.scheduleVideo ?? "";
+    body.scheduleVideo = url;
+  }
+
+  // ── 4. COMPREHENSIVE VIDEO ──
+  const compFilePath = filePath(req, "comprehensiveVideoFile");
+  if (compFilePath) {
+    body.comprehensiveVideo = compFilePath;
+  } else {
+    const url = req.body.comprehensiveVideoUrl ?? body.comprehensiveVideoUrl ?? body.comprehensiveVideo ?? "";
+    body.comprehensiveVideo = url;
+  }
+
+  // Clean up the split URL/File keys from form — we only store the merged fields
+  delete body.syllabusVideoUrl;
+  delete body.syllabusVideoFile;
+  delete body.scheduleVideoUrl;
+  delete body.scheduleVideoFile;
+  delete body.comprehensiveVideoUrl;
+  delete body.comprehensiveVideoFile;
+
   return body;
 };
 
@@ -22,29 +118,11 @@ exports.create = async (req, res) => {
     if (existing) {
       return res.status(400).json({
         success: false,
-        message: "Content already exists",
+        message: "Content already exists. Please update instead.",
       });
     }
 
-    /* IMAGE HANDLING */
-    if (req.files?.bannerImage) {
-      body.bannerImage = `/uploads/${req.files.bannerImage[0].filename}`;
-    } else if (req.body.bannerImageUrl) {
-      body.bannerImage = req.body.bannerImageUrl;
-    }
-
-    if (req.files?.scheduleImage) {
-      body.scheduleImage = `/uploads/${req.files.scheduleImage[0].filename}`;
-    } else if (req.body.scheduleImageUrl) {
-      body.scheduleImage = req.body.scheduleImageUrl;
-    }
-
-    if (req.files?.soulShineImage) {
-      body.soulShineImage = `/uploads/${req.files.soulShineImage[0].filename}`;
-    } else if (req.body.soulShineImageUrl) {
-      body.soulShineImage = req.body.soulShineImageUrl;
-    }
-
+    body = applyMedia(body, req);
     const content = await Content.create(body);
 
     res.status(201).json({
@@ -53,11 +131,8 @@ exports.create = async (req, res) => {
       data: content,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Create failed",
-    });
+    console.error("100hr create error:", err);
+    res.status(500).json({ success: false, message: "Create failed" });
   }
 };
 
@@ -67,42 +142,23 @@ exports.create = async (req, res) => {
 exports.get = async (req, res) => {
   try {
     const content = await Content.findOne();
-
-    res.json({
-      success: true,
-      data: content,
-    });
+    res.json({ success: true, data: content });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Fetch failed",
-    });
+    res.status(500).json({ success: false, message: "Fetch failed" });
   }
 };
 
 /* =========================
-   GET BY ID (OPTIONAL)
+   GET BY ID
 ========================= */
 exports.getById = async (req, res) => {
   try {
     const content = await Content.findById(req.params.id);
-
-    if (!content) {
-      return res.status(404).json({
-        success: false,
-        message: "Content not found",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: content,
-    });
+    if (!content)
+      return res.status(404).json({ success: false, message: "Not found" });
+    res.json({ success: true, data: content });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Fetch by ID failed",
-    });
+    res.status(500).json({ success: false, message: "Fetch by ID failed" });
   }
 };
 
@@ -114,31 +170,14 @@ exports.update = async (req, res) => {
     let body = parseBody(req);
 
     const content = await Content.findOne();
-    if (!content) {
-      return res.status(404).json({
-        success: false,
-        message: "Content not found",
-      });
-    }
+    if (!content)
+      return res.status(404).json({ success: false, message: "Not found" });
 
-    /* IMAGE UPDATE */
-    if (req.files?.bannerImage) {
-      body.bannerImage = `/uploads/${req.files.bannerImage[0].filename}`;
-    }
+    body = applyMedia(body, req);
 
-    if (req.files?.scheduleImage) {
-      body.scheduleImage = `/uploads/${req.files.scheduleImage[0].filename}`;
-    }
-
-    if (req.files?.soulShineImage) {
-      body.soulShineImage = `/uploads/${req.files.soulShineImage[0].filename}`;
-    }
-
-    const updated = await Content.findByIdAndUpdate(
-      content._id,
-      body,
-      { new: true }
-    );
+    const updated = await Content.findByIdAndUpdate(content._id, body, {
+      new: true,
+    });
 
     res.json({
       success: true,
@@ -146,56 +185,34 @@ exports.update = async (req, res) => {
       data: updated,
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Update failed",
-    });
+    console.error("100hr update error:", err);
+    res.status(500).json({ success: false, message: "Update failed" });
   }
 };
 
 /* =========================
-   DELETE (⚠ ONLY ONE RECORD)
+   DELETE
 ========================= */
 exports.delete = async (req, res) => {
   try {
     const content = await Content.findOne();
-
-    if (!content) {
-      return res.status(404).json({
-        success: false,
-        message: "Content not found",
-      });
-    }
-
+    if (!content)
+      return res.status(404).json({ success: false, message: "Not found" });
     await Content.findByIdAndDelete(content._id);
-
-    res.json({
-      success: true,
-      message: "Content deleted successfully",
-    });
+    res.json({ success: true, message: "Content deleted successfully" });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Delete failed",
-    });
+    res.status(500).json({ success: false, message: "Delete failed" });
   }
 };
 
 /* =========================
-   RESET (DELETE + CLEAN START)
+   RESET
 ========================= */
 exports.reset = async (req, res) => {
   try {
     await Content.deleteMany();
-
-    res.json({
-      success: true,
-      message: "All content reset successfully",
-    });
+    res.json({ success: true, message: "All content reset" });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Reset failed",
-    });
+    res.status(500).json({ success: false, message: "Reset failed" });
   }
 };
