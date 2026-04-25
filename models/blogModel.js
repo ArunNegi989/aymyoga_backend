@@ -5,14 +5,9 @@ const mongoose = require("mongoose");
 ========================= */
 const imageSchema = new mongoose.Schema(
   {
-    src: {
-      type: String,
-      required: [true, "Image source is required"],
-    },
-    caption: {
-      type: String,
-      required: [true, "Image caption is required"],
-    },
+    src: { type: String, required: [true, "Image source is required"] },
+    caption: { type: String, default: "" },
+    altText: { type: String, default: "" },
   },
   { _id: false }
 );
@@ -24,31 +19,52 @@ const contentSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["heading", "subheading", "paragraph", "images", "divider"],
+      enum: [
+        "heading", "subheading", "paragraph", "images", "divider",
+        "list", "quote", "code", "video", "table", "callout", "spacer", "html",
+      ],
       required: true,
     },
 
-    text: {
-      type: String,
-      required: function () {
-        return this.type !== "images" && this.type !== "divider";
-      },
-    },
+    /* Text (heading, subheading, paragraph, quote, code, callout, html) */
+    text: { type: String, default: "" },
 
-    images: {
-      type: [imageSchema],
-      required: function () {
-        return this.type === "images";
-      },
-    },
-
+    /* Images */
+    images: { type: [imageSchema], default: undefined },
     imageLayout: {
       type: String,
       enum: ["single", "two-col", "three-col", "wide"],
-      required: function () {
-        return this.type === "images";
-      },
+      default: undefined,
     },
+
+    /* List */
+    listType: { type: String, enum: ["unordered", "ordered"], default: undefined },
+    listItems: { type: [String], default: undefined },
+
+    /* Quote */
+    quoteAuthor: { type: String, default: "" },
+
+    /* Code */
+    codeLanguage: { type: String, default: "plaintext" },
+
+    /* Video */
+    videoUrl: { type: String, default: "" },
+    videoCaption: { type: String, default: "" },
+
+    /* Table */
+    tableHeaders: { type: [String], default: undefined },
+    tableRows: { type: [[String]], default: undefined },
+
+    /* Callout */
+    calloutVariant: {
+      type: String,
+      enum: ["info", "warning", "success", "tip", "danger"],
+      default: undefined,
+    },
+    calloutTitle: { type: String, default: "" },
+
+    /* Spacer */
+    spacerHeight: { type: Number, default: 40 },
   },
   { _id: false }
 );
@@ -67,11 +83,7 @@ const blogSchema = new mongoose.Schema(
     coverImage: { type: String, required: true },
     tags: { type: [String], default: [] },
     content: { type: [contentSchema], required: true },
-    status: {
-      type: String,
-      enum: ["Draft", "Published"],
-      default: "Draft",
-    },
+    status: { type: String, enum: ["Draft", "Published"], default: "Draft" },
   },
   { timestamps: true }
 );
