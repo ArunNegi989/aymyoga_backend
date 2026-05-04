@@ -82,7 +82,7 @@ const buildDataObject = (body, files) => {
     .sort(
       (a, b) =>
         parseInt(a.replace("aimsIntro", "")) -
-        parseInt(b.replace("aimsIntro", ""))
+        parseInt(b.replace("aimsIntro", "")),
     )
     .map((k) => getSingle(body[k]));
 
@@ -92,16 +92,16 @@ const buildDataObject = (body, files) => {
     .sort(
       (a, b) =>
         parseInt(a.replace("syllabusIntro", "")) -
-        parseInt(b.replace("syllabusIntro", ""))
+        parseInt(b.replace("syllabusIntro", "")),
     )
     .map((k) => getSingle(body[k]));
 
   /* ── Stats array ── */
   const stats = [1, 2, 3, 4].map((i) => ({
-    icon:  getSingle(body[`stat${i}Icon`]),
+    icon: getSingle(body[`stat${i}Icon`]),
     value: getSingle(body[`stat${i}Val`]),
     title: getSingle(body[`stat${i}Title`]),
-    desc:  getSingle(body[`stat${i}Desc`]),
+    desc: getSingle(body[`stat${i}Desc`]),
   }));
 
   /* ═══════════════════════════════════════════
@@ -109,7 +109,7 @@ const buildDataObject = (body, files) => {
   ═══════════════════════════════════════════ */
   const data = {
     /* ── meta ── */
-    slug:   getSingle(body.slug),
+    slug: getSingle(body.slug),
     status: getSingle(body.status) || "Active",
 
     /* ── hero ── */
@@ -121,142 +121,142 @@ const buildDataObject = (body, files) => {
     introParaCount,
 
     /* ── course card ── */
-    courseCardHeaderLabel:   getSingle(body.courseCardHeaderLabel),
-    courseCardItem1Label:    getSingle(body.courseCardItem1Label),
-    courseCardItem1Value:    getSingle(body.courseCardItem1Value),
-    courseCardItem2Label:    getSingle(body.courseCardItem2Label),
-    courseCardItem2Value:    getSingle(body.courseCardItem2Value),
-    courseCardItem3Label:    getSingle(body.courseCardItem3Label),
-    courseCardItem3Value:    getSingle(body.courseCardItem3Value),
-    courseCardItem4Label:    getSingle(body.courseCardItem4Label),
-    courseCardItem4Value:    getSingle(body.courseCardItem4Value),
-    courseCardItem4Sub:      getSingle(body.courseCardItem4Sub),
-    courseCardItem5Label:    getSingle(body.courseCardItem5Label),
-    courseCardItem5Value:    getSingle(body.courseCardItem5Value),
-    courseCardItem6Label:    getSingle(body.courseCardItem6Label),
-    courseCardItem6Value:    getSingle(body.courseCardItem6Value),
-    courseCardFeeLabel:      getSingle(body.courseCardFeeLabel),
-    courseCardFeeFrom:       getSingle(body.courseCardFeeFrom),
-    courseCardOldPrice:      getSingle(body.courseCardOldPrice),
-    courseCardNewPrice:      getSingle(body.courseCardNewPrice),
+    courseCardHeaderLabel: getSingle(body.courseCardHeaderLabel),
+    courseCardItem1Label: getSingle(body.courseCardItem1Label),
+    courseCardItem1Value: getSingle(body.courseCardItem1Value),
+    courseCardItem2Label: getSingle(body.courseCardItem2Label),
+    courseCardItem2Value: getSingle(body.courseCardItem2Value),
+    courseCardItem3Label: getSingle(body.courseCardItem3Label),
+    courseCardItem3Value: getSingle(body.courseCardItem3Value),
+    courseCardItem4Label: getSingle(body.courseCardItem4Label),
+    courseCardItem4Value: getSingle(body.courseCardItem4Value),
+    courseCardItem4Sub: getSingle(body.courseCardItem4Sub),
+    courseCardItem5Label: getSingle(body.courseCardItem5Label),
+    courseCardItem5Value: getSingle(body.courseCardItem5Value),
+    courseCardItem6Label: getSingle(body.courseCardItem6Label),
+    courseCardItem6Value: getSingle(body.courseCardItem6Value),
+    courseCardFeeLabel: getSingle(body.courseCardFeeLabel),
+    courseCardFeeFrom: getSingle(body.courseCardFeeFrom),
+    courseCardOldPrice: getSingle(body.courseCardOldPrice),
+    courseCardNewPrice: getSingle(body.courseCardNewPrice),
     courseCardPriceCurrency: getSingle(body.courseCardPriceCurrency),
-    courseCardBookBtnText:   getSingle(body.courseCardBookBtnText),
-    courseCardBookBtnUrl:    getSingle(body.courseCardBookBtnUrl),
+    courseCardBookBtnText: getSingle(body.courseCardBookBtnText),
+    courseCardBookBtnUrl: getSingle(body.courseCardBookBtnUrl),
 
     /* ── video ── */
     videoBadgeText: getSingle(body.videoBadgeText),
-    videoUrl:       getSingle(body.videoUrl),
+    videoUrl: getSingle(body.videoUrl),
 
     /* ── stats ── */
     stats,
 
     /* ── aims & objectives ── */
-    aimsH3:          getSingle(body.aimsH3),
+    aimsH3: getSingle(body.aimsH3),
     aimsKeyObjLabel: getSingle(body.aimsKeyObjLabel),
     aimsIntro,
-    aimsBullets:     [].concat(body.aimsBullets || []),
-    aimsOutro:       decodeHtml(body.aimsOutro),
+    aimsBullets: [].concat(body.aimsBullets || []),
+    aimsOutro: decodeHtml(body.aimsOutro),
 
     /* ── COURSE OVERVIEW — all 6 label/value pairs ── */
-    overviewH2:           getSingle(body.overviewH2),
-    overviewSubPara:      getSingle(body.overviewSubPara),
-    overviewCertLabel:    getSingle(body.overviewCertLabel),
-    overviewCertName:     getSingle(body.overviewCertName),
-    overviewLevelLabel:   getSingle(body.overviewLevelLabel),
-    overviewLevel:        getSingle(body.overviewLevel),
-    overviewEligLabel:    getSingle(body.overviewEligLabel),
-    overviewEligibility:  getSingle(body.overviewEligibility),
-    overviewAgeLabel:     getSingle(body.overviewAgeLabel),
-    overviewMinAge:       getSingle(body.overviewMinAge),
+    overviewH2: getSingle(body.overviewH2),
+    overviewSubPara: getSingle(body.overviewSubPara),
+    overviewCertLabel: getSingle(body.overviewCertLabel),
+    overviewCertName: getSingle(body.overviewCertName),
+    overviewLevelLabel: getSingle(body.overviewLevelLabel),
+    overviewLevel: getSingle(body.overviewLevel),
+    overviewEligLabel: getSingle(body.overviewEligLabel),
+    overviewEligibility: getSingle(body.overviewEligibility),
+    overviewAgeLabel: getSingle(body.overviewAgeLabel),
+    overviewMinAge: getSingle(body.overviewMinAge),
     overviewCreditsLabel: getSingle(body.overviewCreditsLabel),
-    overviewCredits:      getSingle(body.overviewCredits),
-    overviewLangLabel:    getSingle(body.overviewLangLabel),
-    overviewLanguage:     getSingle(body.overviewLanguage),
+    overviewCredits: getSingle(body.overviewCredits),
+    overviewLangLabel: getSingle(body.overviewLangLabel),
+    overviewLanguage: getSingle(body.overviewLanguage),
 
     /* ── upcoming dates ── */
-    batchSectionTag:      getSingle(body.batchSectionTag),
-    upcomingDatesH2:      getSingle(body.upcomingDatesH2),
+    batchSectionTag: getSingle(body.batchSectionTag),
+    upcomingDatesH2: getSingle(body.upcomingDatesH2),
     upcomingDatesSubtext: getSingle(body.upcomingDatesSubtext),
 
     /* ── fee inclusions ── */
-    feeIncludedTitle:    getSingle(body.feeIncludedTitle),
+    feeIncludedTitle: getSingle(body.feeIncludedTitle),
     feeNotIncludedTitle: getSingle(body.feeNotIncludedTitle),
-    includedFee:         [].concat(body.includedFee    || []),
-    notIncludedFee:      [].concat(body.notIncludedFee || []),
+    includedFee: [].concat(body.includedFee || []),
+    notIncludedFee: [].concat(body.notIncludedFee || []),
 
     /* ── syllabus ── */
-    syllabusH3:    getSingle(body.syllabusH3),
+    syllabusH3: getSingle(body.syllabusH3),
     syllabusIntro,
 
     /* ── modules ── */
     modules: parseJSON(body.modules),
 
     /* ── ashtanga ── */
-    ashtangaH2:       getSingle(body.ashtangaH2),
+    ashtangaH2: getSingle(body.ashtangaH2),
     ashtangaSubtitle: getSingle(body.ashtangaSubtitle),
-    ashtangaImgAlt:   getSingle(body.ashtangaImgAlt),
-    ashtangaDesc:     decodeHtml(body.ashtangaDesc),
-    ashtangaPill1:    getSingle(body.ashtangaPill1),
-    ashtangaPill2:    getSingle(body.ashtangaPill2),
-    ashtangaPill3:    getSingle(body.ashtangaPill3),
+    ashtangaImgAlt: getSingle(body.ashtangaImgAlt),
+    ashtangaDesc: decodeHtml(body.ashtangaDesc),
+    ashtangaPill1: getSingle(body.ashtangaPill1),
+    ashtangaPill2: getSingle(body.ashtangaPill2),
+    ashtangaPill3: getSingle(body.ashtangaPill3),
 
     /* ── primary series ── */
-    primarySeriesH3:      getSingle(body.primarySeriesH3),
+    primarySeriesH3: getSingle(body.primarySeriesH3),
     primarySeriesSubtext: getSingle(body.primarySeriesSubtext),
-    primaryIntro:         decodeHtml(body.primaryIntro),
-    foundationItems:      [].concat(body.foundationItems || []),
-    weekGrid:             parseJSON(body.weekGrid),
+    primaryIntro: decodeHtml(body.primaryIntro),
+    foundationItems: [].concat(body.foundationItems || []),
+    weekGrid: parseJSON(body.weekGrid),
 
     /* ── hatha yoga ── */
-    hathaH2:       getSingle(body.hathaH2),
+    hathaH2: getSingle(body.hathaH2),
     hathaSubtitle: getSingle(body.hathaSubtitle),
-    hathaImgAlt:   getSingle(body.hathaImgAlt),
-    hathaDesc:     decodeHtml(body.hathaDesc),
-    hathaPill1:    getSingle(body.hathaPill1),
-    hathaPill2:    getSingle(body.hathaPill2),
-    hathaPill3:    getSingle(body.hathaPill3),
-    hatha43:       parseJSON(body.hatha43),
+    hathaImgAlt: getSingle(body.hathaImgAlt),
+    hathaDesc: decodeHtml(body.hathaDesc),
+    hathaPill1: getSingle(body.hathaPill1),
+    hathaPill2: getSingle(body.hathaPill2),
+    hathaPill3: getSingle(body.hathaPill3),
+    hatha43: parseJSON(body.hatha43),
 
     /* ── asanas section ── */
-    asanasH2:      getSingle(body.asanasH2),
+    asanasH2: getSingle(body.asanasH2),
     asanasSubtext: getSingle(body.asanasSubtext),
 
     /* ── programs ── */
-    newProgramsH2:      getSingle(body.newProgramsH2),
+    newProgramsH2: getSingle(body.newProgramsH2),
     newProgramsSubtext: getSingle(body.newProgramsSubtext),
     programs: programsWithImages,
 
     /* ── evaluation ── */
-    evalH2:   getSingle(body.evalH2),
+    evalH2: getSingle(body.evalH2),
     evalDesc: decodeHtml(body.evalDesc),
 
     /* ── luxury facilities ── */
-    luxuryH2:    getSingle(body.luxuryH2),
+    luxuryH2: getSingle(body.luxuryH2),
     luxFeatures: parseJSON(body.luxFeatures),
 
     /* ── indian fees ── */
     indianFeeH2: getSingle(body.indianFeeH2),
-    indianFees:  parseJSON(body.indianFees),
+    indianFees: parseJSON(body.indianFees),
 
     /* ── daily schedule ── */
     scheduleH2: getSingle(body.scheduleH2),
-    schedDesc:  decodeHtml(body.schedDesc),
-    schedRows:  parseJSON(body.schedRows),
+    schedDesc: decodeHtml(body.schedDesc),
+    schedRows: parseJSON(body.schedRows),
 
     /* ── more information ── */
-    moreInfoH2:         getSingle(body.moreInfoH2),
-    instrLangs:         parseJSON(body.instrLangs),
+    moreInfoH2: getSingle(body.moreInfoH2),
+    instrLangs: parseJSON(body.instrLangs),
     spanishChineseNote: getSingle(body.spanishChineseNote),
-    visaPassportTitle:  getSingle(body.visaPassportTitle),
-    visaPassportDesc:   decodeHtml(body.visaPassportDesc),
+    visaPassportTitle: getSingle(body.visaPassportTitle),
+    visaPassportDesc: decodeHtml(body.visaPassportDesc),
 
     /* ── global certification ── */
     globalCertH2: getSingle(body.globalCertH2),
-    globalCert1:  decodeHtml(body.globalCert1),
-    globalCert2:  decodeHtml(body.globalCert2),
+    globalCert1: decodeHtml(body.globalCert1),
+    globalCert2: decodeHtml(body.globalCert2),
 
     /* ── requirements for enrollment ── */
-    requirementsH2:     getSingle(body.requirementsH2),
+    requirementsH2: getSingle(body.requirementsH2),
     requirementsImgAlt: getSingle(body.requirementsImgAlt),
     req1: decodeHtml(body.req1),
     req2: decodeHtml(body.req2),
@@ -265,52 +265,52 @@ const buildDataObject = (body, files) => {
 
     /* ── what you need to know ── */
     whatYouNeedH2: getSingle(body.whatYouNeedH2),
-    knowQA:        parseJSON(body.knowQA),
+    knowQA: parseJSON(body.knowQA),
 
     /* ── why AYM ── */
     best200HrH4: getSingle(body.best200HrH4),
-    best200Hr:   decodeHtml(body.best200Hr),
+    best200Hr: decodeHtml(body.best200Hr),
 
     /* ── what's included ── */
     whatsIncludedH4: getSingle(body.whatsIncludedH4),
-    whatIncl:        parseJSON(body.whatIncl),
+    whatIncl: parseJSON(body.whatIncl),
 
     /* ── booking steps ── */
-    bookingH2:        getSingle(body.bookingH2),
-    step1Icon:        getSingle(body.step1Icon),
-    step1Title:       getSingle(body.step1Title),
+    bookingH2: getSingle(body.bookingH2),
+    step1Icon: getSingle(body.step1Icon),
+    step1Title: getSingle(body.step1Title),
     bookingStep1Desc: decodeHtml(body.bookingStep1Desc),
-    step2Icon:        getSingle(body.step2Icon),
-    step2Title:       getSingle(body.step2Title),
+    step2Icon: getSingle(body.step2Icon),
+    step2Title: getSingle(body.step2Title),
     bookingStep2Desc: decodeHtml(body.bookingStep2Desc),
-    step3Icon:        getSingle(body.step3Icon),
-    step3Title:       getSingle(body.step3Title),
+    step3Icon: getSingle(body.step3Icon),
+    step3Title: getSingle(body.step3Title),
     bookingStep3Desc: decodeHtml(body.bookingStep3Desc),
-    step4Icon:        getSingle(body.step4Icon),
-    step4Title:       getSingle(body.step4Title),
+    step4Icon: getSingle(body.step4Icon),
+    step4Title: getSingle(body.step4Title),
     bookingStep4Desc: decodeHtml(body.bookingStep4Desc),
 
     /* ── faq ── */
-    faqH2:    getSingle(body.faqH2),
+    faqH2: getSingle(body.faqH2),
     faqItems: parseJSON(body.faqItems),
 
     /* ── cta ── */
-    ctaTitle:        getSingle(body.ctaTitle),
-    ctaSubtitle:     getSingle(body.ctaSubtitle),
+    ctaTitle: getSingle(body.ctaTitle),
+    ctaSubtitle: getSingle(body.ctaSubtitle),
     ctaApplyBtnText: getSingle(body.ctaApplyBtnText),
-    ctaApplyUrl:     getSingle(body.ctaApplyUrl),
-    ctaPhone:        getSingle(body.ctaPhone),
-    whatsappNumber:  getSingle(body.whatsappNumber),
+    ctaApplyUrl: getSingle(body.ctaApplyUrl),
+    ctaPhone: getSingle(body.ctaPhone),
+    whatsappNumber: getSingle(body.whatsappNumber),
     whatsappBtnText: getSingle(body.whatsappBtnText),
 
     /* ── seo ── */
-    metaTitle:    getSingle(body.metaTitle),
-    metaDesc:     getSingle(body.metaDesc),
+    metaTitle: getSingle(body.metaTitle),
+    metaDesc: getSingle(body.metaDesc),
     metaKeywords: getSingle(body.metaKeywords),
 
     /* ── eligibility / visa ── */
     eligibilityInfoTitle: getSingle(body.eligibilityInfoTitle),
-    eligibilityInfoText:  getSingle(body.eligibilityInfoText),
+    eligibilityInfoText: getSingle(body.eligibilityInfoText),
   };
 
   return { data, getFile };
@@ -321,17 +321,17 @@ const buildDataObject = (body, files) => {
 ═══════════════════════════════════════════════ */
 exports.create = async (req, res) => {
   try {
-    const body  = req.body;
+    const body = req.body;
     const files = req.files || [];
 
     const { data, getFile } = buildDataObject(body, files);
 
     /* ── Images — required on create ── */
-    data.heroImage          = getFile("heroImage")          || "";
-    data.ashtangaImage      = getFile("ashtangaImage")      || "";
-    data.hathaImage         = getFile("hathaImage")         || "";
-    data.reqImage           = getFile("reqImage")           || "";
-    data.aimsImage          = getFile("aimsImage")          || "";
+    data.heroImage = getFile("heroImage") || "";
+    data.ashtangaImage = getFile("ashtangaImage") || "";
+    data.hathaImage = getFile("hathaImage") || "";
+    data.reqImage = getFile("reqImage") || "";
+    data.aimsImage = getFile("aimsImage") || "";
     data.primarySeriesImage = getFile("primarySeriesImage") || "";
 
     data.luxImages = files
@@ -377,7 +377,8 @@ exports.getAll = async (req, res) => {
 exports.getOne = async (req, res) => {
   try {
     const data = await Model.findById(req.params.id);
-    if (!data) return res.status(404).json({ success: false, message: "Not found" });
+    if (!data)
+      return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -394,48 +395,48 @@ exports.getOne = async (req, res) => {
 ═══════════════════════════════════════════════ */
 exports.update = async (req, res) => {
   try {
-    const body  = req.body;
+    const body = req.body;
     const files = req.files || [];
 
     const { data, getFile } = buildDataObject(body, files);
 
     /* ── Single image fields — only overwrite if a new file was uploaded ── */
-    const heroNew          = getFile("heroImage");
-    const ashtangaNew      = getFile("ashtangaImage");
-    const hathaNew         = getFile("hathaImage");
-    const reqNew           = getFile("reqImage");
-    const aimsNew          = getFile("aimsImage");
-    const primaryNew       = getFile("primarySeriesImage");
-    const videoFileNew     = getFile("videoFile");
+    const heroNew = getFile("heroImage");
+    const ashtangaNew = getFile("ashtangaImage");
+    const hathaNew = getFile("hathaImage");
+    const reqNew = getFile("reqImage");
+    const aimsNew = getFile("aimsImage");
+    const primaryNew = getFile("primarySeriesImage");
+    const videoFileNew = getFile("videoFile");
 
-    if (heroNew)          data.heroImage          = heroNew;
+    if (heroNew) data.heroImage = heroNew;
     else if (body.existingHeroImage)
-                          data.heroImage          = getSingle(body.existingHeroImage);
+      data.heroImage = getSingle(body.existingHeroImage);
 
-    if (ashtangaNew)      data.ashtangaImage      = ashtangaNew;
+    if (ashtangaNew) data.ashtangaImage = ashtangaNew;
     else if (body.existingAshtangaImage)
-                          data.ashtangaImage      = getSingle(body.existingAshtangaImage);
+      data.ashtangaImage = getSingle(body.existingAshtangaImage);
 
-    if (hathaNew)         data.hathaImage         = hathaNew;
+    if (hathaNew) data.hathaImage = hathaNew;
     else if (body.existingHathaImage)
-                          data.hathaImage         = getSingle(body.existingHathaImage);
+      data.hathaImage = getSingle(body.existingHathaImage);
 
-    if (reqNew)           data.reqImage           = reqNew;
+    if (reqNew) data.reqImage = reqNew;
     else if (body.existingReqImage)
-                          data.reqImage           = getSingle(body.existingReqImage);
+      data.reqImage = getSingle(body.existingReqImage);
 
-    if (aimsNew)          data.aimsImage          = aimsNew;
+    if (aimsNew) data.aimsImage = aimsNew;
     else if (body.existingAimsImage)
-                          data.aimsImage          = getSingle(body.existingAimsImage);
+      data.aimsImage = getSingle(body.existingAimsImage);
 
-    if (primaryNew)       data.primarySeriesImage = primaryNew;
+    if (primaryNew) data.primarySeriesImage = primaryNew;
     else if (body.existingPrimaryImage)
-                          data.primarySeriesImage = getSingle(body.existingPrimaryImage);
+      data.primarySeriesImage = getSingle(body.existingPrimaryImage);
 
-    if (videoFileNew)     data.videoFile          = videoFileNew;
+    if (videoFileNew) data.videoFile = videoFileNew;
 
     /* ── Gallery images — merge existing paths + new uploads ── */
-    const existingLux   = parseJSON(body.existingLuxImages,   []);
+    const existingLux = parseJSON(body.existingLuxImages, []);
     const existingSched = parseJSON(body.existingSchedImages, []);
 
     const newLuxImgs = files
@@ -447,18 +448,23 @@ exports.update = async (req, res) => {
       .map((f) => normalizePath(f.path));
 
     /* If new files uploaded, replace gallery; otherwise keep existing */
-    data.luxImages   = newLuxImgs.length   ? [...existingLux,   ...newLuxImgs]   : existingLux;
-    data.schedImages = newSchedImgs.length ? [...existingSched, ...newSchedImgs] : existingSched;
+    data.luxImages = newLuxImgs.length
+      ? [...existingLux, ...newLuxImgs]
+      : existingLux;
+    data.schedImages = newSchedImgs.length
+      ? [...existingSched, ...newSchedImgs]
+      : existingSched;
 
     /* ── Perform update ── */
-    const updated = await Model.findByIdAndUpdate(
-      req.params.id,
-      data,
-      { new: true, runValidators: false }
-    );
+    const updated = await Model.findByIdAndUpdate(req.params.id, data, {
+      new: true,
+      runValidators: false,
+    });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Record not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Record not found" });
     }
 
     res.json({ success: true, data: updated });
@@ -474,7 +480,8 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const deleted = await Model.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ success: false, message: "Not found" });
+    if (!deleted)
+      return res.status(404).json({ success: false, message: "Not found" });
     res.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
