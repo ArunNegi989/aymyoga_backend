@@ -20,11 +20,22 @@ const parseJSON = (val, def = []) => {
 };
 
 /** Normalise multer path to a forward-slash URL path */
+const path = require("path");
+
 const normalizePath = (filePath) => {
   if (!filePath) return "";
-  return "/" + filePath.replace(/\\/g, "/");
-};
 
+  const normalized = filePath.replace(/\\/g, "/");
+
+  // sirf uploads ke baad wala path lo
+  const uploadIndex = normalized.indexOf("/uploads/");
+
+  if (uploadIndex !== -1) {
+    return normalized.substring(uploadIndex);
+  }
+
+  return `/uploads/${path.basename(normalized)}`;
+};
 /**
  * Rich-text fields come from the frontend as PLAIN HTML strings appended
  * directly to FormData (no JSON.stringify wrapper — that was removed in the
