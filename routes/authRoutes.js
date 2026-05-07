@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   registerUser,
   loginUser,
@@ -7,9 +8,27 @@ const {
   logoutUser,
 } = require("../controllers/authController");
 
+const {
+  sendOTP,
+  verifyOTP,
+  resetPassword,
+} = require("../controllers/forgotPasswordController");
+
+const { changePassword } = require("../controllers/changePasswordController");
+const { protect } = require("../middleware/authMiddleware");
+
+// ── Public auth routes ───────────────────────────────────────
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/refresh", refreshToken);
 router.post("/logout", logoutUser);
+
+// ── Forgot password (public, 3-step) ────────────────────────
+router.post("/forgot-password", sendOTP);
+router.post("/verify-otp", verifyOTP);
+router.post("/reset-password", resetPassword);
+
+// ── Change password (protected — must be logged in) ─────────
+router.post("/change-password", protect, changePassword);
 
 module.exports = router;
