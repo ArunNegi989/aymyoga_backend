@@ -15,7 +15,7 @@ const {
 } = require("../controllers/Forgotpasswordcontroller");
 
 const { changePassword } = require("../controllers/Changepasswordcontroller");
-const { protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/Authmiddleware");
 
 // ── Public auth routes ───────────────────────────────────────
 router.post("/register", registerUser);
