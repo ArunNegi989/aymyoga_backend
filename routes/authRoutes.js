@@ -12,9 +12,9 @@ const {
   sendOTP,
   verifyOTP,
   resetPassword,
-} = require("../controllers/forgotPasswordController");
+} = require("../controllers/Forgotpasswordcontroller");
 
-const { changePassword } = require("../controllers/changePasswordController");
+const { changePassword } = require("../controllers/Changepasswordcontroller");
 const { protect } = require("../middleware/authMiddleware");
 
 // ── Public auth routes ───────────────────────────────────────
