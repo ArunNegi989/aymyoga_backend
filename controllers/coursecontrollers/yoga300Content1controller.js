@@ -16,16 +16,12 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
     rightSideImage = "/uploads/" + req.files.rightSideImage[0].filename;
   }
 
-  // Handle thumbnails - FIXED
+  // Handle thumbnails
   let bottomThumbnails = [];
   try {
     const parsedThumbnails = JSON.parse(body.bottomThumbnails || "[]");
     
-    // Match uploaded files with thumbnails
     if (req.files) {
-      // Find all thumbnail files
-      const thumbnailKeys = Object.keys(req.files).filter(key => key.startsWith('thumbnail_'));
-      
       parsedThumbnails.forEach((thumb, idx) => {
         const fileKey = `thumbnail_${idx}`;
         if (req.files[fileKey] && req.files[fileKey][0]) {
@@ -39,20 +35,31 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
     bottomThumbnails = [];
   }
 
-  // Handle fees
+  // FIXED: Parse fees from JSON strings
   let includedFee = [];
   let notIncludedFee = [];
   
   try {
-    includedFee = Array.isArray(body.includedFee)
-      ? body.includedFee
-      : body.includedFee ? [body.includedFee] : [];
-      
-    notIncludedFee = Array.isArray(body.notIncludedFee)
-      ? body.notIncludedFee
-      : body.notIncludedFee ? [body.notIncludedFee] : [];
+    // Parse includedFee from JSON string
+    if (body.includedFee) {
+      includedFee = typeof body.includedFee === 'string' 
+        ? JSON.parse(body.includedFee)
+        : (Array.isArray(body.includedFee) ? body.includedFee : []);
+    }
   } catch(e) {
+    console.error("Error parsing includedFee:", e);
     includedFee = [];
+  }
+
+  try {
+    // Parse notIncludedFee from JSON string
+    if (body.notIncludedFee) {
+      notIncludedFee = typeof body.notIncludedFee === 'string'
+        ? JSON.parse(body.notIncludedFee)
+        : (Array.isArray(body.notIncludedFee) ? body.notIncludedFee : []);
+    }
+  } catch(e) {
+    console.error("Error parsing notIncludedFee:", e);
     notIncludedFee = [];
   }
 
@@ -84,7 +91,6 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
     modules = JSON.parse(body.modules || "[]");
   } catch { modules = []; }
 
-  // Return parsed data
   return {
     slug: body.slug,
     status: body.status,

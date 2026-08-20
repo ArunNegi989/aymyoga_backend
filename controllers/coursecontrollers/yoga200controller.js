@@ -189,11 +189,29 @@ const buildDataObject = (body, files) => {
     upcomingDatesH2: getSingle(body.upcomingDatesH2),
     upcomingDatesSubtext: getSingle(body.upcomingDatesSubtext),
 
-    /* ── fee inclusions ── */
+    /* ── fee inclusions - FIXED: Parse from JSON strings ── */
     feeIncludedTitle: getSingle(body.feeIncludedTitle),
     feeNotIncludedTitle: getSingle(body.feeNotIncludedTitle),
-    includedFee: [].concat(body.includedFee || []),
-    notIncludedFee: [].concat(body.notIncludedFee || []),
+    includedFee: (() => {
+      const raw = getSingle(body.includedFee);
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        return [raw];
+      }
+    })(),
+    notIncludedFee: (() => {
+      const raw = getSingle(body.notIncludedFee);
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        return [raw];
+      }
+    })(),
 
     /* ── syllabus ── */
     syllabusH3: getSingle(body.syllabusH3),
