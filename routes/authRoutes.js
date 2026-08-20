@@ -6,6 +6,7 @@ const {
   loginUser,
   refreshToken,
   logoutUser,
+  checkAdmin,
 } = require("../controllers/authController");
 
 const {
@@ -30,5 +31,6 @@ router.post("/reset-password", resetPassword);
 
 // ── Change password (protected — must be logged in) ─────────
 router.post("/change-password", protect, changePassword);
+router.get("/check-admin", checkAdmin);
 
 module.exports = router;
