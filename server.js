@@ -16,9 +16,25 @@ connectDB();
 app.set("trust proxy", 1);
 
 /* ========================= CORS — must be first ========================= */
+const allowedOrigins = [
+  "https://www.indianyoga.aymyogaschool.com",
+  "https://indianyoga.aymyogaschool.com",
+  "http://localhost:3000", // dev
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // ✅ exact origin, NOT true/*
+    origin: (origin, callback) => {
+      // allow requests with no origin (like curl, Postman, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
