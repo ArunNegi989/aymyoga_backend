@@ -9,7 +9,6 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
-      inrFee,
       dormPrice,
       twinPrice,
       privatePrice,
@@ -31,7 +30,6 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
-      inrFee,
       dormPrice,
       twinPrice,
       privatePrice,
@@ -103,9 +101,12 @@ exports.getBatchById = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
+    // Remove inrFee from req.body before updating
+    const { inrFee, ...cleanData } = req.body;
+    
     const updated = await VinyasaSeats.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      cleanData,
       { new: true }
     );
 

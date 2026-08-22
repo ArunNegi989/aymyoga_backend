@@ -8,8 +8,15 @@ exports.createBatch = async (req, res) => {
     const data = req.body;
 
     const batch = await TwoHundredBatch.create({
-      ...data,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      usdFee: data.usdFee,
+      dormPrice: data.dormPrice,
+      twinPrice: data.twinPrice,
+      privatePrice: data.privatePrice,
+      totalSeats: data.totalSeats,
       bookedSeats: 0, // always start from 0
+      note: data.note,
     });
 
     res.status(201).json({

@@ -9,7 +9,6 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
-      inrFee,
       dormPrice,
       twinPrice,
       privatePrice,
@@ -28,7 +27,7 @@ exports.createBatch = async (req, res) => {
       });
     }
 
-    if (!usdFee || !inrFee) {
+    if (!usdFee) {
       return res.status(400).json({
         message: "Fees are required",
       });
@@ -63,7 +62,6 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
-      inrFee,
       dormPrice,
       twinPrice,
       privatePrice,
@@ -145,9 +143,12 @@ exports.getOne = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
+    // Remove inrFee from req.body before updating
+    const { inrFee, ...cleanData } = req.body;
+    
     const updated = await PrenatalSeats.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      cleanData,
       { new: true }
     );
 

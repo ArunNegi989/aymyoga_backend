@@ -16,11 +16,7 @@ const threeHundredBatchSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    inrFee: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+   
 
     dormPrice: {
       type: Number,

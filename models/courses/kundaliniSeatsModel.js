@@ -16,10 +16,7 @@ const kundaliniSeatsSchema = new mongoose.Schema(
       required: true,
     },
 
-    inrFee: {
-      type: String,
-      required: true,
-    },
+    
 
     dormPrice: {
       type: Number,

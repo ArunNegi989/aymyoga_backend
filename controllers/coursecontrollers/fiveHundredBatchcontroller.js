@@ -5,7 +5,10 @@ const FiveHundredBatch = require("../../models/courses/500hrSeats.model");
 ========================= */
 exports.createBatch = async (req, res) => {
   try {
-    const batch = await FiveHundredBatch.create(req.body);
+    // Remove inrFee from req.body before creating
+    const { inrFee, ...cleanData } = req.body;
+    
+    const batch = await FiveHundredBatch.create(cleanData);
 
     res.status(201).json({
       success: true,
@@ -70,9 +73,12 @@ exports.getSingleBatch = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
+    // Remove inrFee from req.body before updating
+    const { inrFee, ...cleanData } = req.body;
+    
     const batch = await FiveHundredBatch.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      cleanData,
       { new: true }
     );
 

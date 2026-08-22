@@ -5,8 +5,11 @@ const GoaThreeHundredBatch = require("../../models/courses/GoaThreeHundredBatchM
 ========================= */
 exports.createBatch = async (req, res) => {
   try {
+    // Remove inrFee from req.body before creating
+    const { inrFee, ...cleanData } = req.body;
+    
     const batch = await GoaThreeHundredBatch.create({
-      ...req.body,
+      ...cleanData,
       bookedSeats: 0,
     });
 
@@ -65,9 +68,12 @@ exports.getBatchById = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
+    // Remove inrFee from req.body before updating
+    const { inrFee, ...cleanData } = req.body;
+    
     const batch = await GoaThreeHundredBatch.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      cleanData,
       { new: true, runValidators: true }
     );
 

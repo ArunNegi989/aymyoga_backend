@@ -15,10 +15,7 @@ const vinyasaSeatsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    inrFee: {
-      type: String,
-      required: true,
-    },
+    
 
     dormPrice: {
       type: Number,
