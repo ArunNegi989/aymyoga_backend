@@ -11,7 +11,6 @@ exports.create = async (req, res) => {
       startDate: data.startDate,
       endDate: data.endDate,
       usdFee: data.usdFee,
-      inrFee: data.inrFee,
       dormPrice: data.dormPrice,
       twinPrice: data.twinPrice,
       privatePrice: data.privatePrice,
@@ -103,8 +102,6 @@ exports.remove = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
-
 
 /* =========================
    BOOK SEAT (🔥 NEW)
