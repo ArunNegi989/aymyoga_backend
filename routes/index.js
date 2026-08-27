@@ -60,6 +60,10 @@ router.use("/courses-section", require("./courseSectionRoutes"));
 router.use("/affiliation", require("./affiliationRoutes"));
 
 /* =========================
+   About Aym
+========================= */
+router.use("/about-section", require("./aboutRoutes"));
+/* =========================
    FOUNDER ROUTES
 ========================= */
 router.use("/founder", require("./founderRoutes"));
