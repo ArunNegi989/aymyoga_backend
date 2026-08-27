@@ -71,6 +71,17 @@ router.use("/rules-section", require("./rulesRoutes"));
 
 
 /* =========================
+  yoga retreat
+========================= */
+router.use("/yoga-retreat-section", require("./yogaRetreatRoutes"));
+
+
+/* =========================
+  yoga ashram
+========================= */
+router.use("/yoga-ashram-section", require("./yogaAshramRoutes"));
+ 
+/* =========================
    FOUNDER ROUTES
 ========================= */
 router.use("/founder", require("./founderRoutes"));
