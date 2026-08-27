@@ -53,6 +53,12 @@ router.use("/why-aym", require("./whyAYMRoutes"));
 
 router.use("/courses-section", require("./courseSectionRoutes"));
 
+
+/* =========================
+   Affiliation
+========================= */
+router.use("/affiliation", require("./affiliationRoutes"));
+
 /* =========================
    FOUNDER ROUTES
 ========================= */
