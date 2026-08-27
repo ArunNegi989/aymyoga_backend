@@ -63,6 +63,13 @@ router.use("/affiliation", require("./affiliationRoutes"));
    About Aym
 ========================= */
 router.use("/about-section", require("./aboutRoutes"));
+
+/* =========================
+  yoga rules
+========================= */
+router.use("/rules-section", require("./rulesRoutes"));
+
+
 /* =========================
    FOUNDER ROUTES
 ========================= */
