@@ -80,6 +80,13 @@ router.use("/yoga-retreat-section", require("./yogaRetreatRoutes"));
   yoga ashram
 ========================= */
 router.use("/yoga-ashram-section", require("./yogaAshramRoutes"));
+
+
+/* =========================
+  yoga holidays
+========================= */
+
+router.use("/holidays-section", require("./holidaysRoutes"));
  
 /* =========================
    FOUNDER ROUTES
