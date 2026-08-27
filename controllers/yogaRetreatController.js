@@ -68,6 +68,9 @@ const buildPayload = (body, files, existing = null) => {
     packages: safeParse(body.packages, []),
     overview: safeParse(body.overview, []),
 
+    applyButtonText: body.applyButtonText || "",
+    applyButtonLink: body.applyButtonLink || "",
+
     photoStrip,
     s3Blocks: safeParse(body.s3Blocks, []),
 
@@ -83,6 +86,11 @@ const buildPayload = (body, files, existing = null) => {
     reachTitle: body.reachTitle || "",
     reachParagraphs: safeParse(body.reachParagraphs, []),
     routes: safeParse(body.routes, []),
+
+    bookNowText: body.bookNowText || "",
+    bookNowLink: body.bookNowLink || "",
+    paypalText: body.paypalText || "",
+    paypalLink: body.paypalLink || "",
   };
 };
 

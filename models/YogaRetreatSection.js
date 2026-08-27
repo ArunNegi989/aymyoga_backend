@@ -84,6 +84,10 @@ const YogaRetreatSectionSchema = new mongoose.Schema(
     packages: { type: [PackageSchema], default: [] },
     overview: { type: [OverviewItemSchema], default: [] },
 
+    // Apply Now CTA (schedule section)
+    applyButtonText: { type: String, default: "" },
+    applyButtonLink: { type: String, default: "" },
+
     // Section 3 — Photo strip + short-stay blocks
     photoStrip: { type: [PhotoStripItemSchema], default: [] },
     s3Blocks: { type: [ContentBlockSchema], default: [] },
@@ -102,6 +106,12 @@ const YogaRetreatSectionSchema = new mongoose.Schema(
     reachTitle: { type: String, default: "" },
     reachParagraphs: { type: [String], default: [] },
     routes: { type: [RouteSchema], default: [] },
+
+    // Reach CTA buttons
+    bookNowText: { type: String, default: "" },
+    bookNowLink: { type: String, default: "" },
+    paypalText: { type: String, default: "" },
+    paypalLink: { type: String, default: "" },
   },
   { timestamps: true }
 );
