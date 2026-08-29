@@ -99,6 +99,21 @@ router.use("/inner-awakening-section", require("./innerAwakeningRoutes"));
 router.use("/detox-retreat-section", require("./detoxRetreatRoutes"));
 
 /* =========================
+   sound healing — seats
+========================= */
+router.use("/sound-healing-seats", require("./soundHealingSeatsRoutes"));
+
+router.use("/sound-healing-section", require("./Soundhealingroutes"));
+
+
+/* =========================
+   meditation yoga workshop — seats
+========================= */
+router.use("/meditation-seats", require("./meditationSeatsRoutes"));
+
+router.use("/meditation-section", require("./meditationSectionRoutes"));
+
+/* =========================
    yoga for beginners — seats
 ========================= */
 router.use("/yoga-beginners-section", require("./yogaBeginnersRoutes"));
