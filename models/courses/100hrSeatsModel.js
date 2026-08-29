@@ -17,12 +17,17 @@ const seatsSchema = new mongoose.Schema(
       required: true,
     },
 
-    // inrFee: {
-    //   type: String,
-    //   required: true,
-    // },
+    inrFee: {
+      type: String,
+      required: true,
+    },
 
     dormPrice: {
+      type: Number,
+      required: true,
+    },
+
+    inrDormPrice: {
       type: Number,
       required: true,
     },
@@ -32,7 +37,17 @@ const seatsSchema = new mongoose.Schema(
       required: true,
     },
 
+    inrTwinPrice: {
+      type: Number,
+      required: true,
+    },
+
     privatePrice: {
+      type: Number,
+      required: true,
+    },
+
+    inrPrivatePrice: {
       type: Number,
       required: true,
     },

@@ -11,9 +11,13 @@ exports.create = async (req, res) => {
       startDate: data.startDate,
       endDate: data.endDate,
       usdFee: data.usdFee,
+      inrFee: data.inrFee,
       dormPrice: data.dormPrice,
+      inrDormPrice: data.inrDormPrice,
       twinPrice: data.twinPrice,
+      inrTwinPrice: data.inrTwinPrice,
       privatePrice: data.privatePrice,
+      inrPrivatePrice: data.inrPrivatePrice,
       totalSeats: data.totalSeats,
       bookedSeats: data.bookedSeats || 0,
       note: data.note,
@@ -104,11 +108,11 @@ exports.remove = async (req, res) => {
 };
 
 /* =========================
-   BOOK SEAT (🔥 NEW)
+   BOOK SEAT
 ========================= */
 exports.bookSeat = async (req, res) => {
   try {
-    const { id } = req.params; // ✅ from URL: /book-seat/:id
+    const { id } = req.params;
 
     const batch = await Seats.findById(id);
 

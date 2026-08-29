@@ -5,9 +5,22 @@ const HathaYogaBatch = require("../../models/courses/HathaYogaBatchModel");
 ========================= */
 exports.createBatch = async (req, res) => {
   try {
+    const data = req.body;
+
     const batch = await HathaYogaBatch.create({
-      ...req.body,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      usdFee: data.usdFee,
+      inrFee: data.inrFee || "",
+      dormPrice: data.dormPrice,
+      inrDormPrice: data.inrDormPrice || 0,
+      twinPrice: data.twinPrice,
+      inrTwinPrice: data.inrTwinPrice || 0,
+      privatePrice: data.privatePrice,
+      inrPrivatePrice: data.inrPrivatePrice || 0,
+      totalSeats: data.totalSeats,
       bookedSeats: 0,
+      note: data.note || "",
     });
 
     res.status(201).json({

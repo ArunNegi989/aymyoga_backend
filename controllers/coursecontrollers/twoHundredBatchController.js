@@ -11,12 +11,16 @@ exports.createBatch = async (req, res) => {
       startDate: data.startDate,
       endDate: data.endDate,
       usdFee: data.usdFee,
-      dormPrice: data.dormPrice,
-      twinPrice: data.twinPrice,
-      privatePrice: data.privatePrice,
-      totalSeats: data.totalSeats,
-      bookedSeats: 0, // always start from 0
-      note: data.note,
+      inrFee: data.inrFee || "",
+      dormPrice: data.dormPrice || 0,
+      inrDormPrice: data.inrDormPrice || 0,
+      twinPrice: data.twinPrice || 0,
+      inrTwinPrice: data.inrTwinPrice || 0,
+      privatePrice: data.privatePrice || 0,
+      inrPrivatePrice: data.inrPrivatePrice || 0,
+      totalSeats: data.totalSeats || 0,
+      bookedSeats: 0,
+      note: data.note || "",
     });
 
     res.status(201).json({

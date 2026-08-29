@@ -9,9 +9,13 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
+      inrFee,
       dormPrice,
+      inrDormPrice,
       twinPrice,
+      inrTwinPrice,
       privatePrice,
+      inrPrivatePrice,
       totalSeats,
       note,
     } = req.body;
@@ -27,11 +31,15 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
+      inrFee: inrFee || "",
       dormPrice,
+      inrDormPrice: inrDormPrice || 0,
       twinPrice,
+      inrTwinPrice: inrTwinPrice || 0,
       privatePrice,
+      inrPrivatePrice: inrPrivatePrice || 0,
       totalSeats,
-      note,
+      note: note || "",
     });
 
     res.status(201).json({
@@ -94,12 +102,9 @@ exports.getOne = async (req, res) => {
 ========================= */
 exports.update = async (req, res) => {
   try {
-    // Remove inrFee from req.body before updating
-    const { inrFee, ...cleanData } = req.body;
-    
     const data = await Model.findByIdAndUpdate(
       req.params.id,
-      cleanData,
+      req.body,
       { new: true }
     );
 

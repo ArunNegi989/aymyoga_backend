@@ -9,9 +9,13 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
+      inrFee,
       dormPrice,
+      inrDormPrice,
       twinPrice,
+      inrTwinPrice,
       privatePrice,
+      inrPrivatePrice,
       totalSeats,
       note,
     } = req.body;
@@ -34,11 +38,15 @@ exports.createBatch = async (req, res) => {
       startDate,
       endDate,
       usdFee,
+      inrFee: inrFee || "",
       dormPrice,
+      inrDormPrice: inrDormPrice || 0,
       twinPrice,
+      inrTwinPrice: inrTwinPrice || 0,
       privatePrice,
+      inrPrivatePrice: inrPrivatePrice || 0,
       totalSeats,
-      note,
+      note: note || "",
     });
 
     res.status(201).json({
@@ -158,6 +166,45 @@ exports.deleteBatch = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error deleting batch",
+    });
+  }
+};
+
+/* =========================
+   BOOK SEAT
+========================= */
+exports.bookSeat = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const batch = await ThreeHundredBatch.findById(id);
+
+    if (!batch) {
+      return res.status(404).json({
+        success: false,
+        message: "Batch not found",
+      });
+    }
+
+    if (batch.bookedSeats >= batch.totalSeats) {
+      return res.status(400).json({
+        success: false,
+        message: "No seats available",
+      });
+    }
+
+    batch.bookedSeats += 1;
+    await batch.save();
+
+    res.json({
+      success: true,
+      message: "Seat booked successfully",
+      data: batch,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error booking seat",
     });
   }
 };

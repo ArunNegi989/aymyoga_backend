@@ -5,12 +5,22 @@ const GoaFiveHundredBatch = require("../../models/courses/GoaFiveHundredBatchMod
 ========================= */
 exports.createBatch = async (req, res) => {
   try {
-    // Remove inrFee from req.body before creating
-    const { inrFee, ...cleanData } = req.body;
-    
+    const data = req.body;
+
     const batch = await GoaFiveHundredBatch.create({
-      ...cleanData,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      usdFee: data.usdFee,
+      inrFee: data.inrFee || "",
+      dormPrice: data.dormPrice,
+      inrDormPrice: data.inrDormPrice || 0,
+      twinPrice: data.twinPrice,
+      inrTwinPrice: data.inrTwinPrice || 0,
+      privatePrice: data.privatePrice,
+      inrPrivatePrice: data.inrPrivatePrice || 0,
+      totalSeats: data.totalSeats,
       bookedSeats: 0,
+      note: data.note || "",
     });
 
     res.status(201).json({
@@ -19,7 +29,10 @@ exports.createBatch = async (req, res) => {
       data: batch,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -36,7 +49,10 @@ exports.getAllBatches = async (req, res) => {
       data: batches,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -59,7 +75,10 @@ exports.getBatchById = async (req, res) => {
       data: batch,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -68,12 +87,9 @@ exports.getBatchById = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
-    // Remove inrFee from req.body before updating
-    const { inrFee, ...cleanData } = req.body;
-    
     const batch = await GoaFiveHundredBatch.findByIdAndUpdate(
       req.params.id,
-      cleanData,
+      req.body,
       { new: true, runValidators: true }
     );
 
@@ -90,7 +106,10 @@ exports.updateBatch = async (req, res) => {
       data: batch,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -113,7 +132,10 @@ exports.deleteBatch = async (req, res) => {
       message: "Batch deleted successfully",
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
@@ -147,6 +169,9 @@ exports.bookSeat = async (req, res) => {
       data: batch,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };

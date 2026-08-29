@@ -5,12 +5,22 @@ const GoaTwoHundredBatch = require("../../models/courses/Goa200BatchModel");
 ========================= */
 exports.createBatch = async (req, res) => {
   try {
-    // Remove inrFee from req.body before creating
-    const { inrFee, ...cleanData } = req.body;
+    const data = req.body;
     
     const batch = await GoaTwoHundredBatch.create({
-      ...cleanData,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      usdFee: data.usdFee,
+      inrFee: data.inrFee || "",
+      dormPrice: data.dormPrice,
+      inrDormPrice: data.inrDormPrice || 0,
+      twinPrice: data.twinPrice,
+      inrTwinPrice: data.inrTwinPrice || 0,
+      privatePrice: data.privatePrice,
+      inrPrivatePrice: data.inrPrivatePrice || 0,
+      totalSeats: data.totalSeats || 50,
       bookedSeats: 0,
+      note: data.note || "",
     });
 
     res.status(201).json({
@@ -68,12 +78,9 @@ exports.getBatchById = async (req, res) => {
 ========================= */
 exports.updateBatch = async (req, res) => {
   try {
-    // Remove inrFee from req.body before updating
-    const { inrFee, ...cleanData } = req.body;
-    
     const batch = await GoaTwoHundredBatch.findByIdAndUpdate(
       req.params.id,
-      cleanData,
+      req.body,
       { new: true, runValidators: true }
     );
 
