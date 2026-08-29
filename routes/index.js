@@ -87,6 +87,16 @@ router.use("/yoga-ashram-section", require("./yogaAshramRoutes"));
 ========================= */
 
 router.use("/holidays-section", require("./holidaysRoutes"));
+
+/* =========================
+  inner awakening
+========================= */
+router.use("/inner-awakening-section", require("./innerAwakeningRoutes"));
+
+/* =========================
+   DETOX RETREAT ROUTES
+========================= */
+router.use("/detox-retreat-section", require("./detoxRetreatRoutes"));
  
 /* =========================
    FOUNDER ROUTES
