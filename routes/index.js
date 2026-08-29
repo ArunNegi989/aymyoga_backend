@@ -53,6 +53,58 @@ router.use("/why-aym", require("./whyAYMRoutes"));
 
 router.use("/courses-section", require("./courseSectionRoutes"));
 
+
+/* =========================
+   Affiliation
+========================= */
+router.use("/affiliation", require("./affiliationRoutes"));
+
+/* =========================
+   About Aym
+========================= */
+router.use("/about-section", require("./aboutRoutes"));
+
+/* =========================
+  yoga rules
+========================= */
+router.use("/rules-section", require("./rulesRoutes"));
+
+
+/* =========================
+  yoga retreat
+========================= */
+router.use("/yoga-retreat-section", require("./yogaRetreatRoutes"));
+
+
+/* =========================
+  yoga ashram
+========================= */
+router.use("/yoga-ashram-section", require("./yogaAshramRoutes"));
+
+
+/* =========================
+  yoga holidays
+========================= */
+
+router.use("/holidays-section", require("./holidaysRoutes"));
+
+/* =========================
+  inner awakening
+========================= */
+router.use("/inner-awakening-section", require("./innerAwakeningRoutes"));
+
+/* =========================
+   DETOX RETREAT ROUTES
+========================= */
+router.use("/detox-retreat-section", require("./detoxRetreatRoutes"));
+
+/* =========================
+   yoga for beginners — seats
+========================= */
+router.use("/yoga-beginners-section", require("./yogaBeginnersRoutes"));
+
+router.use("/yoga-beginners-seats", require("./yogaBeginnerSeatRoutes"));
+ 
 /* =========================
    FOUNDER ROUTES
 ========================= */

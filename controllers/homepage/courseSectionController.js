@@ -17,13 +17,13 @@ const buildCourseFields = (body, file) => {
   const {
     title, imageAlt, duration, level, description,
     enrollHref, exploreLabel, exploreHref,
-    priceINR, priceUSD, totalSeats, order,
+    priceUSD, totalSeats, order,
   } = body;
 
   const data = {
     title, imageAlt, duration, level, description,
     enrollHref, exploreLabel, exploreHref,
-    priceINR, priceUSD,
+    priceUSD,
     totalSeats: Number(totalSeats),
     order: order !== undefined ? Number(order) : 0,
     links: parseLinks(body.links),

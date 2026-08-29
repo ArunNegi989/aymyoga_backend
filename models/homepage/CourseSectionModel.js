@@ -20,8 +20,6 @@ const courseSchema = new mongoose.Schema(
     enrollHref:   { type: String, required: true },
     exploreLabel: { type: String, required: true },
     exploreHref:  { type: String, required: true },
-
-    priceINR:     { type: String, required: true },
     priceUSD:     { type: String, required: true },
 
     totalSeats:     { type: Number, required: true },
