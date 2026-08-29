@@ -97,6 +97,13 @@ router.use("/inner-awakening-section", require("./innerAwakeningRoutes"));
    DETOX RETREAT ROUTES
 ========================= */
 router.use("/detox-retreat-section", require("./detoxRetreatRoutes"));
+
+/* =========================
+   yoga for beginners — seats
+========================= */
+router.use("/yoga-beginners-section", require("./yogaBeginnersRoutes"));
+
+router.use("/yoga-beginners-seats", require("./yogaBeginnerSeatRoutes"));
  
 /* =========================
    FOUNDER ROUTES
