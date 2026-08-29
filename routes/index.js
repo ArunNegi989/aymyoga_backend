@@ -105,6 +105,14 @@ router.use("/sound-healing-seats", require("./soundHealingSeatsRoutes"));
 
 router.use("/sound-healing-section", require("./Soundhealingroutes"));
 
+
+/* =========================
+   meditation yoga workshop — seats
+========================= */
+router.use("/meditation-seats", require("./meditationSeatsRoutes"));
+
+router.use("/meditation-section", require("./meditationSectionRoutes"));
+
 /* =========================
    yoga for beginners — seats
 ========================= */
