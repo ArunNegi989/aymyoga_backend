@@ -4,7 +4,11 @@ const { Schema } = mongoose;
 const SoundHealingSeatSchema = new Schema(
   {
     startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
+    endDate: { 
+      type: Date, 
+      required: true, 
+      index: { expireAfterSeconds: 0 }   // 👈 TTL index — endDate nikalte hi doc auto-delete
+    },
 
     usdFee: { type: String, required: true, trim: true },
     inrFee: { type: String, required: true, trim: true },

@@ -9,6 +9,7 @@ const vinyasaSeatsSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       required: true,
+      index: { expireAfterSeconds: 0 },
     },
 
     usdFee: {

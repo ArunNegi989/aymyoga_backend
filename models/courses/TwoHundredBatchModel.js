@@ -9,6 +9,7 @@ const twoHundredBatchSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       required: true,
+      index: { expireAfterSeconds: 0 },
     },
 
     usdFee: {
