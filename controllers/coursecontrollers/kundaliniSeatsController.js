@@ -139,3 +139,40 @@ exports.remove = async (req, res) => {
     });
   }
 };
+
+/* =========================
+   BOOK SEAT
+========================= */
+exports.bookSeat = async (req, res) => {
+  try {
+    const batch = await Model.findById(req.params.id);
+
+    if (!batch) {
+      return res.status(404).json({
+        success: false,
+        message: "Batch not found",
+      });
+    }
+
+    if (batch.bookedSeats >= batch.totalSeats) {
+      return res.status(400).json({
+        success: false,
+        message: "No seats available",
+      });
+    }
+
+    batch.bookedSeats += 1;
+    await batch.save();
+
+    res.json({
+      success: true,
+      message: "Seat booked successfully",
+      data: batch,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

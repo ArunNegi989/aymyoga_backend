@@ -23,6 +23,11 @@ router.get("/:id", controller.getOne);
 router.put("/:id", controller.update);
 
 /* =========================
+   BOOK SEAT
+========================= */
+router.patch("/bookSeat/:id", controller.bookSeat);
+
+/* =========================
    DELETE
 ========================= */
 router.delete("/:id", controller.remove);

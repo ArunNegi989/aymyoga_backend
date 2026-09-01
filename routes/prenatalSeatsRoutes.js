@@ -9,6 +9,6 @@ router.put("/:id", controller.updateBatch);
 router.delete("/:id", controller.deleteBatch);
 
 /* 🔥 seat booking */
-router.post("/book-seat", controller.bookSeat);
+router.patch("/bookSeat/:id", controller.bookSeat);
 
 module.exports = router;

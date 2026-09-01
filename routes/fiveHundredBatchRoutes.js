@@ -20,6 +20,11 @@ router.get("/:id", controller.getSingleBatch);
 router.put("/:id", controller.updateBatch);
 
 /* =========================
+   BOOK SEAT
+========================= */
+router.patch("/bookSeat/:id", controller.bookSeat);
+
+/* =========================
    DELETE
 ========================= */
 router.delete("/:id", controller.deleteBatch);

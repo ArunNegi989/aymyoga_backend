@@ -208,20 +208,19 @@ exports.deleteBatch = async (req, res) => {
 ========================= */
 exports.bookSeat = async (req, res) => {
   try {
-    const { batchId } = req.body;
-
-    const batch = await PrenatalSeats.findById(batchId);
+    const batch = await Model.findById(req.params.id);
 
     if (!batch) {
       return res.status(404).json({
+        success: false,
         message: "Batch not found",
       });
     }
 
-    /* ❌ OVERBOOKING STOP */
     if (batch.bookedSeats >= batch.totalSeats) {
       return res.status(400).json({
-        message: "All seats are booked",
+        success: false,
+        message: "No seats available",
       });
     }
 
@@ -235,6 +234,7 @@ exports.bookSeat = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: error.message,
     });
   }
