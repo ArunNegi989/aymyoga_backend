@@ -243,6 +243,15 @@ router.use("/testimonials/text", require("./Textreviewroutes"));
 router.use("/student-reviews", require("./studentReviewRoutes"));
 router.use("/video-reviews", require("./studentvideoReviewRoutes"));
 
+/* ============ online yoga course ==================*/
+
+router.use("/online-seats", require("./Onlineseatsroutes"));
+
+router.use("/online-course-section", require("./OnlinecourseSectionRoutes"));
+
+
+/* ============ ayush course ==================*/
+router.use("/yoga-college-section", require("./Yogacollegesectionroutes"));
 
 /* ===========================
    API HEALTH CHECK
