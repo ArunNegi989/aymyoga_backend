@@ -74,6 +74,7 @@ const contentSchema = new mongoose.Schema(
 ========================= */
 const blogSchema = new mongoose.Schema(
   {
+    // Main content fields
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     excerpt: { type: String, required: true },
@@ -84,8 +85,62 @@ const blogSchema = new mongoose.Schema(
     tags: { type: [String], default: [] },
     content: { type: [contentSchema], required: true },
     status: { type: String, enum: ["Draft", "Published"], default: "Draft" },
+
+    // SEO fields
+    metaTitle: { 
+      type: String, 
+      default: function() { 
+        return this.title || ""; 
+      } 
+    },
+    metaDescription: { 
+      type: String, 
+      default: function() { 
+        return this.excerpt || ""; 
+      } 
+    },
+    canonicalUrl: { 
+      type: String, 
+      default: "" 
+    },
+    ogTitle: { 
+      type: String, 
+      default: function() { 
+        return this.title || ""; 
+      } 
+    },
+    ogDescription: { 
+      type: String, 
+      default: function() { 
+        return this.excerpt || ""; 
+      } 
+    },
+    ogImage: { 
+      type: String, 
+      default: function() { 
+        return this.coverImage || ""; 
+      } 
+    },
+
+    // Schema Markup fields
+    schemaType: {
+      type: String,
+      enum: ["Article", "BlogPosting", "NewsArticle", "TechArticle", "None"],
+      default: "BlogPosting"
+    },
+    schemaCustomJson: {
+      type: String,
+      default: ""
+    }
   },
   { timestamps: true }
 );
+
+// Indexes for better query performance
+blogSchema.index({ slug: 1, status: 1 });
+blogSchema.index({ category: 1, status: 1 });
+blogSchema.index({ tags: 1 });
+blogSchema.index({ date: -1 });
+blogSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Blog", blogSchema);
