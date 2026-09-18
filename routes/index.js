@@ -253,6 +253,9 @@ router.use("/online-course-section", require("./OnlinecourseSectionRoutes"));
 /* ============ ayush course ==================*/
 router.use("/yoga-college-section", require("./Yogacollegesectionroutes"));
 
+/* ============ how to reach ==================*/
+router.use("/how-to-reach-section", require("./howToReachRoutes"));
+
 /* ===========================
    API HEALTH CHECK
 =========================== */
