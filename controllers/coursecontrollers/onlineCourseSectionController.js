@@ -12,8 +12,7 @@ const parseJSON = (value, fallback) => {
   }
 };
 
-const findFile = (files, fieldname) =>
-  (files || []).find((f) => f.fieldname === fieldname);
+const findFile = (files, fieldname) => (files || []).find((f) => f.fieldname === fieldname);
 
 const removeFile = (relativePath) => {
   try {
@@ -37,9 +36,9 @@ exports.createSection = async (req, res) => {
     const introParagraphs = parseJSON(body.introParagraphs, []);
     const whyReasons = parseJSON(body.whyReasons, []);
     const keyBenefits = parseJSON(body.keyBenefits, []);
-    const liveCourses = parseJSON(body.liveCourses, []);
+    const liveCourses = parseJSON(body.liveCourses, []); // includes applyBtnLink/bookBtnLink per card
     const faqs = parseJSON(body.faqs, []);
-    const recordedCourses = parseJSON(body.recordedCourses, []);
+    const recordedCourses = parseJSON(body.recordedCourses, []); // includes applyBtnLink per card
     const infoBlocks = parseJSON(body.infoBlocks, []);
     const curriculumData = parseJSON(body.curriculumData, []);
     const existingCurriculumImages = parseJSON(body.existingCurriculumImages, []);
@@ -55,7 +54,7 @@ exports.createSection = async (req, res) => {
     const otherCourses = otherCoursesData.map((course, i) => {
       const file = findFile(files, `otherCourseImage_${i}`);
       const image = file ? `/uploads/${file.filename}` : existingOtherCourseImages[i] || null;
-      return { ...course, image };
+      return { ...course, image }; // course already includes enquireBtnText + enquireBtnLink
     });
 
     const section = new OnlineCourseSection({
@@ -86,6 +85,10 @@ exports.createSection = async (req, res) => {
       seatBookingEyebrow: body.seatBookingEyebrow,
       seatBookingTitle: body.seatBookingTitle,
       seatBookingSubtitle: body.seatBookingSubtitle,
+      seatBookingApplyBtnText: body.seatBookingApplyBtnText,
+      seatBookingApplyBtnLink: body.seatBookingApplyBtnLink,
+      seatBookingBookBtnText: body.seatBookingBookBtnText,
+      seatBookingBookBtnLink: body.seatBookingBookBtnLink,
 
       noteBoxText: body.noteBoxText,
       faqEyebrow: body.faqEyebrow,
@@ -115,10 +118,7 @@ exports.createSection = async (req, res) => {
     });
   } catch (error) {
     console.error("createSection error:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to create online course section",
-    });
+    return res.status(500).json({ success: false, message: error.message || "Failed to create online course section" });
   }
 };
 
@@ -129,10 +129,7 @@ exports.getAllSections = async (req, res) => {
     return res.status(200).json({ success: true, data: sections });
   } catch (error) {
     console.error("getAllSections error:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to fetch online course sections",
-    });
+    return res.status(500).json({ success: false, message: error.message || "Failed to fetch online course sections" });
   }
 };
 
@@ -140,16 +137,11 @@ exports.getAllSections = async (req, res) => {
 exports.getSectionById = async (req, res) => {
   try {
     const section = await OnlineCourseSection.findById(req.params.id);
-    if (!section) {
-      return res.status(404).json({ success: false, message: "Section not found" });
-    }
+    if (!section) return res.status(404).json({ success: false, message: "Section not found" });
     return res.status(200).json({ success: true, data: section });
   } catch (error) {
     console.error("getSectionById error:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to fetch online course section",
-    });
+    return res.status(500).json({ success: false, message: error.message || "Failed to fetch online course section" });
   }
 };
 
@@ -157,9 +149,7 @@ exports.getSectionById = async (req, res) => {
 exports.updateSection = async (req, res) => {
   try {
     const existing = await OnlineCourseSection.findById(req.params.id);
-    if (!existing) {
-      return res.status(404).json({ success: false, message: "Section not found" });
-    }
+    if (!existing) return res.status(404).json({ success: false, message: "Section not found" });
 
     const body = req.body;
     const files = req.files || [];
@@ -167,7 +157,6 @@ exports.updateSection = async (req, res) => {
     const heroFile = findFile(files, "heroImage");
     const whyFile = findFile(files, "whyImage");
 
-    // remove old top-level images if replaced
     if (heroFile && existing.heroImage) removeFile(existing.heroImage);
     if (whyFile && existing.whyImage) removeFile(existing.whyImage);
 
@@ -183,7 +172,6 @@ exports.updateSection = async (req, res) => {
     const otherCoursesData = parseJSON(body.otherCoursesData, null);
     const existingOtherCourseImages = parseJSON(body.existingOtherCourseImages, []);
 
-    // Curriculum areas (only rebuild if curriculumData sent)
     let curriculumAreas = existing.curriculumAreas;
     if (curriculumData) {
       curriculumAreas = curriculumData.map((area, i) => {
@@ -195,7 +183,6 @@ exports.updateSection = async (req, res) => {
       });
     }
 
-    // Other courses (only rebuild if otherCoursesData sent)
     let otherCourses = existing.otherCourses;
     if (otherCoursesData) {
       otherCourses = otherCoursesData.map((course, i) => {
@@ -203,7 +190,7 @@ exports.updateSection = async (req, res) => {
         const oldImage = existing.otherCourses?.[i]?.image;
         if (file && oldImage) removeFile(oldImage);
         const image = file ? `/uploads/${file.filename}` : existingOtherCourseImages[i] || null;
-        return { ...course, image };
+        return { ...course, image }; // course already includes enquireBtnText + enquireBtnLink
       });
     }
 
@@ -234,6 +221,10 @@ exports.updateSection = async (req, res) => {
     existing.seatBookingEyebrow = body.seatBookingEyebrow ?? existing.seatBookingEyebrow;
     existing.seatBookingTitle = body.seatBookingTitle ?? existing.seatBookingTitle;
     existing.seatBookingSubtitle = body.seatBookingSubtitle ?? existing.seatBookingSubtitle;
+    existing.seatBookingApplyBtnText = body.seatBookingApplyBtnText ?? existing.seatBookingApplyBtnText;
+    existing.seatBookingApplyBtnLink = body.seatBookingApplyBtnLink ?? existing.seatBookingApplyBtnLink;
+    existing.seatBookingBookBtnText = body.seatBookingBookBtnText ?? existing.seatBookingBookBtnText;
+    existing.seatBookingBookBtnLink = body.seatBookingBookBtnLink ?? existing.seatBookingBookBtnLink;
 
     existing.noteBoxText = body.noteBoxText ?? existing.noteBoxText;
     existing.faqEyebrow = body.faqEyebrow ?? existing.faqEyebrow;
@@ -262,10 +253,7 @@ exports.updateSection = async (req, res) => {
     });
   } catch (error) {
     console.error("updateSection error:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to update online course section",
-    });
+    return res.status(500).json({ success: false, message: error.message || "Failed to update online course section" });
   }
 };
 
@@ -273,9 +261,7 @@ exports.updateSection = async (req, res) => {
 exports.deleteSection = async (req, res) => {
   try {
     const section = await OnlineCourseSection.findByIdAndDelete(req.params.id);
-    if (!section) {
-      return res.status(404).json({ success: false, message: "Section not found" });
-    }
+    if (!section) return res.status(404).json({ success: false, message: "Section not found" });
 
     removeFile(section.heroImage);
     removeFile(section.whyImage);
@@ -285,9 +271,6 @@ exports.deleteSection = async (req, res) => {
     return res.status(200).json({ success: true, message: "Section deleted successfully" });
   } catch (error) {
     console.error("deleteSection error:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to delete online course section",
-    });
+    return res.status(500).json({ success: false, message: error.message || "Failed to delete online course section" });
   }
 };
