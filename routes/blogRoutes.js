@@ -26,7 +26,7 @@ router.get("/get-all", getAll);
 
 /* GET BY SLUG — must be BEFORE /get/:id so ":slug" doesn't get caught by ":id" */
 router.get("/get-by-slug/:slug", getBySlug);  // ✅ NEW
-
+router.get("/blogs/latest-published", blogController.getLatestPublished);
 /* GET BY ID */
 router.get("/get/:id", getOne);
 

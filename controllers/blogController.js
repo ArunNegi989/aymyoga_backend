@@ -267,7 +267,30 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+// controllers/blog.controller.js (ya jo bhi tumhari file hai)
 
+exports.getLatestPublished = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 4;
+
+    const blogs = await Blog.find({ status: "Published" })
+      .sort({ date: -1 })
+      .limit(limit)
+      .select("title excerpt coverImage category date author slug")
+      .lean(); // lean() se plain JS object milta hai, thoda fast hota hai
+
+    return res.status(200).json({
+      success: true,
+      data: blogs,
+    });
+  } catch (err) {
+    console.error("Failed to fetch latest published blogs:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch blogs",
+    });
+  }
+};
 /* =========================
    GET SINGLE BLOG BY ID
 ========================= */
