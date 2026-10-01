@@ -253,6 +253,11 @@ router.use("/online-course-section", require("./OnlinecourseSectionRoutes"));
 /* ============ ayush course ==================*/
 router.use("/yoga-college-section", require("./Yogacollegesectionroutes"));
 
+
+/* ============ Payment page ==================*/
+
+router.use("/payment-section", require("./Paymentsectionroutes"));
+
 /* ============ how to reach ==================*/
 router.use("/how-to-reach-section", require("./howToReachRoutes"));
 
