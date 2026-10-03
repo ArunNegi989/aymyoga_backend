@@ -3,9 +3,6 @@ const router = express.Router();
 const upload = require("../middleware/upload");
 const controller = require("../controllers/coursecontrollers/yogaTTCIndiaController");
 
-/* =========================
-   MULTER FIELDS
-========================= */
 const fields = [
   { name: "heroImage", maxCount: 1 },
   { name: "mediaImage", maxCount: 1 },
@@ -16,7 +13,6 @@ const fields = [
   { name: "whyAYMImage", maxCount: 1 },
 ];
 
-// Dynamic fields for arrays
 for (let i = 0; i < 100; i++) {
   fields.push({ name: `accredBadgeImage_${i}`, maxCount: 1 });
   fields.push({ name: `courseCardImage_${i}`, maxCount: 1 });
@@ -24,9 +20,6 @@ for (let i = 0; i < 100; i++) {
   fields.push({ name: `locationImage_${i}`, maxCount: 1 });
 }
 
-/* =========================
-   ROUTES
-========================= */
 
 router.post("/create", upload.fields(fields), controller.create);
 router.get("/", controller.getSingle);

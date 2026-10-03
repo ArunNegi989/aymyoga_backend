@@ -43,14 +43,10 @@ const TermSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ── Main Schema ── */
 const InnerAwakeningSchema = new mongoose.Schema(
   {
-    // Hero Banner
     heroImage: { type: String, default: "" },
     heroImageAlt: { type: String, default: "" },
-
-    // Guru / Hero Title Section
     heroBadge: { type: String, default: "" },
     mainTitle: { type: String, default: "" },
     subTitle: { type: String, default: "" },

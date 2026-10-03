@@ -112,7 +112,7 @@ exports.updateBatch = async (req, res) => {
     const updated = await VinyasaSeats.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true },
     );
 
     res.json({

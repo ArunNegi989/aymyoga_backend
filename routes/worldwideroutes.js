@@ -13,7 +13,7 @@ router.post(
     { name: "heroImage", maxCount: 1 },
     { name: "curriculumRightImage", maxCount: 1 },
     { name: "teacherTeamLeftImage", maxCount: 1 },
-    { name: "communitySliderImages", maxCount: 10 }, // up to 10 slider images
+    { name: "communitySliderImages", maxCount: 10 }, 
   ]),
   controller.createContent
 );

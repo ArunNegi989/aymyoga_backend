@@ -25,19 +25,17 @@ exports.createContent = async (req, res) => {
 
     const body = req.body;
 
-    // Parse introItems from form data
     let introItems = parseJSON(body.introItems);
-    
-    // Handle intro media files
+
     if (req.files && req.files.introMedia && req.files.introMedia.length > 0) {
       const introMediaFiles = req.files.introMedia;
       let mediaIndex = 0;
-      
+
       introItems = introItems.map((item) => {
         if (item.media === "new_upload" && introMediaFiles[mediaIndex]) {
-          const newItem = { 
-            ...item, 
-            media: "/uploads/" + introMediaFiles[mediaIndex].filename 
+          const newItem = {
+            ...item,
+            media: "/uploads/" + introMediaFiles[mediaIndex].filename,
           };
           mediaIndex++;
           return newItem;
@@ -46,7 +44,6 @@ exports.createContent = async (req, res) => {
       });
     }
 
-    // Handle video file upload
     let videoUrl = "";
     if (req.files && req.files.videoFile && req.files.videoFile[0]) {
       videoUrl = "/uploads/" + req.files.videoFile[0].filename;
@@ -78,7 +75,9 @@ exports.createContent = async (req, res) => {
       imgBadgeText: body.imgBadgeText || "500 Hr Advanced TTC",
       videoUrl: videoUrl,
       videoBadgeText: body.videoBadgeText || "✦ Featured Video ✦",
-      videoTitle: body.videoTitle || "Experience the Journey of 500 Hour Yoga Teacher Training",
+      videoTitle:
+        body.videoTitle ||
+        "Experience the Journey of 500 Hour Yoga Teacher Training",
       videoSubtitle: body.videoSubtitle || "Watch Our Students' Transformation",
       evalImageAlt: body.evalImageAlt || "Evaluation process",
       courseInfoDetails: parseJSON(body.courseInfoDetails),
@@ -86,14 +85,23 @@ exports.createContent = async (req, res) => {
       courseInfoFeeLabel: body.courseInfoFeeLabel || "COURSE FEE",
       courseInfoFeeFromText: body.courseInfoFeeFromText || "starting from",
       courseInfoBookBtnText: body.courseInfoBookBtnText || "BOOK NOW",
-      courseInfoOriginalPriceMultiplier: parseFloat(body.courseInfoOriginalPriceMultiplier) || 1.8,
+      courseInfoOriginalPriceMultiplier:
+        parseFloat(body.courseInfoOriginalPriceMultiplier) || 1.8,
       courseInfoUsdPrice: parseFloat(body.courseInfoUsdPrice) || 1649,
       courseInfoInrPrice: parseFloat(body.courseInfoInrPrice) || 135000,
-      courseInfoOriginalUsdPrice: parseFloat(body.courseInfoOriginalUsdPrice) || 2950,
-      courseInfoOriginalInrPrice: parseFloat(body.courseInfoOriginalInrPrice) || 240000,
-      heroImage: req.files?.heroImage ? "/uploads/" + req.files.heroImage[0].filename : "",
-      shivaImage: req.files?.shivaImage ? "/uploads/" + req.files.shivaImage[0].filename : "",
-      evalImage: req.files?.evalImage ? "/uploads/" + req.files.evalImage[0].filename : "",
+      courseInfoOriginalUsdPrice:
+        parseFloat(body.courseInfoOriginalUsdPrice) || 2950,
+      courseInfoOriginalInrPrice:
+        parseFloat(body.courseInfoOriginalInrPrice) || 240000,
+      heroImage: req.files?.heroImage
+        ? "/uploads/" + req.files.heroImage[0].filename
+        : "",
+      shivaImage: req.files?.shivaImage
+        ? "/uploads/" + req.files.shivaImage[0].filename
+        : "",
+      evalImage: req.files?.evalImage
+        ? "/uploads/" + req.files.evalImage[0].filename
+        : "",
       accomImages: getArrayFiles(req.files, "accomImage"),
       foodImages: getArrayFiles(req.files, "foodImage"),
     };
@@ -129,31 +137,26 @@ exports.updateContent = async (req, res) => {
 
     const body = req.body;
 
-    // ── Get newly uploaded files ──
     const newAccom = getArrayFiles(req.files, "accomImage");
     const newFood = getArrayFiles(req.files, "foodImage");
 
-    // ── Parse existing images sent from frontend ──
     const existingAccom = parseJSON(body.existingAccomImages);
     const existingFood = parseJSON(body.existingFoodImages);
 
-    // ── Combine existing (kept) + newly uploaded ──
     const finalAccom = [...existingAccom, ...newAccom];
     const finalFood = [...existingFood, ...newFood];
 
-    // Parse introItems
     let introItems = parseJSON(body.introItems);
-    
-    // Handle intro media files
+
     if (req.files && req.files.introMedia && req.files.introMedia.length > 0) {
       const introMediaFiles = req.files.introMedia;
       let mediaIndex = 0;
-      
+
       introItems = introItems.map((item) => {
         if (item.media === "new_upload" && introMediaFiles[mediaIndex]) {
-          const newItem = { 
-            ...item, 
-            media: "/uploads/" + introMediaFiles[mediaIndex].filename 
+          const newItem = {
+            ...item,
+            media: "/uploads/" + introMediaFiles[mediaIndex].filename,
           };
           mediaIndex++;
           return newItem;
@@ -162,7 +165,6 @@ exports.updateContent = async (req, res) => {
       });
     }
 
-    // Handle video file upload
     let videoUrl = existing.videoUrl;
     if (req.files && req.files.videoFile && req.files.videoFile[0]) {
       videoUrl = "/uploads/" + req.files.videoFile[0].filename;
@@ -172,19 +174,16 @@ exports.updateContent = async (req, res) => {
       videoUrl = body.videoUrl;
     }
 
-    // Handle eval image upload
     let evalImage = existing.evalImage;
     if (req.files && req.files.evalImage && req.files.evalImage[0]) {
       evalImage = "/uploads/" + req.files.evalImage[0].filename;
     }
 
-    // Handle hero image upload
     let heroImage = existing.heroImage;
     if (req.files && req.files.heroImage && req.files.heroImage[0]) {
       heroImage = "/uploads/" + req.files.heroImage[0].filename;
     }
 
-    // Handle shiva image upload
     let shivaImage = existing.shivaImage;
     if (req.files && req.files.shivaImage && req.files.shivaImage[0]) {
       shivaImage = "/uploads/" + req.files.shivaImage[0].filename;
@@ -209,22 +208,56 @@ exports.updateContent = async (req, res) => {
       reviews: parseJSON(body.reviews),
       standApartPills: parseJSON(body.standApartPills),
       standApartStats: parseJSON(body.standApartStats),
-      imgBadgeText: body.imgBadgeText || existing.imgBadgeText || "500 Hr Advanced TTC",
+      imgBadgeText:
+        body.imgBadgeText || existing.imgBadgeText || "500 Hr Advanced TTC",
       videoUrl: videoUrl,
-      videoBadgeText: body.videoBadgeText || existing.videoBadgeText || "✦ Featured Video ✦",
-      videoTitle: body.videoTitle || existing.videoTitle || "Experience the Journey of 500 Hour Yoga Teacher Training",
-      videoSubtitle: body.videoSubtitle || existing.videoSubtitle || "Watch Our Students' Transformation",
-      evalImageAlt: body.evalImageAlt || existing.evalImageAlt || "Evaluation process",
+      videoBadgeText:
+        body.videoBadgeText || existing.videoBadgeText || "✦ Featured Video ✦",
+      videoTitle:
+        body.videoTitle ||
+        existing.videoTitle ||
+        "Experience the Journey of 500 Hour Yoga Teacher Training",
+      videoSubtitle:
+        body.videoSubtitle ||
+        existing.videoSubtitle ||
+        "Watch Our Students' Transformation",
+      evalImageAlt:
+        body.evalImageAlt || existing.evalImageAlt || "Evaluation process",
       courseInfoDetails: parseJSON(body.courseInfoDetails),
-      courseInfoCardTitle: body.courseInfoCardTitle || existing.courseInfoCardTitle || "COURSE DETAILS",
-      courseInfoFeeLabel: body.courseInfoFeeLabel || existing.courseInfoFeeLabel || "COURSE FEE",
-      courseInfoFeeFromText: body.courseInfoFeeFromText || existing.courseInfoFeeFromText || "starting from",
-      courseInfoBookBtnText: body.courseInfoBookBtnText || existing.courseInfoBookBtnText || "BOOK NOW",
-      courseInfoOriginalPriceMultiplier: parseFloat(body.courseInfoOriginalPriceMultiplier) || existing.courseInfoOriginalPriceMultiplier || 1.8,
-      courseInfoUsdPrice: parseFloat(body.courseInfoUsdPrice) || existing.courseInfoUsdPrice || 1649,
-      courseInfoInrPrice: parseFloat(body.courseInfoInrPrice) || existing.courseInfoInrPrice || 135000,
-      courseInfoOriginalUsdPrice: parseFloat(body.courseInfoOriginalUsdPrice) || existing.courseInfoOriginalUsdPrice || 2950,
-      courseInfoOriginalInrPrice: parseFloat(body.courseInfoOriginalInrPrice) || existing.courseInfoOriginalInrPrice || 240000,
+      courseInfoCardTitle:
+        body.courseInfoCardTitle ||
+        existing.courseInfoCardTitle ||
+        "COURSE DETAILS",
+      courseInfoFeeLabel:
+        body.courseInfoFeeLabel || existing.courseInfoFeeLabel || "COURSE FEE",
+      courseInfoFeeFromText:
+        body.courseInfoFeeFromText ||
+        existing.courseInfoFeeFromText ||
+        "starting from",
+      courseInfoBookBtnText:
+        body.courseInfoBookBtnText ||
+        existing.courseInfoBookBtnText ||
+        "BOOK NOW",
+      courseInfoOriginalPriceMultiplier:
+        parseFloat(body.courseInfoOriginalPriceMultiplier) ||
+        existing.courseInfoOriginalPriceMultiplier ||
+        1.8,
+      courseInfoUsdPrice:
+        parseFloat(body.courseInfoUsdPrice) ||
+        existing.courseInfoUsdPrice ||
+        1649,
+      courseInfoInrPrice:
+        parseFloat(body.courseInfoInrPrice) ||
+        existing.courseInfoInrPrice ||
+        135000,
+      courseInfoOriginalUsdPrice:
+        parseFloat(body.courseInfoOriginalUsdPrice) ||
+        existing.courseInfoOriginalUsdPrice ||
+        2950,
+      courseInfoOriginalInrPrice:
+        parseFloat(body.courseInfoOriginalInrPrice) ||
+        existing.courseInfoOriginalInrPrice ||
+        240000,
       heroImage: heroImage,
       shivaImage: shivaImage,
       evalImage: evalImage,

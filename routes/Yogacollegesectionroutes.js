@@ -1,10 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
-// ⚠️ Adjust this path/export to match your existing upload.js
-// Assumes upload.js exports a configured multer instance, e.g.:
-//   const multer = require("multer");
-//   module.exports = multer({ storage });
 const upload = require("../middleware/upload");
 
 const {
@@ -15,7 +10,6 @@ const {
   deleteYogaCollegeSection,
 } = require("../controllers/coursecontrollers/Yogacollegesectioncontroller");
 
-// All single-image fields + up to 6 in-person course thumbnails
 const uploadFields = upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "aimImage1", maxCount: 1 },

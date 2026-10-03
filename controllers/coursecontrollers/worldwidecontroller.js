@@ -14,22 +14,19 @@ const parseData = (req, existing = {}) => {
     }
   };
 
-  // Handle community slider images:
-let communitySliderImages = existing.communitySliderImages || [];
+  let communitySliderImages = existing.communitySliderImages || [];
 
-// ✅ keep old images sent from frontend
-if (body.existingSliderImages) {
-  communitySliderImages = JSON.parse(body.existingSliderImages);
-}
+  if (body.existingSliderImages) {
+    communitySliderImages = JSON.parse(body.existingSliderImages);
+  }
 
-// ✅ add new uploaded images
-if (req.files?.communitySliderImages) {
-  const newImages = req.files.communitySliderImages.map(
-    (f) => "/uploads/" + f.filename
-  );
+  if (req.files?.communitySliderImages) {
+    const newImages = req.files.communitySliderImages.map(
+      (f) => "/uploads/" + f.filename,
+    );
 
-  communitySliderImages = [...communitySliderImages, ...newImages];
-}
+    communitySliderImages = [...communitySliderImages, ...newImages];
+  }
   return {
     slug: body.slug,
     status: body.status,
@@ -40,23 +37,20 @@ if (req.files?.communitySliderImages) {
       ? "/uploads/" + req.files.heroImage[0].filename
       : existing.heroImage,
 
-    // Top paragraphs
     topParagraphs: Array.from(
       { length: Number(body.topParagraphCount || 0) },
-      (_, i) => body[`topPara${i + 1}`]
+      (_, i) => body[`topPara${i + 1}`],
     ),
 
-    // Stats
     statsTitle: body.statsTitle,
     stats: parseJSON(body.stats),
 
-    // Curriculum
     curriculumTitle: body.curriculumTitle,
     curriculumSubHeading: body.curriculumSubHeading,
     curriculumIntro: body.curriculumIntro,
     curriculumParagraphs: Array.from(
       { length: Number(body.curriculumParagraphCount || 0) },
-      (_, i) => body[`curriculumPara${i + 1}`]
+      (_, i) => body[`curriculumPara${i + 1}`],
     ),
     curriculumItems: parseJSON(body.curriculumItems),
 
@@ -161,7 +155,7 @@ exports.updateContent = async (req, res) => {
     const updated = await Worldwide.findByIdAndUpdate(
       existing._id,
       updatedData,
-      { new: true }
+      { new: true },
     );
 
     res.json({ success: true, data: updated });

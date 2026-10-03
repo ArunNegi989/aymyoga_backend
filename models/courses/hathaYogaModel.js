@@ -8,7 +8,6 @@ const certCardSchema = new mongoose.Schema({
   image: String,
 });
 
-/* ── NEW: What-section feature cards ── */
 const whatCardSchema = new mongoose.Schema({
   icon:  String,
   title: String,
@@ -76,7 +75,7 @@ const hathaYogaSchema = new mongoose.Schema(
     whatParagraphs:      [String],
     ashramParagraphs:    [String],
     programmeParagraphs: [String],
-    certParagraphs:      [String],   // replaces old certPara
+    certParagraphs:      [String],   
     accreditations:      [String],
     benefitsList:        [String],
     courseDetailsList:   [String],
@@ -95,25 +94,24 @@ const hathaYogaSchema = new mongoose.Schema(
        NEW FIELDS  (static content made editable)
     ══════════════════════════════════════════════ */
 
-    /* Course Info Card */
-    courseInfoTitle:       String,   // "COURSE DETAILS"
-    courseDuration:        String,   // "13 Days"
-    courseLevel:           String,   // "Beginner"
-    courseCertLabel:       String,   // "Hatha Yoga"  (cert row value)
-    courseYogaStyle:       String,   // "Hatha Yoga"
-    courseYogaStyleSub:    String,   // "Traditional & Classical"
-    courseLanguage:        String,   // "English & Hindi"
-    courseDates:           String,   // "1st to 13th of every month"
+    courseInfoTitle:       String,   
+    courseDuration:        String,  
+    courseLevel:           String,   
+    courseCertLabel:       String,  
+    courseYogaStyle:       String,  
+    courseYogaStyleSub:    String,   
+    courseLanguage:        String,   
+    courseDates:           String,   
 
     /* Premium Seat Booking section */
-    seatSectionTag:      String,   // "Upcoming Batches · 2026–2027"
-    seatSectionTitle:    String,   // "Hatha Yoga Training in Rishikesh"
-    seatSectionSubtitle: String,   // "Choose your dates & preferred accommodation…"
-    seatDurationLocation: String,  // "13 Days · Rishikesh, India"
+    seatSectionTag:      String,  
+    seatSectionTitle:    String,   
+    seatSectionSubtitle: String,   
+    seatDurationLocation: String,  
 
     /* Programme section (was fully hardcoded) */
-    programmeSuperLabel: String,   // "Programme Overview"
-    programmeTitle:      String,   // "Our Hatha Yoga Programmes"
+    programmeSuperLabel: String,   
+    programmeTitle:      String,  
 
     /* What-section feature cards */
     whatCards: [whatCardSchema],

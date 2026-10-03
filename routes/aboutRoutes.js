@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middleware/upload"); // the multer config you shared
+const upload = require("../middleware/upload"); 
 const {
   getAbout,
   getAboutById,
@@ -9,13 +9,7 @@ const {
   deleteAbout,
 } = require("../controllers/aboutController");
 
-/**
- * upload.any() is used (instead of upload.fields([...])) because the admin
- * form sends dynamically-named file fields whose count varies:
- *   - timelineImage_0..timelineImage_n
- * alongside the fixed single fields heroImage / schoolGalleryImage / visionImage / missionImage.
- * The controller groups req.files by fieldname.
- */
+
 
 // GET /api/about-section        → singleton fetch
 router.get("/", getAbout);

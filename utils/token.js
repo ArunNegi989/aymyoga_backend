@@ -19,13 +19,12 @@ const sendTokenResponse = async (user, statusCode, res) => {
   user.refreshToken = refreshToken;
   await user.save();
 
-  // ✅ Cookie options — all fields explicit so clearCookie can match exactly
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,      // set to true in production (HTTPS)
+    secure: false,      
     sameSite: "lax",
-    path: "/",          // ← required for clearCookie to work
-    maxAge: 60 * 24 * 60 * 60 * 1000, // 60 days
+    path: "/",         
+    maxAge: 60 * 24 * 60 * 60 * 1000, 
   });
 
   const userObj = user.toObject();

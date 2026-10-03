@@ -8,7 +8,7 @@ const methodCardSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     text: { type: String, required: true },
     imageAlt: { type: String, default: "" },
-    image: { type: String, default: "" }, // stored path
+    image: { type: String, default: "" }, 
   },
   { _id: false }
 );

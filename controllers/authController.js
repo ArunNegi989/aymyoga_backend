@@ -23,7 +23,7 @@ exports.registerUser = async (req, res, next) => {
       name,
       email,
       password: hashedPassword,
-      role: "user", // ✅ default user, DB se manually admin karo
+      role: "user", 
     });
 
     res.status(201).json({

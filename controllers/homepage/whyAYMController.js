@@ -2,9 +2,6 @@ const Model = require("../../models/homepage/whyAYMModel");
 const fs = require("fs");
 const path = require("path");
 
-/* =========================
-   CREATE (ONLY ONE)
-========================= */
 exports.create = async (req, res, next) => {
   try {
     const exists = await Model.findOne();
@@ -17,13 +14,11 @@ exports.create = async (req, res, next) => {
       });
     }
 
-    /* IMAGE PATH */
     let imagePath = "";
     if (req.file) {
       imagePath = "/uploads/" + req.file.filename;
     }
 
-    /* PARSE ARRAY DATA */
     const data = {
       ...req.body,
       sideFeatures: JSON.parse(req.body.sideFeatures || "[]"),
@@ -43,9 +38,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-/* =========================
-   GET (SINGLE RECORD ONLY)
-========================= */
 exports.getAll = async (req, res, next) => {
   try {
     const data = await Model.findOne();
@@ -59,9 +51,6 @@ exports.getAll = async (req, res, next) => {
   }
 };
 
-/* =========================
-   GET SINGLE
-========================= */
 exports.getOne = async (req, res, next) => {
   try {
     const data = await Model.findById(req.params.id);
@@ -82,9 +71,6 @@ exports.getOne = async (req, res, next) => {
   }
 };
 
-/* =========================
-   UPDATE
-========================= */
 exports.update = async (req, res, next) => {
   try {
     const existing = await Model.findById(req.params.id);
@@ -98,15 +84,9 @@ exports.update = async (req, res, next) => {
 
     let imagePath = existing.imageSrc;
 
-    /* IF NEW IMAGE UPLOADED */
     if (req.file) {
-      // delete old image
       if (existing.imageSrc) {
-        const oldPath = path.join(
-          __dirname,
-          "../../",
-          existing.imageSrc
-        );
+        const oldPath = path.join(__dirname, "../../", existing.imageSrc);
 
         if (fs.existsSync(oldPath)) {
           fs.unlinkSync(oldPath);
@@ -123,14 +103,10 @@ exports.update = async (req, res, next) => {
       imageSrc: imagePath,
     };
 
-    const updated = await Model.findByIdAndUpdate(
-      req.params.id,
-      updatedData,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    const updated = await Model.findByIdAndUpdate(req.params.id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       success: true,
@@ -142,9 +118,6 @@ exports.update = async (req, res, next) => {
   }
 };
 
-/* =========================
-   DELETE (WITH IMAGE DELETE)
-========================= */
 exports.remove = async (req, res, next) => {
   try {
     const existing = await Model.findById(req.params.id);
@@ -156,13 +129,8 @@ exports.remove = async (req, res, next) => {
       });
     }
 
-    /* DELETE IMAGE */
     if (existing.imageSrc) {
-      const filePath = path.join(
-        __dirname,
-        "../../",
-        existing.imageSrc
-      );
+      const filePath = path.join(__dirname, "../../", existing.imageSrc);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);

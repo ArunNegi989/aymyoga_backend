@@ -9,8 +9,8 @@ const studentVideoReviewSchema = new mongoose.Schema(
 
     thumbnail: { type: String },
 
-    videoUrl: { type: String }, // youtube / insta / etc
-    videoFile: { type: String }, // uploaded file
+    videoUrl: { type: String },
+    videoFile: { type: String }, 
 
     label: { type: String },
 

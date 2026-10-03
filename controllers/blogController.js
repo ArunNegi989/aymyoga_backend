@@ -10,7 +10,6 @@ function slugify(str) {
     .replace(/^-|-$/g, "");
 }
 
-/* ─── Map a single content block (shared by create & update) ─── */
 function mapBlock(block, uploadedImages, imgIndexRef) {
   switch (block.type) {
     case "images":
@@ -28,8 +27,13 @@ function mapBlock(block, uploadedImages, imgIndexRef) {
             };
           }
           if (!img.src) throw new Error("Image src missing");
-          if (img.src.startsWith("blob:")) throw new Error("Blob URL not allowed.");
-          return { src: img.src, caption: img.caption || "", altText: img.altText || "" };
+          if (img.src.startsWith("blob:"))
+            throw new Error("Blob URL not allowed.");
+          return {
+            src: img.src,
+            caption: img.caption || "",
+            altText: img.altText || "",
+          };
         }),
       };
 
@@ -102,23 +106,20 @@ exports.create = async (req, res) => {
     console.log("Request body:", req.body);
     console.log("Request files:", req.files);
 
-    // Clone the body to avoid prototype issues
     let body = { ...req.body };
 
-    // Parse content if it's a string
     if (body.content && typeof body.content === "string") {
       try {
         body.content = JSON.parse(body.content);
       } catch (e) {
         console.error("Failed to parse content:", e);
-        return res.status(400).json({ 
-          success: false, 
-          message: "Invalid content format. Content must be valid JSON." 
+        return res.status(400).json({
+          success: false,
+          message: "Invalid content format. Content must be valid JSON.",
         });
       }
     }
 
-    // Parse tags if it's a string
     if (body.tags && typeof body.tags === "string") {
       try {
         body.tags = JSON.parse(body.tags);
@@ -128,102 +129,95 @@ exports.create = async (req, res) => {
       }
     }
 
-    // Check if content exists and is an array
     if (!body.content) {
       return res.status(400).json({
         success: false,
-        message: "Content is required"
+        message: "Content is required",
       });
     }
 
-    // Ensure content is an array
     if (!Array.isArray(body.content)) {
       return res.status(400).json({
         success: false,
-        message: "Content must be an array"
+        message: "Content must be an array",
       });
     }
 
-    // Ensure tags is an array
     if (!body.tags || !Array.isArray(body.tags)) {
       body.tags = [];
     }
 
-    // Slugify the slug
     if (body.slug) {
       body.slug = slugify(body.slug);
     }
 
-    // Handle cover image upload
     if (req.files && req.files.coverImage && req.files.coverImage[0]) {
       body.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
     }
 
-    // Process content images
     const uploadedImages = req.files?.contentImages || [];
     const imgIndexRef = { i: 0 };
-    
+
     try {
-      body.content = body.content.map((block) => mapBlock(block, uploadedImages, imgIndexRef));
+      body.content = body.content.map((block) =>
+        mapBlock(block, uploadedImages, imgIndexRef),
+      );
     } catch (e) {
       console.error("Error mapping content blocks:", e);
       return res.status(400).json({
         success: false,
-        message: e.message || "Error processing content blocks"
+        message: e.message || "Error processing content blocks",
+      });
+    }
+    if (!body.title || body.title.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Title is required",
       });
     }
 
-    // Validate required fields
-    if (!body.title || body.title.trim() === '') {
+    if (!body.slug || body.slug.trim() === "") {
       return res.status(400).json({
         success: false,
-        message: "Title is required"
+        message: "Slug is required",
       });
     }
 
-    if (!body.slug || body.slug.trim() === '') {
+    if (!body.excerpt || body.excerpt.trim() === "") {
       return res.status(400).json({
         success: false,
-        message: "Slug is required"
+        message: "Excerpt is required",
       });
     }
 
-    if (!body.excerpt || body.excerpt.trim() === '') {
+    if (!body.date || body.date.trim() === "") {
       return res.status(400).json({
         success: false,
-        message: "Excerpt is required"
+        message: "Date is required",
       });
     }
 
-    if (!body.date || body.date.trim() === '') {
+    if (!body.category || body.category.trim() === "") {
       return res.status(400).json({
         success: false,
-        message: "Date is required"
+        message: "Category is required",
       });
     }
 
-    if (!body.category || body.category.trim() === '') {
+    if (!body.coverImage || body.coverImage.trim() === "") {
       return res.status(400).json({
         success: false,
-        message: "Category is required"
-      });
-    }
-
-    if (!body.coverImage || body.coverImage.trim() === '') {
-      return res.status(400).json({
-        success: false,
-        message: "Cover image is required"
+        message: "Cover image is required",
       });
     }
 
     if (!body.content || body.content.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Content cannot be empty. Add at least one content block."
+        message: "Content cannot be empty. Add at least one content block.",
       });
     }
 
-    // Set SEO fields with defaults
     body.metaTitle = body.metaTitle || body.title;
     body.metaDescription = body.metaDescription || body.excerpt;
     body.canonicalUrl = body.canonicalUrl || "";
@@ -231,26 +225,23 @@ exports.create = async (req, res) => {
     body.ogDescription = body.ogDescription || body.excerpt;
     body.ogImage = body.ogImage || body.coverImage;
 
-    // Set Schema Markup fields with defaults
     body.schemaType = body.schemaType || "BlogPosting";
     body.schemaCustomJson = body.schemaCustomJson || "";
 
-    // Set status
     body.status = body.status || "Draft";
 
-    // Create the blog
     const blog = await Blog.create(body);
-    
-    res.status(201).json({ 
-      success: true, 
-      message: "Blog created successfully", 
-      data: blog 
+
+    res.status(201).json({
+      success: true,
+      message: "Blog created successfully",
+      data: blog,
     });
   } catch (err) {
     console.error("CREATE BLOG ERROR:", err);
-    res.status(500).json({ 
-      success: false, 
-      message: err.message || "Server Error" 
+    res.status(500).json({
+      success: false,
+      message: err.message || "Server Error",
     });
   }
 };
@@ -267,7 +258,6 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-// controllers/blog.controller.js (ya jo bhi tumhari file hai)
 
 exports.getLatestPublished = async (req, res) => {
   try {
@@ -277,7 +267,7 @@ exports.getLatestPublished = async (req, res) => {
       .sort({ date: -1 })
       .limit(limit)
       .select("title excerpt coverImage category date author slug")
-      .lean(); // lean() se plain JS object milta hai, thoda fast hota hai
+      .lean();
 
     return res.status(200).json({
       success: true,
@@ -298,7 +288,9 @@ exports.getOne = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
     res.json({ success: true, data: blog });
   } catch (err) {
@@ -323,7 +315,9 @@ exports.getBySlug = async (req, res) => {
     }
 
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
     res.json({ success: true, data: blog });
   } catch (err) {
@@ -345,9 +339,9 @@ exports.update = async (req, res) => {
         body.content = JSON.parse(body.content);
       } catch (e) {
         console.error("Failed to parse content:", e);
-        return res.status(400).json({ 
-          success: false, 
-          message: "Invalid content format. Content must be valid JSON." 
+        return res.status(400).json({
+          success: false,
+          message: "Invalid content format. Content must be valid JSON.",
         });
       }
     }
@@ -366,14 +360,14 @@ exports.update = async (req, res) => {
     if (!body.content) {
       return res.status(400).json({
         success: false,
-        message: "Content is required"
+        message: "Content is required",
       });
     }
 
     if (!Array.isArray(body.content)) {
       return res.status(400).json({
         success: false,
-        message: "Content must be an array"
+        message: "Content must be an array",
       });
     }
 
@@ -395,14 +389,16 @@ exports.update = async (req, res) => {
     // Process content images
     const uploadedImages = req.files?.contentImages || [];
     const imgIndexRef = { i: 0 };
-    
+
     try {
-      body.content = body.content.map((block) => mapBlock(block, uploadedImages, imgIndexRef));
+      body.content = body.content.map((block) =>
+        mapBlock(block, uploadedImages, imgIndexRef),
+      );
     } catch (e) {
       console.error("Error mapping content blocks:", e);
       return res.status(400).json({
         success: false,
-        message: e.message || "Error processing content blocks"
+        message: e.message || "Error processing content blocks",
       });
     }
 
@@ -424,10 +420,16 @@ exports.update = async (req, res) => {
     });
 
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
-    
-    res.json({ success: true, message: "Blog updated successfully", data: blog });
+
+    res.json({
+      success: true,
+      message: "Blog updated successfully",
+      data: blog,
+    });
   } catch (err) {
     console.error("UPDATE BLOG ERROR:", err);
     res.status(500).json({ success: false, message: err.message });
@@ -441,7 +443,9 @@ exports.remove = async (req, res) => {
   try {
     const blog = await Blog.findByIdAndDelete(req.params.id);
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
     res.json({ success: true, message: "Blog deleted successfully" });
   } catch (err) {

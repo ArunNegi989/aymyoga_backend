@@ -1,18 +1,14 @@
 const Model = require("../../models/homepage/ourMissionModel");
 
-/* ═══════════════════════════════════════
-   CREATE  —  save BOTH blocks at once
-   POST /our-mission/add-our-mission
-═══════════════════════════════════════ */
 exports.create = async (req, res, next) => {
   try {
     const { missionBlock, whyBlock } = req.body;
 
-    /* ── Basic validation ── */
     if (!missionBlock?.heading || !missionBlock?.paragraphs?.length) {
       return res.status(400).json({
         success: false,
-        message: "missionBlock: heading and at least one paragraph are required",
+        message:
+          "missionBlock: heading and at least one paragraph are required",
       });
     }
 
@@ -23,7 +19,6 @@ exports.create = async (req, res, next) => {
       });
     }
 
-    /* ── Only ONE document allowed ── */
     const existing = await Model.findOne();
     if (existing) {
       return res.status(400).json({
@@ -45,10 +40,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-/* ═══════════════════════════════════════
-   GET ALL  (returns the single document)
-   GET /our-mission/get-our-mission
-═══════════════════════════════════════ */
 exports.getAll = async (req, res, next) => {
   try {
     const data = await Model.find();
@@ -62,10 +53,6 @@ exports.getAll = async (req, res, next) => {
   }
 };
 
-/* ═══════════════════════════════════════
-   GET ONE BY ID
-   GET /our-mission/get-our-mission/:id
-═══════════════════════════════════════ */
 exports.getOne = async (req, res, next) => {
   try {
     const data = await Model.findById(req.params.id);
@@ -86,10 +73,6 @@ exports.getOne = async (req, res, next) => {
   }
 };
 
-/* ═══════════════════════════════════════
-   UPDATE  —  can update one or both blocks
-   PUT /our-mission/update-our-mission/:id
-═══════════════════════════════════════ */
 exports.update = async (req, res, next) => {
   try {
     const existing = await Model.findById(req.params.id);
@@ -103,7 +86,6 @@ exports.update = async (req, res, next) => {
 
     const { missionBlock, whyBlock } = req.body;
 
-    /* ── Merge only provided fields ── */
     const updatePayload = {};
 
     if (missionBlock) {
@@ -123,7 +105,7 @@ exports.update = async (req, res, next) => {
     const updated = await Model.findByIdAndUpdate(
       req.params.id,
       { $set: updatePayload },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     res.json({
@@ -136,10 +118,6 @@ exports.update = async (req, res, next) => {
   }
 };
 
-/* ═══════════════════════════════════════
-   DELETE
-   DELETE /our-mission/delete-our-mission/:id
-═══════════════════════════════════════ */
 exports.remove = async (req, res, next) => {
   try {
     const data = await Model.findByIdAndDelete(req.params.id);

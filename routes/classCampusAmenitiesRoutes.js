@@ -11,9 +11,6 @@ const {
   remove,
 } = require("../controllers/homepage/classCampusAmenitiesController");
 
-/* =========================
-   MULTER FIELDS
-========================= */
 const fields = upload.fields([
   { name: "classSizeImage", maxCount: 1 },
   { name: "amenityImage", maxCount: 1 },
@@ -23,10 +20,6 @@ const fields = upload.fields([
   { name: "campusImage_3" },
   { name: "campusImage_4" },
 ]);
-
-/* =========================
-   ROUTES
-========================= */
 
 router.post("/create", fields, create);
 router.get("/", getAll);

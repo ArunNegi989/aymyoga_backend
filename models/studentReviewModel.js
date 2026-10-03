@@ -13,7 +13,6 @@ const studentReviewSchema = new mongoose.Schema(
 
     courseBadge: { type: String },
 
-    // ✅ important (date input se aa raha hai)
     date: { type: Date, required: true },
 
     image: { type: String },

@@ -90,7 +90,7 @@ exports.updateBatch = async (req, res) => {
     const batch = await HathaYogaBatch.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!batch) {

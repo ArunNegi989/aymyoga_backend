@@ -9,11 +9,7 @@ const {
   remove,
 } = require("../controllers/homepage/Videotestimonialcontroller");
 
-/* =========================
-   VIDEO TESTIMONIAL ROUTES
-========================= */
 
-// CREATE VIDEO TESTIMONIAL
 router.post("/create-video", create);
 
 // GET ALL VIDEO TESTIMONIALS

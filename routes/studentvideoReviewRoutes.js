@@ -6,17 +6,11 @@ const fs = require("fs");
 
 const controller = require("../controllers/studentVideoReviewController");
 
-/* =========================
-   MULTER SETUP
-========================= */
-
-// ensure uploads folder exists
 const uploadDir = "uploads/";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -28,7 +22,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// filter
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype.startsWith("image/") ||
@@ -46,11 +39,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-/* =========================
-   ROUTES
-========================= */
 
-// create (multiple fields)
 router.post(
   "/create",
   upload.fields([
@@ -60,13 +49,10 @@ router.post(
   controller.create
 );
 
-// get all
 router.get("/get", controller.getAll);
 
-// get one
 router.get("/get/:id", controller.getOne);
 
-// update
 router.put(
   "/update/:id",
   upload.fields([
@@ -76,7 +62,6 @@ router.put(
   controller.update
 );
 
-// delete
 router.delete("/delete/:id", controller.delete);
 
 module.exports = router;

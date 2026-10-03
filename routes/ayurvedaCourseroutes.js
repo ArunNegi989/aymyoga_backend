@@ -8,8 +8,6 @@ const uploadFields = upload.fields([
   { name: "introRightImage", maxCount: 1 },
   { name: "spicesStripImage", maxCount: 1 },
   { name: "sunsetImage", maxCount: 1 },
-
-  /* ✅ NEW: Panchakarma right image + training video */
   { name: "panchakarmaRightImage", maxCount: 1 },
   { name: "trainingVideoFile", maxCount: 1 },
 

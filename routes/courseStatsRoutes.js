@@ -5,20 +5,17 @@ const router = express.Router();
 const HundredHourCourse = require("../models/courses/100hrContentModel");
 const TwoHundredHourCourse = require("../models/courses/Yoga200Content");
 const ThreeHundredHourCourse = require("../models/courses/yoga300Content1model");
-const vinyasa = require("../models/courses/ashtangaVinyasaTTCModel")
-const kundalini=require("../models/courses/kundaliniTTCModel")
-const fiveHundred = require("../models/courses/yoga500ContentModel")
-const prenatal =require("../models/courses/prenatalPageModel")
-const yogarishikes =require("../models/courses/bestYogaSchoolModelrishikesh")
-const yogaIndia = require("../models/courses/100hrContentModel")
-const hathayoga = require("../models/courses/HathaYogaBatchModel")
-const yogagoa = require("../models/courses/GoaYogaPageModel")
-const bali  = require("../models/courses/baliPageModel")
-const ayurveda = require("../models/courses/ayurvedaCoursemodel")
-const worldwide =require("../models/courses/worldwidemodel")
-
-
-// ... add all your other course models here
+const vinyasa = require("../models/courses/ashtangaVinyasaTTCModel");
+const kundalini = require("../models/courses/kundaliniTTCModel");
+const fiveHundred = require("../models/courses/yoga500ContentModel");
+const prenatal = require("../models/courses/prenatalPageModel");
+const yogarishikes = require("../models/courses/bestYogaSchoolModelrishikesh");
+const yogaIndia = require("../models/courses/100hrContentModel");
+const hathayoga = require("../models/courses/HathaYogaBatchModel");
+const yogagoa = require("../models/courses/GoaYogaPageModel");
+const bali = require("../models/courses/baliPageModel");
+const ayurveda = require("../models/courses/ayurvedaCoursemodel");
+const worldwide = require("../models/courses/worldwidemodel");
 
 router.get("/count", async (req, res) => {
   try {
@@ -37,7 +34,6 @@ router.get("/count", async (req, res) => {
       bali.countDocuments(),
       ayurveda.countDocuments(),
       worldwide.countDocuments(),
-      // ... match the order of your imports
     ]);
 
     const total = counts.reduce((sum, c) => sum + c, 0);

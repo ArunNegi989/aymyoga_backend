@@ -30,7 +30,6 @@ const courseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Fixed: use async style — no `next` callback needed in Mongoose 7+
 courseSchema.pre("save", async function () {
   if (this.isNew && (this.availableSeats == null || this.availableSeats === 0)) {
     this.availableSeats = this.totalSeats;

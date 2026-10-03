@@ -18,14 +18,12 @@ exports.createAccreditation = async (req, res) => {
 
     const data = req.body;
 
-    // parse JSON
     if (typeof data.courseCerts === "string")
       data.courseCerts = JSON.parse(data.courseCerts);
 
     if (typeof data.awardCerts === "string")
       data.awardCerts = JSON.parse(data.awardCerts);
 
-    /* ✅ AWARD LIMIT */
     if (data.awardCerts && data.awardCerts.length > MAX_AWARDS) {
       return res.status(400).json({
         success: false,
@@ -33,12 +31,10 @@ exports.createAccreditation = async (req, res) => {
       });
     }
 
-    /* ===== MAIN IMAGE ===== */
     if (req.files?.mainImage) {
       data.mainImage = req.files.mainImage[0].path.replace(/\\/g, "/");
     }
 
-    /* ===== COURSE CERT IMAGES ===== */
     let courseIndexes = [];
     if (data.courseCertImageIndexes) {
       courseIndexes = String(data.courseCertImageIndexes)
@@ -55,7 +51,6 @@ exports.createAccreditation = async (req, res) => {
       });
     }
 
-    /* ===== AWARD CERT IMAGES ===== */
     let awardIndexes = [];
     if (data.awardCertImageIndexes) {
       awardIndexes = String(data.awardCertImageIndexes)
@@ -122,7 +117,6 @@ exports.updateAccreditation = async (req, res) => {
     if (typeof data.awardCerts === "string")
       data.awardCerts = JSON.parse(data.awardCerts);
 
-    /* ✅ AWARD LIMIT */
     if (data.awardCerts && data.awardCerts.length > MAX_AWARDS) {
       return res.status(400).json({
         success: false,
@@ -172,11 +166,9 @@ exports.updateAccreditation = async (req, res) => {
     delete data.courseCertImageIndexes;
     delete data.awardCertImageIndexes;
 
-    const updated = await Accreditation.findByIdAndUpdate(
-      req.params.id,
-      data,
-      { new: true }
-    );
+    const updated = await Accreditation.findByIdAndUpdate(req.params.id, data, {
+      new: true,
+    });
 
     res.json({ success: true, data: updated });
   } catch (err) {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const upload = require("../middleware/upload"); // 👈 IMPORTANT
+const upload = require("../middleware/upload"); 
 
 const {
   create,
@@ -11,14 +11,11 @@ const {
   remove,
 } = require("../controllers/homepage/whyAYMController");
 
-/* =========================
-   WHY AYM ROUTES
-========================= */
 
 // CREATE (only once + image)
 router.post(
   "/create-why-aym",
-  upload.single("image"), // 👈 MUST
+  upload.single("image"), 
   create
 );
 
@@ -31,7 +28,7 @@ router.get("/get-why-aym/:id", getOne);
 // UPDATE WHY AYM (with image replace)
 router.put(
   "/update-why-aym/:id",
-  upload.single("image"), // 👈 MUST
+  upload.single("image"), 
   update
 );
 

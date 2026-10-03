@@ -19,11 +19,10 @@ const imageFields = upload.fields([
   { name: "upiQr2", maxCount: 1 },
 ]);
 
-// Public
+
 router.get("/", getPaymentSection);
 router.get("/:id", getPaymentSectionById);
 
-// Admin (add `protect` before imageFields if you use auth)
 router.post("/", imageFields, createPaymentSection);
 router.put("/:id", imageFields, updatePaymentSection);
 router.delete("/:id", deletePaymentSection);

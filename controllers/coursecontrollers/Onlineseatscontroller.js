@@ -1,5 +1,3 @@
-// FILE: src/controllers/coursecontrollers/onlineSeatsController.js
-
 const Seats = require("../../models/courses/Onlineseatsmode");
 
 /* =========================
@@ -43,10 +41,6 @@ exports.create = async (req, res) => {
   }
 };
 
-/* =========================
-   GET ALL
-   (sirf future + aaj ke batches)
-========================= */
 exports.getAll = async (req, res) => {
   try {
     const today = new Date();
@@ -116,7 +110,7 @@ exports.update = async (req, res) => {
         bookedSeats,
         note,
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updated) {
@@ -159,10 +153,6 @@ exports.remove = async (req, res) => {
   }
 };
 
-/* =========================
-   BOOK SEAT
-   (registration form submit hone par call hoga)
-========================= */
 exports.bookSeat = async (req, res) => {
   try {
     const { id } = req.params;

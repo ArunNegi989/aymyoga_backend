@@ -3,14 +3,11 @@ const Model = require("../../models/courses/Yoga200Content");
 /* ═══════════════════════════════════════════════
    SHARED HELPERS
 ═══════════════════════════════════════════════ */
-
-/** Pick first element if array, else return raw value as string */
 const getSingle = (val) => {
   if (Array.isArray(val)) return val[0] ?? "";
   return val ?? "";
 };
 
-/** Safe JSON.parse with a fallback default */
 const parseJSON = (val, def = []) => {
   try {
     return val ? JSON.parse(val) : def;
@@ -19,7 +16,6 @@ const parseJSON = (val, def = []) => {
   }
 };
 
-/** Normalise multer path to a forward-slash URL path */
 const path = require("path");
 
 const normalizePath = (filePath) => {
@@ -27,7 +23,6 @@ const normalizePath = (filePath) => {
 
   const normalized = filePath.replace(/\\/g, "/");
 
-  // sirf uploads ke baad wala path lo
   const uploadIndex = normalized.indexOf("/uploads/");
 
   if (uploadIndex !== -1) {
@@ -36,13 +31,7 @@ const normalizePath = (filePath) => {
 
   return `/uploads/${path.basename(normalized)}`;
 };
-/**
- * Rich-text fields come from the frontend as PLAIN HTML strings appended
- * directly to FormData (no JSON.stringify wrapper — that was removed in the
- * frontend fix).  We still call this helper so old data encoded with
- * JSON.stringify continues to decode correctly, while plain HTML passes
- * through unchanged.
- */
+
 const decodeHtml = (val) => {
   if (!val) return "";
   const raw = Array.isArray(val) ? val[0] : val;
@@ -52,20 +41,15 @@ const decodeHtml = (val) => {
     if (typeof parsed === "string") return parsed;
     return raw;
   } catch {
-    return raw; // already plain HTML — return as-is
+    return raw;
   }
 };
 
-/**
- * Build the full data object that is common to both CREATE and UPDATE.
- * Keeps both handlers DRY and guarantees every field is processed the
- * same way in both paths.
- */
 const buildDataObject = (body, files) => {
   /* ── file lookup helper ── */
   const getFile = (name) => {
     const file = files.find((f) => f.fieldname === name);
-    return file ? normalizePath(file.path) : null; // null = not uploaded
+    return file ? normalizePath(file.path) : null;
   };
 
   /* ── Dynamic intro paragraphs ── */
@@ -168,7 +152,6 @@ const buildDataObject = (body, files) => {
     aimsBullets: [].concat(body.aimsBullets || []),
     aimsOutro: decodeHtml(body.aimsOutro),
 
-    /* ── COURSE OVERVIEW — all 6 label/value pairs ── */
     overviewH2: getSingle(body.overviewH2),
     overviewSubPara: getSingle(body.overviewSubPara),
     overviewCertLabel: getSingle(body.overviewCertLabel),
@@ -189,7 +172,6 @@ const buildDataObject = (body, files) => {
     upcomingDatesH2: getSingle(body.upcomingDatesH2),
     upcomingDatesSubtext: getSingle(body.upcomingDatesSubtext),
 
-    /* ── fee inclusions - FIXED: Parse from JSON strings ── */
     feeIncludedTitle: getSingle(body.feeIncludedTitle),
     feeNotIncludedTitle: getSingle(body.feeNotIncludedTitle),
     includedFee: (() => {
@@ -414,14 +396,6 @@ exports.getOne = async (req, res) => {
   }
 };
 
-/* ═══════════════════════════════════════════════
-   UPDATE
-   Key fixes vs. old version:
-   1. Uses buildDataObject() — all fields processed identically to CREATE
-   2. Existing images are PRESERVED when no new file is uploaded
-   3. existingLuxImages / existingSchedImages sent by the frontend are merged
-      with any newly uploaded files so partial gallery updates work correctly
-═══════════════════════════════════════════════ */
 exports.update = async (req, res) => {
   try {
     const body = req.body;
@@ -429,7 +403,6 @@ exports.update = async (req, res) => {
 
     const { data, getFile } = buildDataObject(body, files);
 
-    /* ── Single image fields — only overwrite if a new file was uploaded ── */
     const heroNew = getFile("heroImage");
     const ashtangaNew = getFile("ashtangaImage");
     const hathaNew = getFile("hathaImage");
@@ -464,7 +437,6 @@ exports.update = async (req, res) => {
 
     if (videoFileNew) data.videoFile = videoFileNew;
 
-    /* ── Gallery images — merge existing paths + new uploads ── */
     const existingLux = parseJSON(body.existingLuxImages, []);
     const existingSched = parseJSON(body.existingSchedImages, []);
 
@@ -476,7 +448,6 @@ exports.update = async (req, res) => {
       .filter((f) => f.fieldname === "schedImages")
       .map((f) => normalizePath(f.path));
 
-    /* If new files uploaded, replace gallery; otherwise keep existing */
     data.luxImages = newLuxImgs.length
       ? [...existingLux, ...newLuxImgs]
       : existingLux;
@@ -484,7 +455,6 @@ exports.update = async (req, res) => {
       ? [...existingSched, ...newSchedImgs]
       : existingSched;
 
-    /* ── Perform update ── */
     const updated = await Model.findByIdAndUpdate(req.params.id, data, {
       new: true,
       runValidators: false,

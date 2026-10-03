@@ -1,7 +1,10 @@
-// controllers/coursecontrollers/yoga300Content1controller.js
 const Yoga300 = require("../../models/courses/yoga300Content1model");
 
-const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => {
+const parseData = (
+  req,
+  existingHeroImage = "",
+  existingRightSideImage = "",
+) => {
   const body = req.body;
 
   // Hero Image
@@ -20,7 +23,7 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
   let bottomThumbnails = [];
   try {
     const parsedThumbnails = JSON.parse(body.bottomThumbnails || "[]");
-    
+
     if (req.files) {
       parsedThumbnails.forEach((thumb, idx) => {
         const fileKey = `thumbnail_${idx}`;
@@ -30,35 +33,38 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
       });
     }
     bottomThumbnails = parsedThumbnails;
-  } catch(e) {
+  } catch (e) {
     console.error("Error parsing thumbnails:", e);
     bottomThumbnails = [];
   }
 
-  // FIXED: Parse fees from JSON strings
   let includedFee = [];
   let notIncludedFee = [];
-  
+
   try {
-    // Parse includedFee from JSON string
     if (body.includedFee) {
-      includedFee = typeof body.includedFee === 'string' 
-        ? JSON.parse(body.includedFee)
-        : (Array.isArray(body.includedFee) ? body.includedFee : []);
+      includedFee =
+        typeof body.includedFee === "string"
+          ? JSON.parse(body.includedFee)
+          : Array.isArray(body.includedFee)
+            ? body.includedFee
+            : [];
     }
-  } catch(e) {
+  } catch (e) {
     console.error("Error parsing includedFee:", e);
     includedFee = [];
   }
 
   try {
-    // Parse notIncludedFee from JSON string
     if (body.notIncludedFee) {
-      notIncludedFee = typeof body.notIncludedFee === 'string'
-        ? JSON.parse(body.notIncludedFee)
-        : (Array.isArray(body.notIncludedFee) ? body.notIncludedFee : []);
+      notIncludedFee =
+        typeof body.notIncludedFee === "string"
+          ? JSON.parse(body.notIncludedFee)
+          : Array.isArray(body.notIncludedFee)
+            ? body.notIncludedFee
+            : [];
     }
-  } catch(e) {
+  } catch (e) {
     console.error("Error parsing notIncludedFee:", e);
     notIncludedFee = [];
   }
@@ -83,13 +89,17 @@ const parseData = (req, existingHeroImage = "", existingRightSideImage = "") => 
   let overviewFields = [];
   try {
     overviewFields = JSON.parse(body.overviewFields || "[]");
-  } catch { overviewFields = []; }
+  } catch {
+    overviewFields = [];
+  }
 
   // Handle modules
   let modules = [];
   try {
     modules = JSON.parse(body.modules || "[]");
-  } catch { modules = []; }
+  } catch {
+    modules = [];
+  }
 
   return {
     slug: body.slug,
@@ -131,7 +141,9 @@ exports.create = async (req, res) => {
     const data = new Yoga300(parsedData);
     await data.save();
 
-    res.status(201).json({ success: true, message: "Created successfully", data });
+    res
+      .status(201)
+      .json({ success: true, message: "Created successfully", data });
   } catch (err) {
     console.error("Create error:", err);
     res.status(500).json({ message: err.message, stack: err.stack });
@@ -153,7 +165,9 @@ exports.getSingle = async (req, res) => {
     const { id } = req.params;
     const data = await Yoga300.findById(id);
     if (!data) {
-      return res.status(404).json({ success: false, message: "Record not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Record not found" });
     }
     res.json({ success: true, data });
   } catch (err) {
@@ -167,11 +181,20 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const existing = await Yoga300.findById(id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "No record found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "No record found" });
     }
 
-    const parsedData = parseData(req, existing.heroImage, existing.rightSideImage);
-    const updated = await Yoga300.findByIdAndUpdate(id, parsedData, { new: true, runValidators: false });
+    const parsedData = parseData(
+      req,
+      existing.heroImage,
+      existing.rightSideImage,
+    );
+    const updated = await Yoga300.findByIdAndUpdate(id, parsedData, {
+      new: true,
+      runValidators: false,
+    });
 
     res.json({ success: true, message: "Updated successfully", data: updated });
   } catch (err) {
@@ -185,7 +208,9 @@ exports.delete = async (req, res) => {
     const { id } = req.params;
     const existing = await Yoga300.findById(id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "No record found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "No record found" });
     }
     await Yoga300.findByIdAndDelete(id);
     res.json({ success: true, message: "Deleted successfully" });

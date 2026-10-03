@@ -4,7 +4,6 @@ exports.sendEmail = async (req, res) => {
   try {
     const data = req.body;
 
-    // ── Basic validation ────────────────────────────────────────────
     if (!data.fullName || !data.email || !data.phone || !data.course) {
       return res.status(400).json({
         success: false,

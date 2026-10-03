@@ -1,6 +1,5 @@
 const AyurvedaCourse = require("../../models/courses/ayurvedaCoursemodel");
 
-/* SAFE JSON */
 const safeParse = (data) => {
   try {
     return JSON.parse(data || "[]");
@@ -9,7 +8,6 @@ const safeParse = (data) => {
   }
 };
 
-/* PARSER */
 const parseData = (req, existing = {}) => {
   const body = req.body;
 
@@ -31,18 +29,16 @@ const parseData = (req, existing = {}) => {
       const file = req.files?.[`panchaKarmaCourseImage_${i}`];
       if (file) item.image = "/uploads/" + file[0].filename;
       return item;
-    }
+    },
   );
 
-  /* ── Training video logic ──
-     Priority: newly uploaded file > URL field > keep existing
-  */
   let trainingVideoFile = existing.trainingVideoFile || "";
-  let trainingVideoUrl = body.trainingVideoUrl || existing.trainingVideoUrl || "";
+  let trainingVideoUrl =
+    body.trainingVideoUrl || existing.trainingVideoUrl || "";
 
   if (req.files?.trainingVideoFile) {
     trainingVideoFile = "/uploads/" + req.files.trainingVideoFile[0].filename;
-    trainingVideoUrl = ""; // uploaded file takes priority, clear URL
+    trainingVideoUrl = "";
   }
 
   return {
@@ -53,7 +49,6 @@ const parseData = (req, existing = {}) => {
     spicesStripImage: getImg("spicesStripImage"),
     sunsetImage: getImg("sunsetImage"),
 
-    /* ✅ NEW fields */
     panchakarmaRightImage: getImg("panchakarmaRightImage"),
     trainingVideoFile,
     trainingVideoUrl,
@@ -76,7 +71,6 @@ const parseData = (req, existing = {}) => {
   };
 };
 
-/* CREATE */
 exports.create = async (req, res) => {
   try {
     const exists = await AyurvedaCourse.findOne();
@@ -117,7 +111,7 @@ exports.update = async (req, res) => {
     const updated = await AyurvedaCourse.findByIdAndUpdate(
       req.params.id,
       data,
-      { new: true }
+      { new: true },
     );
 
     res.json({ success: true, data: updated });

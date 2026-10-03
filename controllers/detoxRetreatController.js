@@ -1,9 +1,7 @@
-// controllers/detoxRetreatController.js
 const DetoxRetreatSection = require("../models/DetoxRetreatSection");
 const fs = require("fs");
 const path = require("path");
 
-// Helper to delete image
 const deleteImage = (imagePath) => {
   if (!imagePath) return;
   const fullPath = path.join(__dirname, "../uploads", path.basename(imagePath));
@@ -12,13 +10,10 @@ const deleteImage = (imagePath) => {
   }
 };
 
-// @desc    Create new detox retreat section
-// @route   POST /api/detox-retreat-section
 exports.createSection = async (req, res) => {
   try {
     const data = req.body;
 
-    // Parse JSON fields
     let benefits = [];
     let steps = [];
     let badges = [];
@@ -56,14 +51,20 @@ exports.createSection = async (req, res) => {
     }
 
     // Handle image uploads
-    const heroImage = req.files?.heroImage ? req.files.heroImage[0].filename : "";
+    const heroImage = req.files?.heroImage
+      ? req.files.heroImage[0].filename
+      : "";
     const s1Image = req.files?.s1Image ? req.files.s1Image[0].filename : "";
-    const massageImage = req.files?.massageImage ? req.files.massageImage[0].filename : "";
+    const massageImage = req.files?.massageImage
+      ? req.files.massageImage[0].filename
+      : "";
 
     const section = await DetoxRetreatSection.create({
       heroImage,
       heroImageAlt: data.heroImageAlt || "Yoga Students Group",
-      mainTitle: data.mainTitle || "DETOXIFICATION RETREAT THROUGH HERBS, YOGA, AYURVEDA, AND NUTRITION",
+      mainTitle:
+        data.mainTitle ||
+        "DETOXIFICATION RETREAT THROUGH HERBS, YOGA, AYURVEDA, AND NUTRITION",
 
       s1Para1: data.s1Para1 || "",
       s1HighlightText: data.s1HighlightText || "",
@@ -78,7 +79,9 @@ exports.createSection = async (req, res) => {
       benefits,
 
       s3Label: data.s3Label || "Our Method",
-      s3Title: data.s3Title || "COMPLETE METHOD TO DETOXIFICATION THROUGH YOGA, AYURVEDA, AND DIET",
+      s3Title:
+        data.s3Title ||
+        "COMPLETE METHOD TO DETOXIFICATION THROUGH YOGA, AYURVEDA, AND DIET",
       s3Body: data.s3Body || "",
       steps,
       finalStepTitle: data.finalStepTitle || "Complete Detox",
@@ -91,16 +94,19 @@ exports.createSection = async (req, res) => {
       overlayQuote: data.overlayQuote || "Healing begins where toxins end.",
 
       s5Label: data.s5Label || "Our Approach",
-      s5Title: data.s5Title || "WE HAVE TWO SYSTEMS FOR DETOXIFICATION AT AYM DETOX SCHOOL IN RISHIKESH",
+      s5Title:
+        data.s5Title ||
+        "WE HAVE TWO SYSTEMS FOR DETOXIFICATION AT AYM DETOX SCHOOL IN RISHIKESH",
       systems,
 
       s6Label: data.s6Label || "Plans",
       s6Title: data.s6Title || "PRICE AND PACKAGES",
       packages,
-      priceNote: data.priceNote || "Price will let you know after consultation with our Ayurveda Doctor (by Email)",
+      priceNote:
+        data.priceNote ||
+        "Price will let you know after consultation with our Ayurveda Doctor (by Email)",
     });
 
-    // Return with full image URLs
     const sectionObj = section.toObject();
     const baseUrl = `${req.protocol}://${req.get("host")}`;
 
@@ -128,8 +134,6 @@ exports.createSection = async (req, res) => {
   }
 };
 
-// @desc    Get all detox retreat sections
-// @route   GET /api/detox-retreat-section
 exports.getAllSections = async (req, res) => {
   try {
     const sections = await DetoxRetreatSection.find().sort({ createdAt: -1 });
@@ -165,8 +169,6 @@ exports.getAllSections = async (req, res) => {
   }
 };
 
-// @desc    Get single detox retreat section
-// @route   GET /api/detox-retreat-section/:id
 exports.getSectionById = async (req, res) => {
   try {
     const section = await DetoxRetreatSection.findById(req.params.id);
@@ -210,8 +212,6 @@ exports.getSectionById = async (req, res) => {
   }
 };
 
-// @desc    Get active/single detox retreat section (frontend)
-// @route   GET /api/detox-retreat-section/active
 exports.getActiveSection = async (req, res) => {
   try {
     const section = await DetoxRetreatSection.findOne().sort({ createdAt: -1 });
@@ -249,8 +249,6 @@ exports.getActiveSection = async (req, res) => {
   }
 };
 
-// @desc    Update detox retreat section
-// @route   PUT /api/detox-retreat-section/:id
 exports.updateSection = async (req, res) => {
   try {
     let section = await DetoxRetreatSection.findById(req.params.id);
@@ -264,7 +262,6 @@ exports.updateSection = async (req, res) => {
 
     const data = req.body;
 
-    // Parse JSON fields
     let benefits = [];
     let steps = [];
     let badges = [];
@@ -301,7 +298,6 @@ exports.updateSection = async (req, res) => {
       packages = section.packages;
     }
 
-    // Handle image uploads - keep existing if no new file
     let heroImage = section.heroImage;
     let s1Image = section.s1Image;
     let massageImage = section.massageImage;
@@ -362,7 +358,7 @@ exports.updateSection = async (req, res) => {
         packages,
         priceNote: data.priceNote || section.priceNote,
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     const sectionObj = section.toObject();
@@ -398,8 +394,6 @@ exports.updateSection = async (req, res) => {
   }
 };
 
-// @desc    Delete detox retreat section
-// @route   DELETE /api/detox-retreat-section/:id
 exports.deleteSection = async (req, res) => {
   try {
     const section = await DetoxRetreatSection.findById(req.params.id);
@@ -411,7 +405,6 @@ exports.deleteSection = async (req, res) => {
       });
     }
 
-    // Delete associated images
     deleteImage(section.heroImage);
     deleteImage(section.s1Image);
     deleteImage(section.massageImage);

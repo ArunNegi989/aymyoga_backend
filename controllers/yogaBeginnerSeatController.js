@@ -1,4 +1,3 @@
-// FILE: controllers/yogaBeginnerSeatController.js
 const YogaBeginnerSeat = require("../models/YogaBeginnerSeat");
 
 /* ══════════════════════════════
@@ -150,7 +149,8 @@ exports.updateBatch = async (req, res) => {
     if (twinPrice !== undefined) batch.twinPrice = Number(twinPrice);
     if (inrTwinPrice !== undefined) batch.inrTwinPrice = Number(inrTwinPrice);
     if (privatePrice !== undefined) batch.privatePrice = Number(privatePrice);
-    if (inrPrivatePrice !== undefined) batch.inrPrivatePrice = Number(inrPrivatePrice);
+    if (inrPrivatePrice !== undefined)
+      batch.inrPrivatePrice = Number(inrPrivatePrice);
     if (totalSeats !== undefined) batch.totalSeats = Number(totalSeats);
     if (bookedSeats !== undefined) batch.bookedSeats = Number(bookedSeats);
     if (note !== undefined) batch.note = note;
@@ -194,10 +194,6 @@ exports.deleteBatch = async (req, res) => {
   }
 };
 
-/* ══════════════════════════════
-   INCREMENT BOOKED SEATS
-   (registration form submit hone par call karo)
-══════════════════════════════ */
 exports.incrementBookedSeat = async (req, res) => {
   try {
     const batch = await YogaBeginnerSeat.findById(req.params.id);

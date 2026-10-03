@@ -53,7 +53,6 @@ router.use("/why-aym", require("./whyAYMRoutes"));
 
 router.use("/courses-section", require("./courseSectionRoutes"));
 
-
 /* =========================
    Affiliation
 ========================= */
@@ -69,18 +68,15 @@ router.use("/about-section", require("./aboutRoutes"));
 ========================= */
 router.use("/rules-section", require("./rulesRoutes"));
 
-
 /* =========================
   yoga retreat
 ========================= */
 router.use("/yoga-retreat-section", require("./yogaRetreatRoutes"));
 
-
 /* =========================
   yoga ashram
 ========================= */
 router.use("/yoga-ashram-section", require("./yogaAshramRoutes"));
-
 
 /* =========================
   yoga holidays
@@ -105,7 +101,6 @@ router.use("/sound-healing-seats", require("./soundHealingSeatsRoutes"));
 
 router.use("/sound-healing-section", require("./Soundhealingroutes"));
 
-
 /* =========================
    meditation yoga workshop — seats
 ========================= */
@@ -119,7 +114,7 @@ router.use("/meditation-section", require("./meditationSectionRoutes"));
 router.use("/yoga-beginners-section", require("./yogaBeginnersRoutes"));
 
 router.use("/yoga-beginners-seats", require("./yogaBeginnerSeatRoutes"));
- 
+
 /* =========================
    FOUNDER ROUTES
 ========================= */
@@ -191,8 +186,6 @@ router.use("/ayurveda-course", require("./ayurvedaCourseroutes"));
 router.use("/ashtanga-vinyasa-ttc", require("./ashtangaVinyasaTTCRoutes"));
 router.use("/vinyasa-seats", require("./vinyasaSeatsRoutes"));
 
-
-
 /* =========================
    PRENATAL SEATS ROUTES
 ========================= */
@@ -205,7 +198,6 @@ router.use("/prenatal-page", require("./prenatalPageRoutes"));
 router.use("/kundalini-seats", require("./kundaliniSeatsRoutes"));
 router.use("/kundalini-ttc-content", require("./kundaliniTTCRoutes"));
 
-
 /* =========================
     Rishikes CONTENT ROUTES
 ========================= */
@@ -216,7 +208,6 @@ router.use("/best-yoga-school", require("./bestYogaSchoolRoutesrishikesh"));
 ========================= */
 router.use("/hathayoga-seats", require("./hathaYogaSeatsRoutes"));
 router.use("/hatha-yoga", require("./hathaYogaRoutes"));
-
 
 /* =========================
    Goa CONTENT ROUTES
@@ -249,10 +240,8 @@ router.use("/online-seats", require("./Onlineseatsroutes"));
 
 router.use("/online-course-section", require("./OnlinecourseSectionRoutes"));
 
-
 /* ============ ayush course ==================*/
 router.use("/yoga-college-section", require("./Yogacollegesectionroutes"));
-
 
 /* ============ Payment page ==================*/
 

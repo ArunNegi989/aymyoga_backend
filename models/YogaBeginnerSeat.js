@@ -66,7 +66,6 @@ const yogaBeginnerSeatSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// ✅ next() ka use hata diya — direct throw karo, Mongoose khud sync/async dono handle kar lega
 yogaBeginnerSeatSchema.pre("validate", function () {
   if (this.startDate && this.endDate && this.endDate <= this.startDate) {
     throw new Error("End date must be after start date");

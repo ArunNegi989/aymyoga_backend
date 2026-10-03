@@ -15,7 +15,9 @@ const parseJSON = (value, fallback) => {
 
 const toDiskPath = (storedPath) => {
   if (!storedPath) return null;
-  const relative = storedPath.startsWith("/") ? storedPath.slice(1) : storedPath;
+  const relative = storedPath.startsWith("/")
+    ? storedPath.slice(1)
+    : storedPath;
   return path.join(process.cwd(), relative);
 };
 
@@ -29,14 +31,10 @@ const deleteFileIfExists = (storedPath) => {
   });
 };
 
-const findFile = (files, fieldname) => (files || []).find((f) => f.fieldname === fieldname);
+const findFile = (files, fieldname) =>
+  (files || []).find((f) => f.fieldname === fieldname);
 const toPublicPath = (file) => (file ? `/uploads/${file.filename}` : "");
 
-/**
- * Builds the full Holidays payload from req.body + req.files.
- * Used by both create and update. `existingDoc` supplies previous values so
- * unspecified fields are preserved.
- */
 const buildHolidaysPayload = (req, existingDoc = null) => {
   const body = req.body;
   const files = req.files || [];
@@ -45,7 +43,8 @@ const buildHolidaysPayload = (req, existingDoc = null) => {
     heroImageAlt: body.heroImageAlt ?? existingDoc?.heroImageAlt ?? "",
     mainTitle: body.mainTitle ?? existingDoc?.mainTitle ?? "",
     mediaImageAlt: body.mediaImageAlt ?? existingDoc?.mediaImageAlt ?? "",
-    imageOverlayCaption: body.imageOverlayCaption ?? existingDoc?.imageOverlayCaption ?? "",
+    imageOverlayCaption:
+      body.imageOverlayCaption ?? existingDoc?.imageOverlayCaption ?? "",
     videoEmbedUrl: body.videoEmbedUrl ?? existingDoc?.videoEmbedUrl ?? "",
     benefitsHeading: body.benefitsHeading ?? existingDoc?.benefitsHeading ?? "",
     ctaText: body.ctaText ?? existingDoc?.ctaText ?? "",
@@ -54,15 +53,18 @@ const buildHolidaysPayload = (req, existingDoc = null) => {
     shivirTitle: body.shivirTitle ?? existingDoc?.shivirTitle ?? "",
     shivirSubtitle: body.shivirSubtitle ?? existingDoc?.shivirSubtitle ?? "",
     campImageAlt: body.campImageAlt ?? existingDoc?.campImageAlt ?? "",
-    campImageCaption: body.campImageCaption ?? existingDoc?.campImageCaption ?? "",
+    campImageCaption:
+      body.campImageCaption ?? existingDoc?.campImageCaption ?? "",
     datesHighlight: body.datesHighlight ?? existingDoc?.datesHighlight ?? "",
     durationRange: body.durationRange ?? existingDoc?.durationRange ?? "",
     dateNote: body.dateNote ?? existingDoc?.dateNote ?? "",
     timetableTitle: body.timetableTitle ?? existingDoc?.timetableTitle ?? "",
-    timetableSubtitle: body.timetableSubtitle ?? existingDoc?.timetableSubtitle ?? "",
+    timetableSubtitle:
+      body.timetableSubtitle ?? existingDoc?.timetableSubtitle ?? "",
     enrollTitle: body.enrollTitle ?? existingDoc?.enrollTitle ?? "",
     seatsNote: body.seatsNote ?? existingDoc?.seatsNote ?? "",
-    eligibilityTitle: body.eligibilityTitle ?? existingDoc?.eligibilityTitle ?? "",
+    eligibilityTitle:
+      body.eligibilityTitle ?? existingDoc?.eligibilityTitle ?? "",
     eligibilityText: body.eligibilityText ?? existingDoc?.eligibilityText ?? "",
     guidelinesTitle: body.guidelinesTitle ?? existingDoc?.guidelinesTitle ?? "",
     moreInfoTitle: body.moreInfoTitle ?? existingDoc?.moreInfoTitle ?? "",
@@ -74,39 +76,69 @@ const buildHolidaysPayload = (req, existingDoc = null) => {
     reachText: body.reachText ?? existingDoc?.reachText ?? "",
   };
 
-  // ── Dynamic string / paragraph arrays ──
-  payload.bodyParagraphs = parseJSON(body.bodyParagraphs, existingDoc?.bodyParagraphs ?? []);
-  payload.ayurvedaCalloutParagraphs = parseJSON(body.ayurvedaCalloutParagraphs, existingDoc?.ayurvedaCalloutParagraphs ?? []);
+  payload.bodyParagraphs = parseJSON(
+    body.bodyParagraphs,
+    existingDoc?.bodyParagraphs ?? [],
+  );
+  payload.ayurvedaCalloutParagraphs = parseJSON(
+    body.ayurvedaCalloutParagraphs,
+    existingDoc?.ayurvedaCalloutParagraphs ?? [],
+  );
   payload.benefits = parseJSON(body.benefits, existingDoc?.benefits ?? []);
-  payload.descriptionParagraphs = parseJSON(body.descriptionParagraphs, existingDoc?.descriptionParagraphs ?? []);
-  payload.datePeriods = parseJSON(body.datePeriods, existingDoc?.datePeriods ?? []);
-  payload.enrollSteps = parseJSON(body.enrollSteps, existingDoc?.enrollSteps ?? []);
-  payload.guidelines = parseJSON(body.guidelines, existingDoc?.guidelines ?? []);
-  payload.moreInfoParagraphs = parseJSON(body.moreInfoParagraphs, existingDoc?.moreInfoParagraphs ?? []);
+  payload.descriptionParagraphs = parseJSON(
+    body.descriptionParagraphs,
+    existingDoc?.descriptionParagraphs ?? [],
+  );
+  payload.datePeriods = parseJSON(
+    body.datePeriods,
+    existingDoc?.datePeriods ?? [],
+  );
+  payload.enrollSteps = parseJSON(
+    body.enrollSteps,
+    existingDoc?.enrollSteps ?? [],
+  );
+  payload.guidelines = parseJSON(
+    body.guidelines,
+    existingDoc?.guidelines ?? [],
+  );
+  payload.moreInfoParagraphs = parseJSON(
+    body.moreInfoParagraphs,
+    existingDoc?.moreInfoParagraphs ?? [],
+  );
 
-  // ── Structured arrays ──
-  payload.timetableRows = parseJSON(body.timetableRows, existingDoc?.timetableRows ?? []);
-  payload.pricingCards = parseJSON(body.pricingCards, existingDoc?.pricingCards ?? []);
+  payload.timetableRows = parseJSON(
+    body.timetableRows,
+    existingDoc?.timetableRows ?? [],
+  );
+  payload.pricingCards = parseJSON(
+    body.pricingCards,
+    existingDoc?.pricingCards ?? [],
+  );
 
-  // ── Single images: hero / media / camp ──
   const heroFile = findFile(files, "heroImage");
-  payload.heroImage = heroFile ? toPublicPath(heroFile) : existingDoc?.heroImage ?? "";
-  if (heroFile && existingDoc?.heroImage) deleteFileIfExists(existingDoc.heroImage);
+  payload.heroImage = heroFile
+    ? toPublicPath(heroFile)
+    : (existingDoc?.heroImage ?? "");
+  if (heroFile && existingDoc?.heroImage)
+    deleteFileIfExists(existingDoc.heroImage);
 
   const mediaFile = findFile(files, "mediaImage");
-  payload.mediaImage = mediaFile ? toPublicPath(mediaFile) : existingDoc?.mediaImage ?? "";
-  if (mediaFile && existingDoc?.mediaImage) deleteFileIfExists(existingDoc.mediaImage);
+  payload.mediaImage = mediaFile
+    ? toPublicPath(mediaFile)
+    : (existingDoc?.mediaImage ?? "");
+  if (mediaFile && existingDoc?.mediaImage)
+    deleteFileIfExists(existingDoc.mediaImage);
 
   const campFile = findFile(files, "campImage");
-  payload.campImage = campFile ? toPublicPath(campFile) : existingDoc?.campImage ?? "";
-  if (campFile && existingDoc?.campImage) deleteFileIfExists(existingDoc.campImage);
+  payload.campImage = campFile
+    ? toPublicPath(campFile)
+    : (existingDoc?.campImage ?? "");
+  if (campFile && existingDoc?.campImage)
+    deleteFileIfExists(existingDoc.campImage);
 
   return payload;
 };
 
-/* ── Controllers ── */
-
-// GET /holidays-section — singleton fetch (returns the one doc, or null)
 exports.getHolidays = async (req, res) => {
   try {
     const doc = await Holidays.findOne().sort({ createdAt: -1 });
@@ -120,7 +152,8 @@ exports.getHolidays = async (req, res) => {
 exports.getHolidaysById = async (req, res) => {
   try {
     const doc = await Holidays.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!doc)
+      return res.status(404).json({ success: false, message: "Not found" });
     return res.json({ success: true, data: doc });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -150,10 +183,13 @@ exports.createHolidays = async (req, res) => {
 exports.updateHolidays = async (req, res) => {
   try {
     const existingDoc = await Holidays.findById(req.params.id);
-    if (!existingDoc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!existingDoc)
+      return res.status(404).json({ success: false, message: "Not found" });
 
     const payload = buildHolidaysPayload(req, existingDoc);
-    const updated = await Holidays.findByIdAndUpdate(req.params.id, payload, { new: true });
+    const updated = await Holidays.findByIdAndUpdate(req.params.id, payload, {
+      new: true,
+    });
     return res.json({ success: true, data: updated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -164,7 +200,8 @@ exports.updateHolidays = async (req, res) => {
 exports.deleteHolidays = async (req, res) => {
   try {
     const doc = await Holidays.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!doc)
+      return res.status(404).json({ success: false, message: "Not found" });
 
     deleteFileIfExists(doc.heroImage);
     deleteFileIfExists(doc.mediaImage);

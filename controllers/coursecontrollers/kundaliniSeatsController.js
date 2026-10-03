@@ -102,11 +102,9 @@ exports.getOne = async (req, res) => {
 ========================= */
 exports.update = async (req, res) => {
   try {
-    const data = await Model.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const data = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     res.json({
       success: true,

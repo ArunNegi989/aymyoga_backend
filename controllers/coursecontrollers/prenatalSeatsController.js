@@ -20,7 +20,6 @@ exports.createBatch = async (req, res) => {
       note,
     } = req.body;
 
-    /* ✅ VALIDATION */
     if (!startDate || !endDate) {
       return res.status(400).json({ message: "Start & End date required" });
     }
@@ -49,7 +48,6 @@ exports.createBatch = async (req, res) => {
       });
     }
 
-    /* ✅ DUPLICATE CHECK */
     const existing = await PrenatalSeats.findOne({
       startDate,
       endDate,
@@ -61,7 +59,6 @@ exports.createBatch = async (req, res) => {
       });
     }
 
-    /* ✅ CREATE */
     const newBatch = await PrenatalSeats.create({
       startDate,
       endDate,
@@ -98,7 +95,6 @@ exports.getAll = async (req, res) => {
   try {
     const batches = await PrenatalSeats.find().sort({ startDate: 1 });
 
-    /* ✅ ADD AVAILABLE SEATS */
     const updated = batches.map((b) => ({
       ...b._doc,
       availableSeats: b.totalSeats - b.bookedSeats,
@@ -154,7 +150,7 @@ exports.updateBatch = async (req, res) => {
     const updated = await PrenatalSeats.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
@@ -203,9 +199,6 @@ exports.deleteBatch = async (req, res) => {
   }
 };
 
-/* =========================
-   BOOK SEAT (🔥 IMPORTANT)
-========================= */
 exports.bookSeat = async (req, res) => {
   try {
     const batch = await Model.findById(req.params.id);

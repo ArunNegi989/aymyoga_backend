@@ -9,7 +9,6 @@ const createGallerySection = async (req, res) => {
 
     let images = [];
 
-    // FILE IMAGES
     if (req.files && req.files.length > 0) {
       const fileImages = req.files.map((file) => ({
         src: `/uploads/${file.filename}`,
@@ -18,7 +17,6 @@ const createGallerySection = async (req, res) => {
       images = [...images, ...fileImages];
     }
 
-    // URL IMAGES
     if (req.body.imagesData) {
       try {
         const urlImages = JSON.parse(req.body.imagesData);
@@ -41,7 +39,6 @@ const createGallerySection = async (req, res) => {
     await section.save();
 
     res.status(201).json({ success: true, data: section });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -90,7 +87,6 @@ const updateGallerySection = async (req, res) => {
 
     let images = [];
 
-    // EXISTING IMAGES (frontend se bhej)
     if (req.body.existingImages) {
       try {
         const existing = JSON.parse(req.body.existingImages);
@@ -98,7 +94,6 @@ const updateGallerySection = async (req, res) => {
       } catch (err) {}
     }
 
-    // FILE IMAGES
     if (req.files && req.files.length > 0) {
       const fileImages = req.files.map((file) => ({
         src: `/uploads/${file.filename}`,
@@ -107,7 +102,6 @@ const updateGallerySection = async (req, res) => {
       images = [...images, ...fileImages];
     }
 
-    // URL IMAGES
     if (req.body.imagesData) {
       try {
         const urlImages = JSON.parse(req.body.imagesData);
@@ -123,7 +117,6 @@ const updateGallerySection = async (req, res) => {
     await section.save();
 
     res.json({ success: true, data: section });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -141,7 +134,6 @@ const deleteGallerySection = async (req, res) => {
     }
 
     res.json({ success: true, message: "Deleted successfully" });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -163,7 +155,6 @@ const deleteImage = async (req, res) => {
     await section.save();
 
     res.json({ success: true, data: section });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -180,8 +171,8 @@ const reorderSections = async (req, res) => {
       items.map((item) =>
         GallerySection.findByIdAndUpdate(item.id, {
           order: item.order,
-        })
-      )
+        }),
+      ),
     );
 
     res.json({ success: true, message: "Reordered" });

@@ -2,9 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const SoundHealingSection = require("../models/Soundhealingmodel");
 
-/* ── Helpers ── */
-
-// Safely parse a JSON string sent from the multipart form; falls back to [] on failure
 const safeParse = (value, fallback = []) => {
   if (!value) return fallback;
   try {
@@ -14,17 +11,13 @@ const safeParse = (value, fallback = []) => {
   }
 };
 
-// Delete an old uploaded file (e.g. "/uploads/xxx.jpg") from disk, ignoring errors
 const deleteOldFile = (relativePath) => {
   if (!relativePath) return;
-  const cleaned = relativePath.replace(/^\/+/, ""); // strip leading slash
+  const cleaned = relativePath.replace(/^\/+/, "");
   const fullPath = path.join(process.cwd(), cleaned);
-  fs.unlink(fullPath, () => {
-    // ignore errors (file may already be missing)
-  });
+  fs.unlink(fullPath, () => {});
 };
 
-// Build the plain-object payload (without images) shared by create & update
 const buildTextFields = (body) => ({
   heroImageAlt: body.heroImageAlt || "",
 
@@ -72,9 +65,6 @@ const buildTextFields = (body) => ({
   batchSectionSub: body.batchSectionSub || "",
 });
 
-/* ── Controllers ── */
-
-// GET /sound-healing-section  (list — singleton, but returns as an array like other admin sections)
 exports.getAll = async (req, res) => {
   try {
     const data = await SoundHealingSection.find().sort({ createdAt: -1 });
@@ -84,12 +74,13 @@ exports.getAll = async (req, res) => {
   }
 };
 
-// GET /sound-healing-section/:id
 exports.getOne = async (req, res) => {
   try {
     const data = await SoundHealingSection.findById(req.params.id);
     if (!data) {
-      return res.status(404).json({ success: false, message: "Sound Healing section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Sound Healing section not found" });
     }
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -97,7 +88,6 @@ exports.getOne = async (req, res) => {
   }
 };
 
-// POST /sound-healing-section
 exports.create = async (req, res) => {
   try {
     const body = req.body;
@@ -105,17 +95,37 @@ exports.create = async (req, res) => {
 
     const doc = new SoundHealingSection({
       ...buildTextFields(body),
-      heroImage: files.heroImage?.[0] ? `/uploads/${files.heroImage[0].filename}` : "",
-      introImage: files.introImage?.[0] ? `/uploads/${files.introImage[0].filename}` : "",
-      bowl1Image: files.bowl1Image?.[0] ? `/uploads/${files.bowl1Image[0].filename}` : "",
-      bowl2Image: files.bowl2Image?.[0] ? `/uploads/${files.bowl2Image[0].filename}` : "",
-      bowl3Image: files.bowl3Image?.[0] ? `/uploads/${files.bowl3Image[0].filename}` : "",
-      aimImage: files.aimImage?.[0] ? `/uploads/${files.aimImage[0].filename}` : "",
-      benefitsImage: files.benefitsImage?.[0] ? `/uploads/${files.benefitsImage[0].filename}` : "",
+      heroImage: files.heroImage?.[0]
+        ? `/uploads/${files.heroImage[0].filename}`
+        : "",
+      introImage: files.introImage?.[0]
+        ? `/uploads/${files.introImage[0].filename}`
+        : "",
+      bowl1Image: files.bowl1Image?.[0]
+        ? `/uploads/${files.bowl1Image[0].filename}`
+        : "",
+      bowl2Image: files.bowl2Image?.[0]
+        ? `/uploads/${files.bowl2Image[0].filename}`
+        : "",
+      bowl3Image: files.bowl3Image?.[0]
+        ? `/uploads/${files.bowl3Image[0].filename}`
+        : "",
+      aimImage: files.aimImage?.[0]
+        ? `/uploads/${files.aimImage[0].filename}`
+        : "",
+      benefitsImage: files.benefitsImage?.[0]
+        ? `/uploads/${files.benefitsImage[0].filename}`
+        : "",
     });
 
     await doc.save();
-    res.status(201).json({ success: true, message: "Sound Healing section created", data: doc });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Sound Healing section created",
+        data: doc,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -127,13 +137,14 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const existing = await SoundHealingSection.findById(id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Sound Healing section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Sound Healing section not found" });
     }
 
     const body = req.body;
     const files = req.files || {};
 
-    // Map of formField -> DB field for the 7 replaceable images
     const imageFields = [
       { form: "heroImage", db: "heroImage" },
       { form: "introImage", db: "introImage" },
@@ -155,7 +166,13 @@ exports.update = async (req, res) => {
     Object.assign(existing, buildTextFields(body), imageUpdates);
 
     await existing.save();
-    res.status(200).json({ success: true, message: "Sound Healing section updated", data: existing });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Sound Healing section updated",
+        data: existing,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -166,7 +183,9 @@ exports.remove = async (req, res) => {
   try {
     const existing = await SoundHealingSection.findById(req.params.id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Sound Healing section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Sound Healing section not found" });
     }
 
     // Clean up uploaded files from disk
@@ -179,7 +198,9 @@ exports.remove = async (req, res) => {
     deleteOldFile(existing.benefitsImage);
 
     await SoundHealingSection.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: "Sound Healing section deleted" });
+    res
+      .status(200)
+      .json({ success: true, message: "Sound Healing section deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

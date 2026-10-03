@@ -45,24 +45,17 @@ const InfoCardSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ── Main schema (singleton — only one document is expected) ── */
 const YogaBeginnersSectionSchema = new mongoose.Schema(
   {
-    // Hero
+
     heroImage: { type: String, default: "" },
     heroImageAlt: { type: String, default: "Yoga Students Group" },
-
-    // Main heading section
     mainTitle: { type: String, required: true, trim: true },
     questionText: { type: String, default: "" },
     bodyParagraphs: { type: [String], default: [] },
     infoRow: { type: [InfoRowItemSchema], default: [] },
-
-    // Second hero image
     secondImage: { type: String, default: "" },
     secondImageAlt: { type: String, default: "" },
-
-    // Benefits & Understanding section
     benefitsFullTitle: { type: String, default: "" },
     understandingTitle: { type: String, default: "" },
     understandingIntro: { type: String, default: "" },
@@ -70,18 +63,11 @@ const YogaBeginnersSectionSchema = new mongoose.Schema(
 
     benefitsLabel: { type: String, default: "" },
     benefits: { type: [BenefitSchema], default: [] },
-
-    // Q&A section
     qaSectionTitle: { type: String, default: "" },
     qaItems: { type: [QAItemSchema], default: [] },
-
-    // More information section
     moreInfoSectionTitle: { type: String, default: "" },
     infoCards: { type: [InfoCardSchema], default: [] },
     noteText: { type: String, default: "" },
-
-    // Batch section intro (heading only — NOT the seat grid/booking UI,
-    // which lives in a separate seats API/collection)
     batchSectionTag: { type: String, default: "" },
     batchSectionTitle: { type: String, default: "" },
     batchSectionSub: { type: String, default: "" },

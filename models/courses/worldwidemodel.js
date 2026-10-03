@@ -59,7 +59,7 @@ const worldwideSchema = new mongoose.Schema(
     communitySubtext: String,
     communityDescription: String,
     // Slider images for community section
-    communitySliderImages: [String], // array of uploaded image paths
+    communitySliderImages: [String], 
 
     // Sticky Section Nav
     navItems: [

@@ -125,9 +125,7 @@ const kundaliniSchema = new mongoose.Schema(
       { label: "LANGUAGE", value: "English & Hindi", sub: "" },
       { label: "DATE", value: "Check batches below", sub: "" },
     ] },
-    // Add after the existing fields in the model
-
-    // NEW - Schedule Section Dynamic Fields
+  
     scheduleTagLine: { type: String, default: "24-DAY RESIDENTIAL PROGRAM" },
     scheduleHeaderSub: { type: String, default: "A carefully structured day balancing intense practice with rest, study &amp; spiritual integration." },
     schedulePhaseLabels: { type: Array, default: [

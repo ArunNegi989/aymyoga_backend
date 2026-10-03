@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-/* ── Reusable sub-schemas (no separate _id needed for simple repeatable rows) ── */
 const StatItemSchema = new Schema(
   {
     num: { type: String, required: true, trim: true },
@@ -66,7 +65,7 @@ const CourseLinkSchema = new Schema(
 const YogaAshramSectionSchema = new Schema(
   {
     // Hero
-    heroImage: { type: String, default: "" }, // stored relative path e.g. /uploads/xxx.jpg
+    heroImage: { type: String, default: "" },
     heroImageAlt: { type: String, required: true, trim: true },
 
     // Title

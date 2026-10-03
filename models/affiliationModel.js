@@ -76,8 +76,4 @@ const AffiliationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Safety guard: if this file ever gets required more than once under the
-// same model name (e.g. via two different paths, or a leftover duplicate
-// file), reuse the already-compiled model instead of re-registering it —
-// this is what throws "Cannot overwrite `X` model once compiled".
 module.exports = mongoose.models.Affiliation || mongoose.model("Affiliation", AffiliationSchema);

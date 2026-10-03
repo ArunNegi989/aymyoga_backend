@@ -68,6 +68,4 @@ const AboutSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Safety guard against "Cannot overwrite model once compiled" if this file
-// ever gets required more than once under the same model name.
 module.exports = mongoose.models.About || mongoose.model("About", AboutSchema);

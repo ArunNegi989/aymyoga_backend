@@ -23,9 +23,9 @@ router.post(
     { name: "locationStackTopImage", maxCount: 1 },
     { name: "locationStackBottomImage", maxCount: 1 },
     { name: "facilitiesVideoPoster", maxCount: 1 },
-    { name: "whyRishikeshBannerImage", maxCount: 1 }, // Added for Section 9
+    { name: "whyRishikeshBannerImage", maxCount: 1 },
   ]),
-  controller.create
+  controller.create,
 );
 
 /* =========================
@@ -52,9 +52,9 @@ router.put(
     { name: "locationStackTopImage", maxCount: 1 },
     { name: "locationStackBottomImage", maxCount: 1 },
     { name: "facilitiesVideoPoster", maxCount: 1 },
-    { name: "whyRishikeshBannerImage", maxCount: 1 }, // Added for Section 9
+    { name: "whyRishikeshBannerImage", maxCount: 1 },
   ]),
-  controller.update
+  controller.update,
 );
 
 /* =========================

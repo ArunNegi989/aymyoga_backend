@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
   try {
     const data = req.body;
 
-    // file handling
+ 
     if (req.files) {
       if (req.files.thumbnail) {
         data.thumbnail = "/uploads/" + req.files.thumbnail[0].filename;

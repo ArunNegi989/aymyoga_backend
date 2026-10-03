@@ -10,10 +10,6 @@ const {
   remove,
 } = require("../controllers/ourTeachers/guestTeacherController");
 
-/* =========================
-   GUEST TEACHER ROUTES
-========================= */
-
 router.post("/create-guest-teacher", upload.single("image"), create);
 router.get("/get-all-guest-teachers", getAll);
 router.get("/get-guest-teacher/:id", getOne);

@@ -5,7 +5,7 @@ const {
   createHomeAbout,
   getHomeAbout,
   updateHomeAbout,
-  deleteHomeAbout
+  deleteHomeAbout,
 } = require("../controllers/homepage/homeAboutController");
 
 router.post("/create-home-about", createHomeAbout);

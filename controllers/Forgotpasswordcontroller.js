@@ -16,9 +16,6 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
-// ── STEP 1: Send OTP to email ────────────────────────────────────────────────
-// POST /auth/forgot-password
-// Body: { email }
 exports.sendOTP = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -27,10 +24,8 @@ exports.sendOTP = async (req, res, next) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    // 1. Check if user exists
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      // Security: same message for unknown emails (don't leak info)
       return res
         .status(404)
         .json({ message: "No account found with this email address" });
@@ -38,9 +33,8 @@ exports.sendOTP = async (req, res, next) => {
 
     // 2. Generate OTP
     const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-    // 3. Hash OTP before saving (never store plain OTP)
     const hashedOTP = await bcrypt.hash(otp, 10);
     user.resetOTP = hashedOTP;
     user.resetOTPExpiry = otpExpiry;
@@ -112,9 +106,6 @@ exports.sendOTP = async (req, res, next) => {
   }
 };
 
-// ── STEP 2: Verify OTP ───────────────────────────────────────────────────────
-// POST /auth/verify-otp
-// Body: { email, otp }
 exports.verifyOTP = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
@@ -144,35 +135,31 @@ exports.verifyOTP = async (req, res, next) => {
     // Compare OTP
     const isValid = await bcrypt.compare(otp, user.resetOTP);
     if (!isValid) {
-      return res.status(400).json({ message: "Invalid OTP. Please try again." });
+      return res
+        .status(400)
+        .json({ message: "Invalid OTP. Please try again." });
     }
 
-    // OTP is correct — issue a short-lived reset token for the next step
-    // We mark OTP as "verified" by generating a temporary token stored in DB
     const resetToken = crypto.randomBytes(32).toString("hex");
     const hashedToken = crypto
       .createHash("sha256")
       .update(resetToken)
       .digest("hex");
 
-    // Reuse resetOTP field to store hashed reset token (overwrite OTP)
     user.resetOTP = hashedToken;
-    user.resetOTPExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 more min
+    user.resetOTPExpiry = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
     res.status(200).json({
       success: true,
       message: "OTP verified successfully",
-      resetToken, // send plain token to frontend (used in next step)
+      resetToken,
     });
   } catch (error) {
     next(error);
   }
 };
 
-// ── STEP 3: Reset Password ───────────────────────────────────────────────────
-// POST /auth/reset-password
-// Body: { email, resetToken, newPassword }
 exports.resetPassword = async (req, res, next) => {
   try {
     const { email, resetToken, newPassword } = req.body;
@@ -190,7 +177,9 @@ exports.resetPassword = async (req, res, next) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user || !user.resetOTP || !user.resetOTPExpiry) {
-      return res.status(400).json({ message: "Invalid or expired reset session" });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset session" });
     }
 
     // Check expiry
@@ -198,7 +187,9 @@ exports.resetPassword = async (req, res, next) => {
       user.resetOTP = undefined;
       user.resetOTPExpiry = undefined;
       await user.save();
-      return res.status(400).json({ message: "Reset session expired. Start again." });
+      return res
+        .status(400)
+        .json({ message: "Reset session expired. Start again." });
     }
 
     // Verify reset token
@@ -215,12 +206,13 @@ exports.resetPassword = async (req, res, next) => {
     user.password = await bcrypt.hash(newPassword, 10);
     user.resetOTP = undefined;
     user.resetOTPExpiry = undefined;
-    user.refreshToken = null; // invalidate all sessions
+    user.refreshToken = null;
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: "Password reset successfully. Please login with your new password.",
+      message:
+        "Password reset successfully. Please login with your new password.",
     });
   } catch (error) {
     next(error);

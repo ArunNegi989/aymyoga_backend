@@ -1,29 +1,21 @@
 const Content = require("../../models/courses/100hrContentModel");
 
-/* =========================
-   HELPER: PARSE BODY
-========================= */
 const parseBody = (req) => {
   let body = req.body;
   if (typeof body.data === "string") {
-    try { body = { ...JSON.parse(body.data) }; } catch { /* keep as-is */ }
+    try {
+      body = { ...JSON.parse(body.data) };
+    } catch {}
   }
   return body;
 };
 
-/* Helper: map uploaded file → /uploads/filename path */
 const filePath = (req, fieldName) =>
   req.files?.[fieldName]?.[0]?.filename
     ? `/uploads/${req.files[fieldName][0].filename}`
     : null;
 
-/* =========================
-   APPLY ALL MEDIA FIELDS
-   Images + all 4 video sections
-========================= */
 const applyMedia = (body, req) => {
-
-  /* ── IMAGE FIELDS ── */
   const imageFields = [
     "bannerImage",
     "transformImage",
@@ -44,59 +36,56 @@ const applyMedia = (body, req) => {
     if (fp) {
       body[f] = fp;
     } else if (req.body[`${f}Url`]) {
-      // URL pasted in form
       body[f] = req.body[`${f}Url`];
     }
-    // else: keep whatever came in JSON payload (body[f])
   });
 
-  /* ══════════════════════════════════════════════
-     VIDEO FIELDS
-     Each section sends its own url & file fields.
-     Priority: uploaded file > URL string > keep existing
-  ══════════════════════════════════════════════ */
-
-  // ── 1. MAIN PAGE VIDEO ──
   const mainFilePath = filePath(req, "videoFile");
   if (mainFilePath) {
     body.videoFile = mainFilePath;
-    body.videoUrl  = "";
+    body.videoUrl = "";
   } else {
-    // videoUrl comes either from multipart field or JSON body
     const url = req.body.videoUrl ?? body.videoUrl ?? "";
-    body.videoUrl  = url;
+    body.videoUrl = url;
     body.videoFile = "";
   }
 
-  // ── 2. SYLLABUS VIDEO ──
-  // Form sends: syllabusVideoFile (mp4 upload) or syllabusVideoUrl (link)
   const sylFilePath = filePath(req, "syllabusVideoFile");
   if (sylFilePath) {
     body.syllabusVideo = sylFilePath;
   } else {
-    const url = req.body.syllabusVideoUrl ?? body.syllabusVideoUrl ?? body.syllabusVideo ?? "";
+    const url =
+      req.body.syllabusVideoUrl ??
+      body.syllabusVideoUrl ??
+      body.syllabusVideo ??
+      "";
     body.syllabusVideo = url;
   }
 
-  // ── 3. SCHEDULE VIDEO ──
   const schedFilePath = filePath(req, "scheduleVideoFile");
   if (schedFilePath) {
     body.scheduleVideo = schedFilePath;
   } else {
-    const url = req.body.scheduleVideoUrl ?? body.scheduleVideoUrl ?? body.scheduleVideo ?? "";
+    const url =
+      req.body.scheduleVideoUrl ??
+      body.scheduleVideoUrl ??
+      body.scheduleVideo ??
+      "";
     body.scheduleVideo = url;
   }
 
-  // ── 4. COMPREHENSIVE VIDEO ──
   const compFilePath = filePath(req, "comprehensiveVideoFile");
   if (compFilePath) {
     body.comprehensiveVideo = compFilePath;
   } else {
-    const url = req.body.comprehensiveVideoUrl ?? body.comprehensiveVideoUrl ?? body.comprehensiveVideo ?? "";
+    const url =
+      req.body.comprehensiveVideoUrl ??
+      body.comprehensiveVideoUrl ??
+      body.comprehensiveVideo ??
+      "";
     body.comprehensiveVideo = url;
   }
 
-  // Clean up the split URL/File keys from form — we only store the merged fields
   delete body.syllabusVideoUrl;
   delete body.syllabusVideoFile;
   delete body.scheduleVideoUrl;

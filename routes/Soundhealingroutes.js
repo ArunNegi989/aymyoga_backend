@@ -11,7 +11,6 @@ const {
   remove,
 } = require("../controllers/Soundhealingcontroller");
 
-/* ── Multer storage config ── */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(process.cwd(), "uploads"));
@@ -24,7 +23,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Same 7 image fields the controller reads from req.files
 const imageUploadFields = upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "introImage", maxCount: 1 },

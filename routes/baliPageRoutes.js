@@ -19,7 +19,7 @@ router.post(
     { name: "gardenImage", maxCount: 1 },
     { name: "ubudImage", maxCount: 1 },
   ]),
-  controller.createPage
+  controller.createPage,
 );
 
 /* =========================
@@ -42,7 +42,7 @@ router.put(
     { name: "gardenImage", maxCount: 1 },
     { name: "ubudImage", maxCount: 1 },
   ]),
-  controller.updatePage
+  controller.updatePage,
 );
 
 /* =========================

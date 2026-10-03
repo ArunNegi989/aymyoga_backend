@@ -12,7 +12,7 @@ const {
 
 
 router.post("/", upload.any(), createSection);
-router.get("/", getAllSections);          // index route
+router.get("/", getAllSections);          
 router.get("/:id", getSectionById);
 router.put("/:id", upload.any(), updateSection);
 router.delete("/:id", deleteSection);

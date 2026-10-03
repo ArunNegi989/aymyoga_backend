@@ -30,7 +30,7 @@ const buildData = (body, files) => {
     // Features Dynamic Fields
     featuresStats: parseJSON(body.featuresStats),
     featuresPills: parseJSON(body.featuresPills),
-    
+
     // Location Dynamic Fields
     locationBadges: parseJSON(body.locationBadges),
 
@@ -44,34 +44,42 @@ const buildData = (body, files) => {
     courseInfoBookBtnText: body.courseInfoBookBtnText || "BOOK NOW",
     courseInfoUsdPrice: parseFloat(body.courseInfoUsdPrice) || 399,
     courseInfoInrPrice: parseFloat(body.courseInfoInrPrice) || 33000,
-    courseInfoOriginalUsdPrice: parseFloat(body.courseInfoOriginalUsdPrice) || 799,
-    courseInfoOriginalInrPrice: parseFloat(body.courseInfoOriginalInrPrice) || 66000,
+    courseInfoOriginalUsdPrice:
+      parseFloat(body.courseInfoOriginalUsdPrice) || 799,
+    courseInfoOriginalInrPrice:
+      parseFloat(body.courseInfoOriginalInrPrice) || 66000,
     courseInfoDetails: parseJSON(body.courseInfoDetails),
-    
+
     // Features Video
     featuresVideoType: body.featuresVideoType || "none",
     featuresVideoUrl: body.featuresVideoUrl || "",
-    featuresVideoLabel: body.featuresVideoLabel || "Watch Our Prenatal Yoga Sessions",
-    
+    featuresVideoLabel:
+      body.featuresVideoLabel || "Watch Our Prenatal Yoga Sessions",
+
     // Online Section Video Fields
     onlineVideoType: body.onlineVideoType || "none",
     onlineVideoUrl: body.onlineVideoUrl || "",
     onlineVideoLabel: body.onlineVideoLabel || "Course Preview",
-    
+
     // Online Section Fields
     onlineHeaderSubtitle: body.onlineHeaderSubtitle || "",
     onlineHighlightsTitle: body.onlineHighlightsTitle || "What You Get Online",
     onlineBonusIcon: body.onlineBonusIcon || "🎁",
     onlineBonusTitle: body.onlineBonusTitle || "Bonus Included",
-    onlineBonusText: body.onlineBonusText || "Free access to prenatal yoga community & monthly workshops",
+    onlineBonusText:
+      body.onlineBonusText ||
+      "Free access to prenatal yoga community & monthly workshops",
     onlineCtaLabel: body.onlineCtaLabel || "Ready to begin your journey?",
-    onlineCtaSub: body.onlineCtaSub || "Join our next online batch · Flexible schedule · Globally certified",
+    onlineCtaSub:
+      body.onlineCtaSub ||
+      "Join our next online batch · Flexible schedule · Globally certified",
     onlineCtaBtnText: body.onlineCtaBtnText || "Enrol Now",
     onlineCtaBtnUrl: body.onlineCtaBtnUrl || "#batch-section",
-    
+
     // Location Map
     locationMapEmbedUrl: body.locationMapEmbedUrl || "",
-    locationMapLabel: body.locationMapLabel || "📍 Tapovan, Rishikesh, Uttarakhand",
+    locationMapLabel:
+      body.locationMapLabel || "📍 Tapovan, Rishikesh, Uttarakhand",
   };
 
   /* HERO IMAGE */
@@ -83,21 +91,29 @@ const buildData = (body, files) => {
   if (files?.locationImage && files.locationImage[0]) {
     data.locationImage = "/uploads/" + files.locationImage[0].filename;
   }
-  
+
   /* FEATURES VIDEO FILE - only save if type is 'local' */
-  if (data.featuresVideoType === "local" && files?.featuresVideoFile && files.featuresVideoFile[0]) {
+  if (
+    data.featuresVideoType === "local" &&
+    files?.featuresVideoFile &&
+    files.featuresVideoFile[0]
+  ) {
     data.featuresVideoFile = "/uploads/" + files.featuresVideoFile[0].filename;
   } else if (data.featuresVideoType !== "local") {
     data.featuresVideoFile = "";
   }
-  
+
   /* ONLINE VIDEO FILE - only save if type is 'local' */
-  if (data.onlineVideoType === "local" && files?.onlineVideoFile && files.onlineVideoFile[0]) {
+  if (
+    data.onlineVideoType === "local" &&
+    files?.onlineVideoFile &&
+    files.onlineVideoFile[0]
+  ) {
     data.onlineVideoFile = "/uploads/" + files.onlineVideoFile[0].filename;
   } else if (data.onlineVideoType !== "local") {
     data.onlineVideoFile = "";
   }
-  
+
   /* ONLINE VIDEO POSTER */
   if (files?.onlineVideoPoster && files.onlineVideoPoster[0]) {
     data.onlineVideoPoster = "/uploads/" + files.onlineVideoPoster[0].filename;
@@ -182,11 +198,9 @@ exports.updatePage = async (req, res) => {
 
     const data = buildData(req.body, req.files);
 
-    const updated = await PrenatalPage.findByIdAndUpdate(
-      existing._id,
-      data,
-      { new: true }
-    );
+    const updated = await PrenatalPage.findByIdAndUpdate(existing._id, data, {
+      new: true,
+    });
 
     res.json({
       success: true,

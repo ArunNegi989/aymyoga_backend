@@ -1,10 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-// ── Change Password (logged-in admin) ───────────────────────────────────────
-// POST /auth/change-password
-// Requires: protect middleware (req.user.id set)
-// Body: { currentPassword, newPassword, confirmPassword }
 exports.changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -40,7 +36,7 @@ exports.changePassword = async (req, res, next) => {
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
-    user.refreshToken = null; // invalidate other sessions
+    user.refreshToken = null;
     await user.save();
 
     res.status(200).json({

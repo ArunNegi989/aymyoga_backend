@@ -119,7 +119,7 @@ exports.updateBatch = async (req, res) => {
     const batch = await ThreeHundredBatch.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true },
     );
 
     if (!batch) {
@@ -147,9 +147,7 @@ exports.updateBatch = async (req, res) => {
 ========================= */
 exports.deleteBatch = async (req, res) => {
   try {
-    const batch = await ThreeHundredBatch.findByIdAndDelete(
-      req.params.id
-    );
+    const batch = await ThreeHundredBatch.findByIdAndDelete(req.params.id);
 
     if (!batch) {
       return res.status(404).json({

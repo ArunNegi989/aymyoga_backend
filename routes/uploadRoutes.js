@@ -4,7 +4,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// ensure uploads folder exists
 const uploadDir = "uploads/";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -24,7 +23,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 // route
@@ -36,7 +35,7 @@ router.post("/", upload.single("file"), (req, res) => {
 
     res.json({
       success: true,
-      url: `/uploads/${req.file.filename}`, // 👈 important
+      url: `/uploads/${req.file.filename}`,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -1,24 +1,15 @@
-// routes/contact.js
-// POST /api/contact  →  sends email + saves to DB (optional)
-
 const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 
-/* ──────────────────────────────────────
-   Nodemailer transporter (Gmail App Pass)
-   ────────────────────────────────────── */
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // arunnegi989@gmail.com
-    pass: process.env.EMAIL_PASS, // gudb yyof ksyv psus  (app password)
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
-/* ──────────────────────────────────────
-   Validate input
-   ────────────────────────────────────── */
 function validateContact({ name, email, subject, message }) {
   const errors = [];
   if (!name || name.trim().length < 3)
@@ -31,11 +22,6 @@ function validateContact({ name, email, subject, message }) {
   return errors;
 }
 
-/* ──────────────────────────────────────
-   HTML email templates
-   ────────────────────────────────────── */
-
-/** Email sent to your inbox (admin notification) */
 function adminEmailHTML({ name, email, phone, subject, course, message }) {
   return `
 <!DOCTYPE html>
@@ -132,7 +118,6 @@ function adminEmailHTML({ name, email, phone, subject, course, message }) {
 </html>`;
 }
 
-/** Auto-reply sent to the person who submitted the form */
 function userEmailHTML({ name, course, subject }) {
   return `
 <!DOCTYPE html>
@@ -229,7 +214,6 @@ function userEmailHTML({ name, course, subject }) {
 </html>`;
 }
 
-/** Sanitize HTML to prevent injection */
 function escapeHtml(str = "") {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -239,9 +223,6 @@ function escapeHtml(str = "") {
     .replace(/'/g, "&#039;");
 }
 
-/* ──────────────────────────────────────
-   POST /api/contact
-   ────────────────────────────────────── */
 router.post("/", async (req, res) => {
   const { name, email, phone, subject, course, message } = req.body;
 
@@ -252,26 +233,20 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    /* 2. Send admin notification email */
     await transporter.sendMail({
       from: `"AYM Yoga School Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_TO, // arunnegi989@gmail.com
+      to: process.env.EMAIL_TO,
       replyTo: email,
       subject: `🧘 New Inquiry: ${subject} — ${name}`,
       html: adminEmailHTML({ name, email, phone, subject, course, message }),
     });
 
-    /* 3. Send auto-reply to the user */
     await transporter.sendMail({
       from: `"AYM Yoga School" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Namaste ${name} 🙏 — We received your message`,
       html: userEmailHTML({ name, course, subject }),
     });
-
-    /* 4. Optionally save to MongoDB (uncomment if you want DB storage) */
-    // const ContactModel = require("../models/Contact");
-    // await ContactModel.create({ name, email, phone, subject, course, message });
 
     return res.status(200).json({
       success: true,

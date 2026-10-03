@@ -41,7 +41,7 @@ const paymentSectionSchema = new mongoose.Schema(
     /* ── Header ── */
     superTitle: str(),
     mainTitle: str(),
-    headerDesc: { type: String, default: "" }, // rich text (HTML)
+    headerDesc: { type: String, default: "" },
 
     /* ── Registration fee ── */
     regFeeTitle: str(),

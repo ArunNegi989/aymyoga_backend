@@ -17,25 +17,21 @@ exports.saveHathaYoga = async (req, res) => {
     let existing = await HathaYoga.findOne();
 
     const data = {
-      /* ── spread all plain string fields from body ── */
       ...req.body,
 
-      /* ── existing arrays ── */
-      introParagraphs:     parseJSON(req.body.introParagraphs),
-      whatParagraphs:      parseJSON(req.body.whatParagraphs),
-      ashramParagraphs:    parseJSON(req.body.ashramParagraphs),
+      introParagraphs: parseJSON(req.body.introParagraphs),
+      whatParagraphs: parseJSON(req.body.whatParagraphs),
+      ashramParagraphs: parseJSON(req.body.ashramParagraphs),
       programmeParagraphs: parseJSON(req.body.programmeParagraphs),
-      certParagraphs:      parseJSON(req.body.certParagraphs),
-      accreditations:      parseJSON(req.body.accreditations),
-      benefitsList:        parseJSON(req.body.benefitsList),
-      courseDetailsList:   parseJSON(req.body.courseDetailsList),
-      certCards:           parseJSON(req.body.certCards),
+      certParagraphs: parseJSON(req.body.certParagraphs),
+      accreditations: parseJSON(req.body.accreditations),
+      benefitsList: parseJSON(req.body.benefitsList),
+      courseDetailsList: parseJSON(req.body.courseDetailsList),
+      certCards: parseJSON(req.body.certCards),
 
-      /* ── NEW: what-section feature cards ── */
       whatCards: parseJSON(req.body.whatCards),
     };
 
-    /* ── image fields ── */
     if (req.files?.heroImage)
       data.heroImage = getFilePath(req.files.heroImage[0]);
     if (req.files?.introSideImage)
@@ -45,7 +41,6 @@ exports.saveHathaYoga = async (req, res) => {
     if (req.files?.ashramImage)
       data.ashramImage = getFilePath(req.files.ashramImage[0]);
 
-    /* ── cert-card images ── */
     if (data.certCards.length) {
       data.certCards = data.certCards.map((card, i) => {
         const fileKey = `certCardImage_${i}`;

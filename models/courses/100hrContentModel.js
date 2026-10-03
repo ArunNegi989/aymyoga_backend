@@ -31,16 +31,10 @@ const ContentSchema = new mongoose.Schema(
     heroTitle:      { type: String, default: "" },
     heroParagraphs: { type: [String], default: [] },
 
-    /* ══════════════════════════════════════
-       VIDEOS — Each section stores ONE field.
-       Value is either:
-         • YouTube/Instagram URL  → stored as-is
-         • Uploaded MP4 path      → "/uploads/filename.mp4"
-    ══════════════════════════════════════ */
+   
 
-    /* Main page video (shared: What Is, Schedule, Video Reviews) */
-    videoUrl:  { type: String, default: "" },  // URL link
-    videoFile: { type: String, default: "" },  // Uploaded path
+    videoUrl:  { type: String, default: "" },  
+    videoFile: { type: String, default: "" }, 
 
     /* Syllabus section video */
     syllabusVideo: { type: String, default: "" },

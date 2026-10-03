@@ -6,7 +6,7 @@ const GoaThreeHundredBatch = require("../../models/courses/GoaThreeHundredBatchM
 exports.createBatch = async (req, res) => {
   try {
     const data = req.body;
-    
+
     const batch = await GoaThreeHundredBatch.create({
       startDate: data.startDate,
       endDate: data.endDate,
@@ -81,7 +81,7 @@ exports.updateBatch = async (req, res) => {
     const batch = await GoaThreeHundredBatch.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!batch) {

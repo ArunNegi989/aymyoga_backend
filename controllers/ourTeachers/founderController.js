@@ -2,9 +2,6 @@ const Founder = require("../../models/ourTeachers/founderModel");
 const fs = require("fs");
 const path = require("path");
 
-/* =========================
-   HELPER: DELETE FILE
-========================= */
 const deleteFile = (filePath) => {
   if (!filePath) return;
 
@@ -16,9 +13,6 @@ const deleteFile = (filePath) => {
   }
 };
 
-/* =========================
-   CREATE (ONLY ONE)
-========================= */
 exports.create = async (req, res) => {
   try {
     const exists = await Founder.findOne();
@@ -31,7 +25,6 @@ exports.create = async (req, res) => {
 
     const body = req.body;
 
-    // BIO ARRAY FIX
     let bio = [];
     if (body.bio) {
       if (Array.isArray(body.bio)) bio = body.bio;
@@ -60,9 +53,6 @@ exports.create = async (req, res) => {
   }
 };
 
-/* =========================
-   GET (ONLY ONE)
-========================= */
 exports.getFounder = async (req, res) => {
   try {
     const founder = await Founder.findOne();
@@ -79,9 +69,6 @@ exports.getFounder = async (req, res) => {
   }
 };
 
-/* =========================
-   UPDATE
-========================= */
 exports.update = async (req, res) => {
   try {
     const founder = await Founder.findById(req.params.id);
@@ -95,14 +82,12 @@ exports.update = async (req, res) => {
 
     const body = req.body;
 
-    // BIO FIX
     let bio = [];
     if (body.bio) {
       if (Array.isArray(body.bio)) bio = body.bio;
       else bio = Object.values(body.bio);
     }
 
-    // IMAGE UPDATE
     if (req.file) {
       deleteFile(founder.image);
       founder.image = `/uploads/${req.file.filename}`;
@@ -129,9 +114,6 @@ exports.update = async (req, res) => {
   }
 };
 
-/* =========================
-   DELETE
-========================= */
 exports.remove = async (req, res) => {
   try {
     const founder = await Founder.findOne();

@@ -15,7 +15,9 @@ const parseJSON = (value, fallback) => {
 
 const toDiskPath = (storedPath) => {
   if (!storedPath) return null;
-  const relative = storedPath.startsWith("/") ? storedPath.slice(1) : storedPath;
+  const relative = storedPath.startsWith("/")
+    ? storedPath.slice(1)
+    : storedPath;
   return path.join(process.cwd(), relative);
 };
 
@@ -29,14 +31,10 @@ const deleteFileIfExists = (storedPath) => {
   });
 };
 
-const findFile = (files, fieldname) => (files || []).find((f) => f.fieldname === fieldname);
+const findFile = (files, fieldname) =>
+  (files || []).find((f) => f.fieldname === fieldname);
 const toPublicPath = (file) => (file ? `/uploads/${file.filename}` : "");
 
-/**
- * Builds the full Rules payload from req.body + req.files.
- * Used by both create and update. `existingDoc` supplies previous values so
- * unspecified fields are preserved.
- */
 const buildRulesPayload = (req, existingDoc = null) => {
   const body = req.body;
   const files = req.files || [];
@@ -50,22 +48,28 @@ const buildRulesPayload = (req, existingDoc = null) => {
   };
 
   // ── Nested categories → rules ──
-  payload.categories = parseJSON(body.categories, existingDoc?.categories ?? []);
+  payload.categories = parseJSON(
+    body.categories,
+    existingDoc?.categories ?? [],
+  );
 
   // ── Dynamic paragraph array ──
-  payload.agreementParagraphs = parseJSON(body.agreementParagraphs, existingDoc?.agreementParagraphs ?? []);
+  payload.agreementParagraphs = parseJSON(
+    body.agreementParagraphs,
+    existingDoc?.agreementParagraphs ?? [],
+  );
 
   // ── Single hero image ──
   const heroFile = findFile(files, "heroImage");
-  payload.heroImage = heroFile ? toPublicPath(heroFile) : existingDoc?.heroImage ?? "";
-  if (heroFile && existingDoc?.heroImage) deleteFileIfExists(existingDoc.heroImage);
+  payload.heroImage = heroFile
+    ? toPublicPath(heroFile)
+    : (existingDoc?.heroImage ?? "");
+  if (heroFile && existingDoc?.heroImage)
+    deleteFileIfExists(existingDoc.heroImage);
 
   return payload;
 };
 
-/* ── Controllers ── */
-
-// GET /rules-section — singleton fetch (returns the one doc, or null)
 exports.getRules = async (req, res) => {
   try {
     const doc = await Rules.findOne().sort({ createdAt: -1 });
@@ -79,7 +83,8 @@ exports.getRules = async (req, res) => {
 exports.getRulesById = async (req, res) => {
   try {
     const doc = await Rules.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!doc)
+      return res.status(404).json({ success: false, message: "Not found" });
     return res.json({ success: true, data: doc });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -109,21 +114,24 @@ exports.createRules = async (req, res) => {
 exports.updateRules = async (req, res) => {
   try {
     const existingDoc = await Rules.findById(req.params.id);
-    if (!existingDoc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!existingDoc)
+      return res.status(404).json({ success: false, message: "Not found" });
 
     const payload = buildRulesPayload(req, existingDoc);
-    const updated = await Rules.findByIdAndUpdate(req.params.id, payload, { new: true });
+    const updated = await Rules.findByIdAndUpdate(req.params.id, payload, {
+      new: true,
+    });
     return res.json({ success: true, data: updated });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// DELETE /rules-section/:id — also best-effort removes the hero image from disk
 exports.deleteRules = async (req, res) => {
   try {
     const doc = await Rules.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+    if (!doc)
+      return res.status(404).json({ success: false, message: "Not found" });
 
     deleteFileIfExists(doc.heroImage);
 

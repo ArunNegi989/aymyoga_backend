@@ -11,34 +11,25 @@ const parseJSON = (val) => {
   }
 };
 
-/* =========================
-   RESOLVE IMAGE
-   Priority: uploaded file > URL field > existing DB value
-========================= */
 const resolveImage = (req, fieldName, existing = {}) => {
-  // 1. File was uploaded
   if (req.files?.[fieldName]?.[0]) {
     return "/uploads/" + req.files[fieldName][0].filename;
   }
-  // 2. URL was pasted (sent as `${fieldName}Url`)
+
   const urlKey = `${fieldName}Url`;
   if (req.body?.[urlKey] && req.body[urlKey].trim()) {
     return req.body[urlKey].trim();
   }
-  // 3. Keep existing DB value
+
   return existing[fieldName] || "";
 };
 
-/* =========================
-   PARSE FUNCTION
-========================= */
 const parseData = (req, existing = {}) => {
   const body = req.body;
 
   return {
     ...body,
 
-    /* JSON fields */
     uniquePoints: parseJSON(body.uniquePoints),
     courses: parseJSON(body.courses),
     highlights: parseJSON(body.highlights),
@@ -46,12 +37,10 @@ const parseData = (req, existing = {}) => {
     aymSpecial: parseJSON(body.aymSpecial),
     chakras: parseJSON(body.chakras),
 
-    /* Array fields */
     introParagraphs: parseJSON(body.introParagraphs),
     uniquePointsParagraphs: parseJSON(body.uniquePointsParagraphs),
     aymSpecialParagraphs: parseJSON(body.aymSpecialParagraphs),
 
-    /* IMAGES — file > URL > existing */
     heroImage: resolveImage(req, "heroImage", existing),
     groupImage: resolveImage(req, "groupImage", existing),
     templeImage: resolveImage(req, "templeImage", existing),

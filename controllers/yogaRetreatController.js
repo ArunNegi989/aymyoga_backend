@@ -24,12 +24,6 @@ const deleteFileSafe = (relativePath) => {
   }
 };
 
-/**
- * Builds the full document payload from req.body + req.files.
- * `existing` (optional) is the current DB doc, used on update to
- * preserve images that weren't replaced, and to know which old
- * files to clean up when they ARE replaced.
- */
 const buildPayload = (body, files, existing = null) => {
   const heroFile = files?.heroImage?.[0];
   const s1File = files?.s1Image?.[0];
@@ -37,7 +31,6 @@ const buildPayload = (body, files, existing = null) => {
   const heroImage = heroFile ? filePathOf(heroFile) : existing?.heroImage || "";
   const s1Image = s1File ? filePathOf(s1File) : existing?.s1Image || "";
 
-  // Clean up replaced files
   if (heroFile && existing?.heroImage) deleteFileSafe(existing.heroImage);
   if (s1File && existing?.s1Image) deleteFileSafe(existing.s1Image);
 
@@ -94,10 +87,11 @@ const buildPayload = (body, files, existing = null) => {
   };
 };
 
-/* ── GET all (singleton — returns an array with at most one doc) ── */
 exports.getAll = async (req, res) => {
   try {
-    const docs = await YogaRetreatSection.find().sort({ createdAt: -1 }).limit(1);
+    const docs = await YogaRetreatSection.find()
+      .sort({ createdAt: -1 })
+      .limit(1);
     res.json({ success: true, data: docs });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -109,7 +103,9 @@ exports.getById = async (req, res) => {
   try {
     const doc = await YogaRetreatSection.findById(req.params.id);
     if (!doc) {
-      return res.status(404).json({ success: false, message: "Yoga Retreat section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Yoga Retreat section not found" });
     }
     res.json({ success: true, data: doc });
   } catch (error) {
@@ -126,12 +122,22 @@ exports.create = async (req, res) => {
       const payload = buildPayload(req.body, req.files, existing);
       Object.assign(existing, payload);
       await existing.save();
-      return res.json({ success: true, message: "Yoga Retreat section updated", data: existing });
+      return res.json({
+        success: true,
+        message: "Yoga Retreat section updated",
+        data: existing,
+      });
     }
 
     const payload = buildPayload(req.body, req.files, null);
     const doc = await YogaRetreatSection.create(payload);
-    res.status(201).json({ success: true, message: "Yoga Retreat section created", data: doc });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Yoga Retreat section created",
+        data: doc,
+      });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
@@ -142,14 +148,20 @@ exports.update = async (req, res) => {
   try {
     const existing = await YogaRetreatSection.findById(req.params.id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Yoga Retreat section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Yoga Retreat section not found" });
     }
 
     const payload = buildPayload(req.body, req.files, existing);
     Object.assign(existing, payload);
     await existing.save();
 
-    res.json({ success: true, message: "Yoga Retreat section updated", data: existing });
+    res.json({
+      success: true,
+      message: "Yoga Retreat section updated",
+      data: existing,
+    });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
@@ -160,7 +172,9 @@ exports.remove = async (req, res) => {
   try {
     const doc = await YogaRetreatSection.findById(req.params.id);
     if (!doc) {
-      return res.status(404).json({ success: false, message: "Yoga Retreat section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Yoga Retreat section not found" });
     }
 
     // Clean up uploaded files

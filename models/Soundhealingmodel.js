@@ -36,14 +36,11 @@ const WhyCardSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ── Main Schema ── */
 const SoundHealingSchema = new mongoose.Schema(
   {
-    // Hero
     heroImage: { type: String, default: "" },
     heroImageAlt: { type: String, default: "" },
 
-    // Intro section
     introTitle: { type: String, default: "" },
     introParagraphs: { type: [String], default: [] },
     introSignatureText: { type: String, default: "" },
@@ -51,7 +48,6 @@ const SoundHealingSchema = new mongoose.Schema(
     introImageAlt: { type: String, default: "" },
     introImageBadge: { type: String, default: "" },
 
-    // What is Sound Healing section
     whatIsTitle: { type: String, default: "" },
     whatIsIntro: { type: String, default: "" },
     levels: { type: [LevelSchema], default: [] },
@@ -62,7 +58,6 @@ const SoundHealingSchema = new mongoose.Schema(
     bowl3Image: { type: String, default: "" },
     bowl3Alt: { type: String, default: "" },
 
-    // Aim section
     aimEyebrow: { type: String, default: "" },
     aimTitle: { type: String, default: "" },
     aimParagraphs: { type: [String], default: [] },
@@ -74,27 +69,23 @@ const SoundHealingSchema = new mongoose.Schema(
     aimQuoteText: { type: String, default: "" },
     aimQuoteAttribution: { type: String, default: "" },
 
-    // Benefits section
     benefitsTitle: { type: String, default: "" },
     benefitsIntro: { type: String, default: "" },
     benCards: { type: [BenCardSchema], default: [] },
     benefitsImage: { type: String, default: "" },
     benefitsImageAlt: { type: String, default: "" },
 
-    // Expect section
     expectTitle: { type: String, default: "" },
     expectIntro: { type: String, default: "" },
     expectCards: { type: [ExpectCardSchema], default: [] },
     instrLabel: { type: String, default: "" },
     instruments: { type: [String], default: [] },
 
-    // Why join + cert banner
     whyJoinTitle: { type: String, default: "" },
     whyCards: { type: [WhyCardSchema], default: [] },
     certBannerIcon: { type: String, default: "" },
     certBannerText: { type: String, default: "" },
 
-    // Batch section intro (heading only — seat grid stays API-driven elsewhere)
     batchSectionTag: { type: String, default: "" },
     batchSectionTitle: { type: String, default: "" },
     batchSectionSub: { type: String, default: "" },

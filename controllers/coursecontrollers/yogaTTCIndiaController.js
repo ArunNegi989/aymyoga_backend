@@ -1,8 +1,5 @@
 const YogaTTCIndia = require("../../models/courses/YogaTTCIndiaModel");
 
-/* =========================
-   HELPERS
-========================= */
 const parseJSON = (val) => {
   try {
     return val ? JSON.parse(val) : [];
@@ -16,9 +13,6 @@ const filePath = (file) => {
   return `/uploads/${file.filename}`;
 };
 
-/* =========================
-   CREATE (ONLY ONE RECORD)
-========================= */
 exports.create = async (req, res) => {
   try {
     const existing = await YogaTTCIndia.findOne();
@@ -38,11 +32,19 @@ exports.create = async (req, res) => {
 
       heroImage: files?.heroImage?.[0] ? filePath(files.heroImage[0]) : "",
       mediaImage: files?.mediaImage?.[0] ? filePath(files.mediaImage[0]) : "",
-      whoWeAreVideo: files?.whoWeAreVideo?.[0] ? filePath(files.whoWeAreVideo[0]) : "",
-      whoWeAreVideoPoster: files?.whoWeAreVideoPoster?.[0] ? filePath(files.whoWeAreVideoPoster[0]) : "",
-      rishikeshImage: files?.rishikeshImage?.[0] ? filePath(files.rishikeshImage[0]) : "",
+      whoWeAreVideo: files?.whoWeAreVideo?.[0]
+        ? filePath(files.whoWeAreVideo[0])
+        : "",
+      whoWeAreVideoPoster: files?.whoWeAreVideoPoster?.[0]
+        ? filePath(files.whoWeAreVideoPoster[0])
+        : "",
+      rishikeshImage: files?.rishikeshImage?.[0]
+        ? filePath(files.rishikeshImage[0])
+        : "",
       goaImage: files?.goaImage?.[0] ? filePath(files.goaImage[0]) : "",
-      whyAYMImage: files?.whyAYMImage?.[0] ? filePath(files.whyAYMImage[0]) : "",
+      whyAYMImage: files?.whyAYMImage?.[0]
+        ? filePath(files.whyAYMImage[0])
+        : "",
 
       introParagraphs: parseJSON(body.introParagraphs),
       whyAYMParagraphs: parseJSON(body.whyAYMParagraphs),
@@ -58,40 +60,44 @@ exports.create = async (req, res) => {
       locations: parseJSON(body.locations),
 
       videoEnabled: body.videoEnabled === "true" || body.videoEnabled === true,
-      whoWeAreVideoEnabled: body.whoWeAreVideoEnabled === "true" || body.whoWeAreVideoEnabled === true,
+      whoWeAreVideoEnabled:
+        body.whoWeAreVideoEnabled === "true" ||
+        body.whoWeAreVideoEnabled === true,
       benefitsList: parseJSON(body.benefitsList),
     };
 
-    // Process accredBadges images
     if (data.accredBadges && data.accredBadges.length) {
       data.accredBadges = data.accredBadges.map((b, i) => ({
         ...b,
-        image: files?.[`accredBadgeImage_${i}`]?.[0] ? filePath(files[`accredBadgeImage_${i}`][0]) : "",
+        image: files?.[`accredBadgeImage_${i}`]?.[0]
+          ? filePath(files[`accredBadgeImage_${i}`][0])
+          : "",
       }));
     }
 
-    // Process courseCards images
     if (data.courseCards && data.courseCards.length) {
       data.courseCards = data.courseCards.map((c, i) => ({
         ...c,
-        image: files?.[`courseCardImage_${i}`]?.[0] ? filePath(files[`courseCardImage_${i}`][0]) : "",
+        image: files?.[`courseCardImage_${i}`]?.[0]
+          ? filePath(files[`courseCardImage_${i}`][0])
+          : "",
       }));
     }
 
-    // Process quoteCards images
     if (data.quoteCards && data.quoteCards.length) {
       data.quoteCards = data.quoteCards.map((q, i) => ({
         ...q,
-        image: files?.[`quoteCardImage_${i}`]?.[0] ? filePath(files[`quoteCardImage_${i}`][0]) : "",
+        image: files?.[`quoteCardImage_${i}`]?.[0]
+          ? filePath(files[`quoteCardImage_${i}`][0])
+          : "",
       }));
     }
 
-    // Process locations images
     if (data.locations && data.locations.length) {
       data.locations = data.locations.map((loc, i) => ({
         ...loc,
-        image: files?.[`locationImage_${i}`]?.[0] 
-          ? filePath(files[`locationImage_${i}`][0]) 
+        image: files?.[`locationImage_${i}`]?.[0]
+          ? filePath(files[`locationImage_${i}`][0])
           : loc.image || "",
       }));
     }
@@ -105,9 +111,6 @@ exports.create = async (req, res) => {
   }
 };
 
-/* =========================
-   GET SINGLE RECORD
-========================= */
 exports.getSingle = async (req, res) => {
   try {
     const data = await YogaTTCIndia.findOne();
@@ -116,10 +119,6 @@ exports.getSingle = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-/* =========================
-   UPDATE SINGLE RECORD
-========================= */
 exports.update = async (req, res) => {
   try {
     const existing = await YogaTTCIndia.findOne();
@@ -134,13 +133,27 @@ exports.update = async (req, res) => {
     let data = {
       ...body,
 
-      heroImage: files?.heroImage?.[0] ? filePath(files.heroImage[0]) : existing.heroImage,
-      mediaImage: files?.mediaImage?.[0] ? filePath(files.mediaImage[0]) : existing.mediaImage,
-      whoWeAreVideo: files?.whoWeAreVideo?.[0] ? filePath(files.whoWeAreVideo[0]) : existing.whoWeAreVideo,
-      whoWeAreVideoPoster: files?.whoWeAreVideoPoster?.[0] ? filePath(files.whoWeAreVideoPoster[0]) : existing.whoWeAreVideoPoster,
-      rishikeshImage: files?.rishikeshImage?.[0] ? filePath(files.rishikeshImage[0]) : existing.rishikeshImage,
-      goaImage: files?.goaImage?.[0] ? filePath(files.goaImage[0]) : existing.goaImage,
-      whyAYMImage: files?.whyAYMImage?.[0] ? filePath(files.whyAYMImage[0]) : existing.whyAYMImage,
+      heroImage: files?.heroImage?.[0]
+        ? filePath(files.heroImage[0])
+        : existing.heroImage,
+      mediaImage: files?.mediaImage?.[0]
+        ? filePath(files.mediaImage[0])
+        : existing.mediaImage,
+      whoWeAreVideo: files?.whoWeAreVideo?.[0]
+        ? filePath(files.whoWeAreVideo[0])
+        : existing.whoWeAreVideo,
+      whoWeAreVideoPoster: files?.whoWeAreVideoPoster?.[0]
+        ? filePath(files.whoWeAreVideoPoster[0])
+        : existing.whoWeAreVideoPoster,
+      rishikeshImage: files?.rishikeshImage?.[0]
+        ? filePath(files.rishikeshImage[0])
+        : existing.rishikeshImage,
+      goaImage: files?.goaImage?.[0]
+        ? filePath(files.goaImage[0])
+        : existing.goaImage,
+      whyAYMImage: files?.whyAYMImage?.[0]
+        ? filePath(files.whyAYMImage[0])
+        : existing.whyAYMImage,
 
       introParagraphs: parseJSON(body.introParagraphs),
       whyAYMParagraphs: parseJSON(body.whyAYMParagraphs),
@@ -156,11 +169,12 @@ exports.update = async (req, res) => {
       locations: parseJSON(body.locations),
 
       videoEnabled: body.videoEnabled === "true" || body.videoEnabled === true,
-      whoWeAreVideoEnabled: body.whoWeAreVideoEnabled === "true" || body.whoWeAreVideoEnabled === true,
+      whoWeAreVideoEnabled:
+        body.whoWeAreVideoEnabled === "true" ||
+        body.whoWeAreVideoEnabled === true,
       benefitsList: parseJSON(body.benefitsList),
     };
 
-    // Process accredBadges images for update
     if (data.accredBadges && data.accredBadges.length) {
       data.accredBadges = data.accredBadges.map((b, i) => ({
         ...b,
@@ -170,7 +184,6 @@ exports.update = async (req, res) => {
       }));
     }
 
-    // Process courseCards images for update
     if (data.courseCards && data.courseCards.length) {
       data.courseCards = data.courseCards.map((c, i) => ({
         ...c,
@@ -180,7 +193,6 @@ exports.update = async (req, res) => {
       }));
     }
 
-    // Process quoteCards images for update
     if (data.quoteCards && data.quoteCards.length) {
       data.quoteCards = data.quoteCards.map((q, i) => ({
         ...q,
@@ -190,7 +202,6 @@ exports.update = async (req, res) => {
       }));
     }
 
-    // Process locations images for update
     if (data.locations && data.locations.length) {
       data.locations = data.locations.map((loc, i) => ({
         ...loc,
@@ -200,11 +211,9 @@ exports.update = async (req, res) => {
       }));
     }
 
-    const updated = await YogaTTCIndia.findByIdAndUpdate(
-      existing._id,
-      data,
-      { new: true }
-    );
+    const updated = await YogaTTCIndia.findByIdAndUpdate(existing._id, data, {
+      new: true,
+    });
 
     res.json({ success: true, data: updated });
   } catch (err) {

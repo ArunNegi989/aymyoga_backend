@@ -7,9 +7,8 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     refreshToken: { type: String },
-     // ── Forgot Password OTP ──────────────────────────────────
-    resetOTP: { type: String },          // hashed OTP stored in DB
-    resetOTPExpiry: { type: Date },      // OTP valid for 10 minutes
+    resetOTP: { type: String },        
+    resetOTPExpiry: { type: Date },    
   },
   { timestamps: true },
 );

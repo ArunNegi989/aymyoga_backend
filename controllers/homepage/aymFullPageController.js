@@ -1,8 +1,5 @@
 const Model = require("../../models/homepage/aymFullPageModel");
 
-/* HELPERS */
-
-// Safe JSON parse
 const safeParse = (val, def) => {
   try {
     return val ? JSON.parse(val) : def;
@@ -11,13 +8,11 @@ const safeParse = (val, def) => {
   }
 };
 
-// File path generator
 const getFilePath = (file) => {
   if (!file) return null;
   return `/uploads/${file.filename}`;
 };
 
-// Required field validation
 const validateFields = (body) => {
   const required = [
     "alignTitle",
@@ -61,18 +56,15 @@ exports.create = async (req, res) => {
 
     const body = req.body;
 
-    /* VALIDATION */
     const error = validateFields(body);
     if (error) return res.status(400).json({ message: error });
 
-    /* PARSE JSON */
     body.bodyPlanes = safeParse(body.bodyPlanes, []);
     body.campusFacilities = safeParse(body.campusFacilities, []);
     body.journeyParas = safeParse(body.journeyParas, []);
     body.promoCard1 = safeParse(body.promoCard1, {});
     body.promoCard2 = safeParse(body.promoCard2, {});
 
-    /* MAIN IMAGES */
     if (req.files?.bodyPlanesImage) {
       body.bodyPlanesImage = getFilePath(req.files.bodyPlanesImage[0]);
     }
@@ -81,7 +73,6 @@ exports.create = async (req, res) => {
       body.outdoorImage = getFilePath(req.files.outdoorImage[0]);
     }
 
-    /* ✅ FACILITY IMAGES */
     body.campusFacilities = body.campusFacilities.map((item, i) => {
       const file = req.files?.[`facilityImage_${i}`]?.[0];
 
@@ -139,18 +130,15 @@ exports.update = async (req, res) => {
 
     const body = req.body;
 
-    /* VALIDATION */
     const error = validateFields(body);
     if (error) return res.status(400).json({ message: error });
 
-    /* PARSE JSON */
     body.bodyPlanes = safeParse(body.bodyPlanes, []);
     body.campusFacilities = safeParse(body.campusFacilities, []);
     body.journeyParas = safeParse(body.journeyParas, []);
     body.promoCard1 = safeParse(body.promoCard1, {});
     body.promoCard2 = safeParse(body.promoCard2, {});
 
-    /* MAIN IMAGE UPDATE */
     body.bodyPlanesImage = req.files?.bodyPlanesImage
       ? getFilePath(req.files.bodyPlanesImage[0])
       : existing.bodyPlanesImage;
@@ -159,7 +147,6 @@ exports.update = async (req, res) => {
       ? getFilePath(req.files.outdoorImage[0])
       : existing.outdoorImage;
 
-    /* ✅ FACILITY IMAGES UPDATE */
     body.campusFacilities = body.campusFacilities.map((item, i) => {
       const file = req.files?.[`facilityImage_${i}`]?.[0];
 

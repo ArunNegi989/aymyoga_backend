@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-/* ── Reusable sub-schema for a content block ── */
 const blockSchema = new mongoose.Schema(
   {
     heading: {
@@ -31,7 +30,6 @@ const blockSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ── Main schema — ONE document holds BOTH blocks ── */
 const ourMissionSchema = new mongoose.Schema(
   {
     missionBlock: {

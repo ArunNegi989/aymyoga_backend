@@ -2,9 +2,6 @@ const Model = require("../../models/homepage/classCampusAmenitiesModel");
 const fs = require("fs");
 const path = require("path");
 
-/* =========================
-   DELETE FILE HELPER
-========================= */
 const deleteFile = (filePath) => {
   if (!filePath) return;
 
@@ -16,15 +13,11 @@ const deleteFile = (filePath) => {
   }
 };
 
-/* =========================
-   CREATE
-========================= */
 exports.create = async (req, res) => {
   try {
     const body = req.body;
     const files = req.files || {};
 
-    /* IMAGE PATHS */
     const classSizeImage = files.classSizeImage?.[0]?.filename
       ? `/uploads/${files.classSizeImage[0].filename}`
       : "";
@@ -38,7 +31,6 @@ exports.create = async (req, res) => {
       campusImages.push(`/uploads/${files["campusImage_0"][0].filename}`);
     }
 
-    /* ARRAY FIX */
     let amenities = body.amenities;
     if (!Array.isArray(amenities)) amenities = [amenities];
 
@@ -55,7 +47,6 @@ exports.create = async (req, res) => {
       message: "Created successfully ✅",
       data,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -75,7 +66,6 @@ exports.getAll = async (req, res) => {
       success: true,
       data,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -102,7 +92,6 @@ exports.getOne = async (req, res) => {
       success: true,
       data,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -129,8 +118,6 @@ exports.update = async (req, res) => {
       });
     }
 
-    /* IMAGE UPDATE */
-
     let classSizeImage = existing.classSizeImage;
     if (files?.classSizeImage?.[0]) {
       deleteFile(existing.classSizeImage);
@@ -149,7 +136,6 @@ exports.update = async (req, res) => {
       campusImages[0] = `/uploads/${files["campusImage_0"][0].filename}`;
     }
 
-    /* ARRAY FIX */
     let amenities = body.amenities;
     if (!Array.isArray(amenities)) amenities = [amenities];
 
@@ -162,7 +148,7 @@ exports.update = async (req, res) => {
         amenityImage,
         campusImages,
       },
-      { new: true }
+      { new: true },
     );
 
     res.json({
@@ -170,7 +156,6 @@ exports.update = async (req, res) => {
       message: "Updated successfully ✏️",
       data: updated,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -193,7 +178,6 @@ exports.remove = async (req, res) => {
       });
     }
 
-    /* DELETE FILES */
     deleteFile(data.classSizeImage);
     deleteFile(data.amenityImage);
     data.campusImages?.forEach(deleteFile);
@@ -204,7 +188,6 @@ exports.remove = async (req, res) => {
       success: true,
       message: "Deleted successfully 🗑️",
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,

@@ -10,9 +10,6 @@ const {
   bookSeat,
 } = require("../controllers/coursecontrollers/vinyasaSeatsController");
 
-/* =========================
-   Vinyasa Seats Routes
-========================= */
 
 // CREATE
 router.post("/createBatch", createBatch);

@@ -1,24 +1,19 @@
 const GuestTeacher = require("../../models/ourTeachers/guestTeacherModel");
 
-/* =========================
-   HELPER - Parse Bio
-========================= */
 const parseBio = (bio) => {
   if (!bio) return [];
 
-  // Already an array — filter empty strings
   if (Array.isArray(bio)) return bio.filter((b) => b && b.trim() !== "");
 
-  // FormData sends multiple fields as object like { "0": "text1", "1": "text2" }
   if (typeof bio === "object") {
     return Object.values(bio).filter((b) => b && b.trim() !== "");
   }
 
-  // Single string
   if (typeof bio === "string" && bio.trim() !== "") {
     try {
       const parsed = JSON.parse(bio);
-      if (Array.isArray(parsed)) return parsed.filter((b) => b && b.trim() !== "");
+      if (Array.isArray(parsed))
+        return parsed.filter((b) => b && b.trim() !== "");
       return [bio.trim()];
     } catch {
       return [bio.trim()];
@@ -28,15 +23,14 @@ const parseBio = (bio) => {
   return [];
 };
 
-/* =========================
-   CREATE
-========================= */
 exports.create = async (req, res) => {
   try {
     const body = req.body;
 
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "Image is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Image is required" });
     }
 
     body.image = `/uploads/${req.file.filename}`;
@@ -44,7 +38,9 @@ exports.create = async (req, res) => {
     const parsedBio = parseBio(body.bio);
 
     if (parsedBio.length === 0) {
-      return res.status(400).json({ success: false, message: "Bio is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Bio is required" });
     }
 
     const teacher = await GuestTeacher.create({
@@ -60,26 +56,24 @@ exports.create = async (req, res) => {
   }
 };
 
-/* =========================
-   GET ALL
-========================= */
 exports.getAll = async (req, res) => {
   try {
-    const teachers = await GuestTeacher.find().sort({ order: 1, createdAt: -1 });
+    const teachers = await GuestTeacher.find().sort({
+      order: 1,
+      createdAt: -1,
+    });
     res.json({ success: true, data: teachers });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-/* =========================
-   GET ONE
-========================= */
 exports.getOne = async (req, res) => {
   try {
     const teacher = await GuestTeacher.findById(req.params.id);
     if (!teacher) {
-      return res.status(404).json({ success: false, message: "Guest Teacher not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Guest Teacher not found" });
     }
     res.json({ success: true, data: teacher });
   } catch (error) {
@@ -87,9 +81,6 @@ exports.getOne = async (req, res) => {
   }
 };
 
-/* =========================
-   UPDATE
-========================= */
 exports.update = async (req, res) => {
   try {
     const body = req.body;
@@ -108,11 +99,13 @@ exports.update = async (req, res) => {
         ...(body.image && { image: body.image }),
         bio: parsedBio,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!teacher) {
-      return res.status(404).json({ success: false, message: "Guest Teacher not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Guest Teacher not found" });
     }
 
     res.json({ success: true, data: teacher });
@@ -121,14 +114,13 @@ exports.update = async (req, res) => {
   }
 };
 
-/* =========================
-   DELETE
-========================= */
 exports.remove = async (req, res) => {
   try {
     const teacher = await GuestTeacher.findByIdAndDelete(req.params.id);
     if (!teacher) {
-      return res.status(404).json({ success: false, message: "Guest Teacher not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Guest Teacher not found" });
     }
     res.json({ success: true, message: "Guest Teacher deleted successfully" });
   } catch (error) {

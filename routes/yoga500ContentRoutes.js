@@ -15,8 +15,8 @@ router.post(
     { name: "evalImage", maxCount: 1 },
     { name: "accomImage", maxCount: 20 },
     { name: "foodImage", maxCount: 20 },
-    { name: "introMedia", maxCount: 20 }, // Now accepts both images and videos
-    { name: "videoFile", maxCount: 1 }, // NEW: Video file upload
+    { name: "introMedia", maxCount: 20 }, 
+    { name: "videoFile", maxCount: 1 }, 
   ]),
   controller.createContent
 );
@@ -37,8 +37,8 @@ router.put(
     { name: "evalImage", maxCount: 1 },
     { name: "accomImage", maxCount: 20 },
     { name: "foodImage", maxCount: 20 },
-    { name: "introMedia", maxCount: 20 }, // Now accepts both images and videos
-    { name: "videoFile", maxCount: 1 }, // NEW: Video file upload
+    { name: "introMedia", maxCount: 20 }, 
+    { name: "videoFile", maxCount: 1 }, 
   ]),
   controller.updateContent
 );

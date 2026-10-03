@@ -1,15 +1,13 @@
-// FILE: controllers/meditationSectionController.js
 const fs = require("fs");
 const path = require("path");
 const MeditationSection = require("../models/MeditationSection");
 
-const relPath = (filename) =>
-  filename ? `/uploads/${filename}` : "";
+const relPath = (filename) => (filename ? `/uploads/${filename}` : "");
 
 const safeUnlink = (relativePath) => {
   if (!relativePath) return;
   const abs = path.join(__dirname, "..", relativePath);
-  fs.unlink(abs, () => {}); // ignore errors (file may not exist)
+  fs.unlink(abs, () => {});
 };
 
 const safeParseJSON = (val, fallback) => {
@@ -62,7 +60,9 @@ exports.createSection = async (req, res) => {
 
       elevateTitle: body.elevateTitle,
       elevateParagraph: body.elevateParagraph,
-      elevateImage: files.elevateImage ? relPath(files.elevateImage[0].filename) : "",
+      elevateImage: files.elevateImage
+        ? relPath(files.elevateImage[0].filename)
+        : "",
       elevateImageAlt: body.elevateImageAlt || "",
 
       whyChooseTitle: body.whyChooseTitle,
@@ -110,7 +110,7 @@ exports.getSection = async (req, res) => {
     const doc = await MeditationSection.findOne().sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
-      data: doc, // frontend handles: Array.isArray(...) ? [0] : data
+      data: doc,
     });
   } catch (err) {
     return res.status(500).json({
@@ -127,11 +127,15 @@ exports.getSectionById = async (req, res) => {
   try {
     const doc = await MeditationSection.findById(req.params.id);
     if (!doc) {
-      return res.status(404).json({ success: false, message: "Section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Section not found" });
     }
     return res.status(200).json({ success: true, data: doc });
   } catch (err) {
-    return res.status(400).json({ success: false, message: "Invalid section id" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid section id" });
   }
 };
 
@@ -142,7 +146,9 @@ exports.updateSection = async (req, res) => {
   try {
     const doc = await MeditationSection.findById(req.params.id);
     if (!doc) {
-      return res.status(404).json({ success: false, message: "Section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Section not found" });
     }
 
     const body = req.body;
@@ -154,40 +160,60 @@ exports.updateSection = async (req, res) => {
 
     if (body.whatIsTitle !== undefined) doc.whatIsTitle = body.whatIsTitle;
     if (body.whatIsParagraphs !== undefined)
-      doc.whatIsParagraphs = safeParseJSON(body.whatIsParagraphs, doc.whatIsParagraphs);
+      doc.whatIsParagraphs = safeParseJSON(
+        body.whatIsParagraphs,
+        doc.whatIsParagraphs,
+      );
     if (body.videoUrl !== undefined) doc.videoUrl = body.videoUrl;
 
-    if (body.methodsSectionTitle !== undefined) doc.methodsSectionTitle = body.methodsSectionTitle;
-    if (body.methodsClosingText !== undefined) doc.methodsClosingText = body.methodsClosingText;
+    if (body.methodsSectionTitle !== undefined)
+      doc.methodsSectionTitle = body.methodsSectionTitle;
+    if (body.methodsClosingText !== undefined)
+      doc.methodsClosingText = body.methodsClosingText;
 
     if (body.elevateTitle !== undefined) doc.elevateTitle = body.elevateTitle;
-    if (body.elevateParagraph !== undefined) doc.elevateParagraph = body.elevateParagraph;
-    if (body.elevateImageAlt !== undefined) doc.elevateImageAlt = body.elevateImageAlt;
+    if (body.elevateParagraph !== undefined)
+      doc.elevateParagraph = body.elevateParagraph;
+    if (body.elevateImageAlt !== undefined)
+      doc.elevateImageAlt = body.elevateImageAlt;
 
-    if (body.whyChooseTitle !== undefined) doc.whyChooseTitle = body.whyChooseTitle;
-    if (body.whyCards !== undefined) doc.whyCards = safeParseJSON(body.whyCards, doc.whyCards);
+    if (body.whyChooseTitle !== undefined)
+      doc.whyChooseTitle = body.whyChooseTitle;
+    if (body.whyCards !== undefined)
+      doc.whyCards = safeParseJSON(body.whyCards, doc.whyCards);
 
-    if (body.scheduleTitle !== undefined) doc.scheduleTitle = body.scheduleTitle;
-    if (body.highlightsLabel !== undefined) doc.highlightsLabel = body.highlightsLabel;
+    if (body.scheduleTitle !== undefined)
+      doc.scheduleTitle = body.scheduleTitle;
+    if (body.highlightsLabel !== undefined)
+      doc.highlightsLabel = body.highlightsLabel;
     if (body.highlightCards !== undefined)
-      doc.highlightCards = safeParseJSON(body.highlightCards, doc.highlightCards);
+      doc.highlightCards = safeParseJSON(
+        body.highlightCards,
+        doc.highlightCards,
+      );
 
-    if (body.batchSectionTag !== undefined) doc.batchSectionTag = body.batchSectionTag;
-    if (body.batchSectionTitle !== undefined) doc.batchSectionTitle = body.batchSectionTitle;
-    if (body.batchSectionSub !== undefined) doc.batchSectionSub = body.batchSectionSub;
-    if (body.batchSectionDuration !== undefined) doc.batchSectionDuration = body.batchSectionDuration;
+    if (body.batchSectionTag !== undefined)
+      doc.batchSectionTag = body.batchSectionTag;
+    if (body.batchSectionTitle !== undefined)
+      doc.batchSectionTitle = body.batchSectionTitle;
+    if (body.batchSectionSub !== undefined)
+      doc.batchSectionSub = body.batchSectionSub;
+    if (body.batchSectionDuration !== undefined)
+      doc.batchSectionDuration = body.batchSectionDuration;
 
     if (body.ctaBadgeText !== undefined) doc.ctaBadgeText = body.ctaBadgeText;
     if (body.ctaTitle !== undefined) doc.ctaTitle = body.ctaTitle;
     if (body.ctaPara1 !== undefined) doc.ctaPara1 = body.ctaPara1;
     if (body.ctaSubTitle !== undefined) doc.ctaSubTitle = body.ctaSubTitle;
     if (body.ctaPara2 !== undefined) doc.ctaPara2 = body.ctaPara2;
-    if (body.ctaEnrollLink !== undefined) doc.ctaEnrollLink = body.ctaEnrollLink;
-    if (body.ctaLearnMoreLink !== undefined) doc.ctaLearnMoreLink = body.ctaLearnMoreLink;
+    if (body.ctaEnrollLink !== undefined)
+      doc.ctaEnrollLink = body.ctaEnrollLink;
+    if (body.ctaLearnMoreLink !== undefined)
+      doc.ctaLearnMoreLink = body.ctaLearnMoreLink;
     if (body.ctaImageAlt !== undefined) doc.ctaImageAlt = body.ctaImageAlt;
-    if (body.ctaImageOverlayText !== undefined) doc.ctaImageOverlayText = body.ctaImageOverlayText;
+    if (body.ctaImageOverlayText !== undefined)
+      doc.ctaImageOverlayText = body.ctaImageOverlayText;
 
-    // ── Single images (replace old file if a new one uploaded) ──
     if (files.heroImage) {
       safeUnlink(doc.heroImage);
       doc.heroImage = relPath(files.heroImage[0].filename);
@@ -201,7 +227,6 @@ exports.updateSection = async (req, res) => {
       doc.ctaImage = relPath(files.ctaImage[0].filename);
     }
 
-    // ── Method cards (merge text fields + optionally replace each image) ──
     if (body.methodCards !== undefined) {
       const incoming = safeParseJSON(body.methodCards, []);
       const oldCards = doc.methodCards || [];
@@ -223,7 +248,6 @@ exports.updateSection = async (req, res) => {
         };
       });
 
-      // If old array had more cards than new (cards removed), clean up their images
       if (oldCards.length > incoming.length) {
         for (let i = incoming.length; i < oldCards.length; i++) {
           safeUnlink(oldCards[i]?.image);
@@ -253,7 +277,9 @@ exports.deleteSection = async (req, res) => {
   try {
     const doc = await MeditationSection.findById(req.params.id);
     if (!doc) {
-      return res.status(404).json({ success: false, message: "Section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Section not found" });
     }
 
     // Clean up all uploaded images

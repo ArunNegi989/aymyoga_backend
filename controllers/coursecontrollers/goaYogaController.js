@@ -29,37 +29,23 @@ const mapFiles = (filesArray = []) => {
 
 /* ========================= */
 const buildData = (req, existing = {}) => {
-  const body  = req.body;
+  const body = req.body;
   const files = mapFiles(req.files);
 
-  /* ── Reel Videos ──────────────────────────────────────────────
-     Admin sends reelVideos JSON array with shape:
-       { id, label, videoUrl, videoFile(existing path) }
-     Uploaded video files arrive as:  reelVideo_<id>
-
-     videoUrl can be:
-       - A YouTube embed URL  (rendered as <iframe>)
-       - A direct video URL   (mp4/webm/etc., rendered as <video>)
-       - An empty string
-
-     If a new file is uploaded for a reel, videoFile is set and
-     videoUrl is cleared (file takes priority on the frontend).
-  ────────────────────────────────────────────────────────────── */
   const reelVideosRaw = parseJSON(body.reelVideos);
   const reelVideos = reelVideosRaw.map((rv) => {
     const fileKey = `reelVideo_${rv.id}`;
     if (files[fileKey]) {
-      // New file uploaded → use file path, clear external url
       return {
-        label:     rv.label || "",
-        videoUrl:  "",
+        label: rv.label || "",
+        videoUrl: "",
         videoFile: "/uploads/" + files[fileKey][0].filename,
       };
     }
-    // No new file → keep existing values (url or old file path)
+
     return {
-      label:     rv.label     || "",
-      videoUrl:  rv.videoUrl  || "",
+      label: rv.label || "",
+      videoUrl: rv.videoUrl || "",
       videoFile: rv.videoFile || "",
     };
   });
@@ -84,17 +70,16 @@ const buildData = (req, existing = {}) => {
       : existing.scheduleImage,
 
     introParagraphs: cleanArray(parseJSON(body.introParagraphs)),
-    learnings:       cleanArray(parseJSON(body.learnings)),
-    mainFocus:       cleanArray(parseJSON(body.mainFocus)),
-    focusBodyText:   stripHtml(body.focusBodyText),
+    learnings: cleanArray(parseJSON(body.learnings)),
+    mainFocus: cleanArray(parseJSON(body.mainFocus)),
+    focusBodyText: stripHtml(body.focusBodyText),
 
-    corePrograms:    parseJSON(body.corePrograms),
+    corePrograms: parseJSON(body.corePrograms),
     specialPrograms: parseJSON(body.specialPrograms),
-    highlights:      parseJSON(body.highlights),
-    scheduleRows:    parseJSON(body.scheduleRows),
-    applyFields:     parseJSON(body.applyFields),
+    highlights: parseJSON(body.highlights),
+    scheduleRows: parseJSON(body.scheduleRows),
+    applyFields: parseJSON(body.applyFields),
 
-    // BEACH IMAGES — merge existing with newly uploaded
     beachImages: (() => {
       const existingBeach = (existing.beachImages || []).reduce((acc, b) => {
         acc[b.id] = b.imgUrl;
@@ -102,7 +87,7 @@ const buildData = (req, existing = {}) => {
       }, {});
 
       const uploadedKeys = Object.keys(files).filter((k) =>
-        k.startsWith("beachImg_")
+        k.startsWith("beachImg_"),
       );
       uploadedKeys.forEach((k) => {
         const id = k.replace("beachImg_", "");
@@ -114,7 +99,6 @@ const buildData = (req, existing = {}) => {
         .map((id) => ({ id, imgUrl: existingBeach[id] }));
     })(),
 
-    // ── Reel Videos ──
     reelVideos,
   };
 };
@@ -125,7 +109,7 @@ exports.createPage = async (req, res) => {
     const exists = await GoaYoga.findOne();
     if (exists) return res.status(400).json({ message: "Already exists" });
 
-    const data    = buildData(req);
+    const data = buildData(req);
     const created = await GoaYoga.create(data);
     res.json({ success: true, data: created });
   } catch (err) {
@@ -145,7 +129,7 @@ exports.updatePage = async (req, res) => {
     const existing = await GoaYoga.findOne();
     if (!existing) return res.status(404).json({ message: "Not found" });
 
-    const data    = buildData(req, existing);
+    const data = buildData(req, existing);
     const updated = await GoaYoga.findByIdAndUpdate(existing._id, data, {
       new: true,
     });

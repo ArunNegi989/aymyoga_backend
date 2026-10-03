@@ -75,11 +75,9 @@ exports.getOne = async (req, res) => {
 ========================= */
 exports.update = async (req, res) => {
   try {
-    const updated = await Seats.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updated = await Seats.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     res.json({
       success: true,
@@ -138,7 +136,6 @@ exports.bookSeat = async (req, res) => {
       message: "Seat booked successfully ✅",
       data: batch,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,

@@ -26,7 +26,7 @@ const schema = new mongoose.Schema(
     amenityMosaicTag: String,
     amenityImage: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("ClassCampusAmenities", schema);

@@ -92,7 +92,6 @@ const OnlineCourseSectionSchema = new mongoose.Schema(
     benefitsTitle: { type: String, default: "" },
     keyBenefits: [IconTextSchema],
 
-    // Live Courses (each card now has its own Apply/Book text + link)
     coursesEyebrow: { type: String, default: "" },
     coursesTitle: { type: String, default: "" },
     liveCourses: [CourseCardSchema],

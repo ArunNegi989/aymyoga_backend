@@ -2,9 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const InnerAwakeningSection = require("../models/innerAwakeningModel");
 
-/* ── Helpers ── */
-
-// Safely parse a JSON string sent from the multipart form; falls back to [] on failure
 const safeParse = (value, fallback = []) => {
   if (!value) return fallback;
   try {
@@ -14,17 +11,13 @@ const safeParse = (value, fallback = []) => {
   }
 };
 
-// Delete an old uploaded file (e.g. "/uploads/xxx.jpg") from disk, ignoring errors
 const deleteOldFile = (relativePath) => {
   if (!relativePath) return;
-  const cleaned = relativePath.replace(/^\/+/, ""); // strip leading slash
+  const cleaned = relativePath.replace(/^\/+/, "");
   const fullPath = path.join(process.cwd(), cleaned);
-  fs.unlink(fullPath, () => {
-    // ignore errors (file may already be missing)
-  });
+  fs.unlink(fullPath, () => {});
 };
 
-// Build the plain-object payload (without images) shared by create & update
 const buildTextFields = (body) => ({
   heroImageAlt: body.heroImageAlt || "",
 
@@ -77,15 +70,11 @@ const buildTextFields = (body) => ({
   pricingNote: body.pricingNote || "",
 });
 
-// Build galleryImages array, mapping uploaded files (galleryImage_0, galleryImage_1, galleryImage_2)
-// onto the caption/subcaption sent in the "galleryImages" JSON field, falling back to any
-// existing image path (for update, when a new file wasn't chosen for that slot).
 const buildGalleryImages = (body, files, existingGalleryImages = []) => {
   const input = safeParse(body.galleryImages);
   return input.map((g, i) => {
     const uploadedFile = files?.[`galleryImage_${i}`]?.[0];
     if (uploadedFile) {
-      // replacing an existing image on update -> remove the old file from disk
       if (existingGalleryImages?.[i]?.image) {
         deleteOldFile(existingGalleryImages[i].image);
       }
@@ -103,9 +92,6 @@ const buildGalleryImages = (body, files, existingGalleryImages = []) => {
   });
 };
 
-/* ── Controllers ── */
-
-// GET /inner-awakening-section  (list — singleton, but returns as an array like other admin sections)
 exports.getAll = async (req, res) => {
   try {
     const data = await InnerAwakeningSection.find().sort({ createdAt: -1 });
@@ -120,7 +106,9 @@ exports.getOne = async (req, res) => {
   try {
     const data = await InnerAwakeningSection.findById(req.params.id);
     if (!data) {
-      return res.status(404).json({ success: false, message: "Inner Awakening section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Inner Awakening section not found" });
     }
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -134,8 +122,12 @@ exports.create = async (req, res) => {
     const body = req.body;
     const files = req.files || {};
 
-    const heroImage = files.heroImage?.[0] ? `/uploads/${files.heroImage[0].filename}` : "";
-    const maharishiImage = files.maharishiImage?.[0] ? `/uploads/${files.maharishiImage[0].filename}` : "";
+    const heroImage = files.heroImage?.[0]
+      ? `/uploads/${files.heroImage[0].filename}`
+      : "";
+    const maharishiImage = files.maharishiImage?.[0]
+      ? `/uploads/${files.maharishiImage[0].filename}`
+      : "";
     const galleryImages = buildGalleryImages(body, files);
 
     const doc = new InnerAwakeningSection({
@@ -146,7 +138,13 @@ exports.create = async (req, res) => {
     });
 
     await doc.save();
-    res.status(201).json({ success: true, message: "Inner Awakening section created", data: doc });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Inner Awakening section created",
+        data: doc,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -158,7 +156,9 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const existing = await InnerAwakeningSection.findById(id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Inner Awakening section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Inner Awakening section not found" });
     }
 
     const body = req.body;
@@ -179,7 +179,11 @@ exports.update = async (req, res) => {
     }
 
     // Gallery images (per-slot replace)
-    const galleryImages = buildGalleryImages(body, files, existing.galleryImages);
+    const galleryImages = buildGalleryImages(
+      body,
+      files,
+      existing.galleryImages,
+    );
 
     Object.assign(existing, buildTextFields(body), {
       heroImage,
@@ -188,7 +192,13 @@ exports.update = async (req, res) => {
     });
 
     await existing.save();
-    res.status(200).json({ success: true, message: "Inner Awakening section updated", data: existing });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Inner Awakening section updated",
+        data: existing,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -199,7 +209,9 @@ exports.remove = async (req, res) => {
   try {
     const existing = await InnerAwakeningSection.findById(req.params.id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Inner Awakening section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Inner Awakening section not found" });
     }
 
     // Clean up uploaded files from disk
@@ -208,7 +220,9 @@ exports.remove = async (req, res) => {
     (existing.galleryImages || []).forEach((g) => deleteOldFile(g.image));
 
     await InnerAwakeningSection.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: "Inner Awakening section deleted" });
+    res
+      .status(200)
+      .json({ success: true, message: "Inner Awakening section deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

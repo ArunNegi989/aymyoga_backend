@@ -7,7 +7,7 @@ const SoundHealingSeatSchema = new Schema(
     endDate: { 
       type: Date, 
       required: true, 
-      index: { expireAfterSeconds: 0 }   // 👈 TTL index — endDate nikalte hi doc auto-delete
+      index: { expireAfterSeconds: 0 }   
     },
 
     usdFee: { type: String, required: true, trim: true },

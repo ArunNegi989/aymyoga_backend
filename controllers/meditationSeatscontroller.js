@@ -1,9 +1,5 @@
 const MeditationSeats = require("../models/meditationSeatsModel");
 
-/* ═══════════════════════════════
-   GET ALL BATCHES
-   GET /meditation-seats/get-all-batches
-═══════════════════════════════ */
 exports.getAllBatches = async (req, res) => {
   try {
     const batches = await MeditationSeats.find().sort({ startDate: 1 });
@@ -20,10 +16,6 @@ exports.getAllBatches = async (req, res) => {
   }
 };
 
-/* ═══════════════════════════════
-   GET SINGLE BATCH
-   GET /meditation-seats/get-batch/:id
-═══════════════════════════════ */
 exports.getBatchById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -49,10 +41,6 @@ exports.getBatchById = async (req, res) => {
   }
 };
 
-/* ═══════════════════════════════
-   CREATE BATCH
-   POST /meditation-seats/create-batch
-═══════════════════════════════ */
 exports.createBatch = async (req, res) => {
   try {
     const {
@@ -158,11 +146,7 @@ exports.updateBatch = async (req, res) => {
       });
     }
 
-    if (
-      startDate &&
-      endDate &&
-      new Date(endDate) <= new Date(startDate)
-    ) {
+    if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
       return res.status(400).json({
         success: false,
         message: "End date must be after start date",
@@ -228,11 +212,6 @@ exports.deleteBatch = async (req, res) => {
   }
 };
 
-/* ═══════════════════════════════
-   INCREMENT BOOKED SEATS
-   (call this internally from your registration/booking controller
-   when a student submits the meditation registration form)
-═══════════════════════════════ */
 exports.incrementBookedSeat = async (req, res) => {
   try {
     const { id } = req.params;

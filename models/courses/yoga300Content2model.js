@@ -1,4 +1,4 @@
-// backend/models/courses/yoga300Content2model.js
+
 const mongoose = require("mongoose");
 
 const yoga300Content2Schema = new mongoose.Schema(

@@ -25,23 +25,14 @@ const RulesSchema = new mongoose.Schema(
     heroImage: { type: String, default: "" },
     heroImageAlt: { type: String, default: "" },
 
-    // Page header
     pageTitle: { type: String, default: "" },
     brownBarLabel: { type: String, default: "" },
-
-    // Rule categories (each with its own list of numbered rules)
     categories: { type: [CategorySchema], default: [] },
-
-    // Agreement section
     agreementTitle: { type: String, default: "" },
     agreementParagraphs: { type: [String], default: [] },
-
-    // Footer
     footerText: { type: String, default: "" },
   },
   { timestamps: true }
 );
 
-// Safety guard against "Cannot overwrite model once compiled" if this file
-// ever gets required more than once under the same model name.
 module.exports = mongoose.models.Rules || mongoose.model("Rules", RulesSchema);

@@ -1,13 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-// ⚠️ Adjust this path to wherever your multer config file (the one you shared) actually lives,
-// e.g. "../middleware/upload" or "../utils/upload"
 const upload = require("../middleware/upload");
 
 const controller = require("../controllers/innerAwakeningController");
 
-// Handles: hero banner image, guru (maharishi) image, and up to 3 gallery images
 const uploadFields = upload.fields([
   { name: "heroImage", maxCount: 1 },
   { name: "maharishiImage", maxCount: 1 },

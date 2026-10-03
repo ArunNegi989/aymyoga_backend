@@ -7,12 +7,12 @@ exports.create = async (req, res) => {
   try {
     const body = req.body;
 
-    // Image
+
     if (req.file) {
       body.image = `/uploads/${req.file.filename}`;
     }
 
-    // Convert arrays
+
    body.bio = req.body.bio ? Object.values(req.body.bio) : [];
 body.education = req.body.education ? Object.values(req.body.education) : [];
 body.expertise = req.body.expertise ? Object.values(req.body.expertise) : [];
@@ -103,7 +103,7 @@ exports.update = async (req, res) => {
       body,
       {
         new: true,
-        runValidators: true,   // 🔥 important
+        runValidators: true,  
       }
     );
 

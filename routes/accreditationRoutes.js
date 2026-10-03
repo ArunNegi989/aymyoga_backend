@@ -16,7 +16,7 @@ const {
 const multiUpload = upload.fields([
   { name: "mainImage", maxCount: 1 },
   { name: "courseCertImages", maxCount: 4 },
-  { name: "awardCertImages", maxCount: 3 }, // ✅ LIMIT FIX
+  { name: "awardCertImages", maxCount: 3 }, 
 ]);
 
 router.post("/", multiUpload, createAccreditation);

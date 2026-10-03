@@ -1,4 +1,3 @@
-// FILE: src/models/courses/onlineSeatsModel.js
 
 const mongoose = require("mongoose");
 
@@ -55,7 +54,6 @@ const onlineSeatsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-/* Auto-delete document when endDate passes (MongoDB TTL index) */
 onlineSeatsSchema.index({ endDate: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model("OnlineSeats", onlineSeatsSchema);

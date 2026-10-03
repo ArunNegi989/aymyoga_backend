@@ -26,7 +26,6 @@ const contentSchema = new mongoose.Schema(
       required: true,
     },
 
-    /* Text (heading, subheading, paragraph, quote, code, callout, html) */
     text: { type: String, default: "" },
 
     /* Images */

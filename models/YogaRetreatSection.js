@@ -6,7 +6,7 @@ const StatSchema = new mongoose.Schema(
     num: { type: String, required: true, trim: true },
     label: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const PackageSchema = new mongoose.Schema(
@@ -14,7 +14,7 @@ const PackageSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     price: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const OverviewItemSchema = new mongoose.Schema(
@@ -22,7 +22,7 @@ const OverviewItemSchema = new mongoose.Schema(
     label: { type: String, required: true, trim: true },
     value: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const PhotoStripItemSchema = new mongoose.Schema(
@@ -30,7 +30,7 @@ const PhotoStripItemSchema = new mongoose.Schema(
     label: { type: String, required: true, trim: true },
     image: { type: String, default: "" },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const ContentBlockSchema = new mongoose.Schema(
@@ -40,7 +40,7 @@ const ContentBlockSchema = new mongoose.Schema(
     priceFrom: { type: String, required: true, trim: true },
     priceNote: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const InfoBlockSchema = new mongoose.Schema(
@@ -48,7 +48,7 @@ const InfoBlockSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     paragraphs: { type: [String], default: [] },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const RouteSchema = new mongoose.Schema(
@@ -58,10 +58,9 @@ const RouteSchema = new mongoose.Schema(
     badge: { type: String, required: true, trim: true },
     desc: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
-/* ── Main schema (singleton — only one document is expected) ── */
 const YogaRetreatSectionSchema = new mongoose.Schema(
   {
     // Hero
@@ -92,7 +91,6 @@ const YogaRetreatSectionSchema = new mongoose.Schema(
     photoStrip: { type: [PhotoStripItemSchema], default: [] },
     s3Blocks: { type: [ContentBlockSchema], default: [] },
 
-    // Section 4 — Long-stay blocks + info blocks + why choose + affordable
     s4Blocks: { type: [ContentBlockSchema], default: [] },
     infoBlocks: { type: [InfoBlockSchema], default: [] },
     whyChooseText: { type: String, default: "" },
@@ -113,7 +111,7 @@ const YogaRetreatSectionSchema = new mongoose.Schema(
     paypalText: { type: String, default: "" },
     paypalLink: { type: String, default: "" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("YogaRetreatSection", YogaRetreatSectionSchema);

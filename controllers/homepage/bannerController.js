@@ -1,6 +1,5 @@
 const Banner = require("../../models/homepage/Banner");
 
-/* CREATE BANNER */
 exports.createBanner = async (req, res) => {
   try {
     const { bannerName, link } = req.body;
@@ -35,11 +34,8 @@ exports.createBanner = async (req, res) => {
     });
   }
 };
-/* GET ALL BANNERS */
 exports.getAllBanners = async (req, res) => {
   try {
-
-    // yaha change karna hai
     const banners = await Banner.find().sort({ order: 1 });
 
     res.status(200).json({
@@ -47,7 +43,6 @@ exports.getAllBanners = async (req, res) => {
       count: banners.length,
       data: banners,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -56,7 +51,6 @@ exports.getAllBanners = async (req, res) => {
   }
 };
 
-/* GET SINGLE BANNER */
 exports.getBannerById = async (req, res) => {
   try {
     const banner = await Banner.findById(req.params.id);
@@ -94,11 +88,9 @@ exports.updateBanner = async (req, res) => {
       updateData.image = `/uploads/${req.file.filename}`;
     }
 
-    const banner = await Banner.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    );
+    const banner = await Banner.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
 
     if (!banner) {
       return res.status(404).json({
@@ -147,8 +139,7 @@ exports.deleteBanner = async (req, res) => {
 /* UPDATE BANNER ORDER */
 exports.updateBannerOrder = async (req, res) => {
   try {
-    const { banners } = req.body; 
-    // banners = [{id, order}]
+    const { banners } = req.body;
 
     const bulkOps = banners.map((b) => ({
       updateOne: {
@@ -163,7 +154,6 @@ exports.updateBannerOrder = async (req, res) => {
       success: true,
       message: "Banner order updated",
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,

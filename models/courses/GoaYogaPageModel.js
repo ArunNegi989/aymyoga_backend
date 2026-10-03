@@ -95,16 +95,11 @@ const goaYogaSchema = new mongoose.Schema(
     footerCtaDatesHref: String,
     footerCtaEmailHref: String,
 
-    // ─── Reel Videos ───
-    // Each reel has a label, and EITHER:
-    //   videoUrl  → YouTube embed URL OR any direct video URL (mp4, etc.)
-    //   videoFile → uploaded file path e.g. /uploads/reel_xyz.mp4
-    // If videoFile is present it takes priority on the frontend.
     reelVideos: [
       {
         label: String,
-        videoUrl: String,  // YouTube embed URL OR direct video URL
-        videoFile: String, // uploaded file path
+        videoUrl: String, 
+        videoFile: String, 
       },
     ],
   },

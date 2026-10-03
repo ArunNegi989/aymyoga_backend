@@ -89,7 +89,7 @@ exports.updateBatch = async (req, res) => {
     const batch = await FiveHundredBatch.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true },
     );
 
     if (!batch) {

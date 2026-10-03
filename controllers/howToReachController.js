@@ -1,6 +1,5 @@
 const HowToReachSection = require("../models/HowToReachSection");
 
-/* Fields the admin form actually submits — everything else on req.body is ignored */
 const ALLOWED_FIELDS = [
   "badgeText",
   "mainTitle",
@@ -28,11 +27,6 @@ function pickAllowed(body) {
   return payload;
 }
 
-/* ===========================
-   GET /how-to-reach-section
-   (singleton — list page expects an array or a single object;
-    we return the one document that should exist)
-=========================== */
 exports.getSections = async (req, res) => {
   try {
     const sections = await HowToReachSection.find().sort({ createdAt: -1 });
@@ -42,14 +36,13 @@ exports.getSections = async (req, res) => {
   }
 };
 
-/* ===========================
-   GET /how-to-reach-section/:id
-=========================== */
 exports.getSectionById = async (req, res) => {
   try {
     const section = await HowToReachSection.findById(req.params.id);
     if (!section) {
-      return res.status(404).json({ success: false, message: "How To Reach section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "How To Reach section not found" });
     }
     res.json({ success: true, data: section });
   } catch (error) {
@@ -57,17 +50,14 @@ exports.getSectionById = async (req, res) => {
   }
 };
 
-/* ===========================
-   POST /how-to-reach-section
-   (singleton — refuse a second document; edit the existing one instead)
-=========================== */
 exports.createSection = async (req, res) => {
   try {
     const existing = await HowToReachSection.findOne();
     if (existing) {
       return res.status(400).json({
         success: false,
-        message: "A How To Reach section already exists. Please edit the existing one instead.",
+        message:
+          "A How To Reach section already exists. Please edit the existing one instead.",
       });
     }
 
@@ -82,9 +72,6 @@ exports.createSection = async (req, res) => {
   }
 };
 
-/* ===========================
-   PUT /how-to-reach-section/:id
-=========================== */
 exports.updateSection = async (req, res) => {
   try {
     const payload = pickAllowed(req.body);
@@ -92,11 +79,13 @@ exports.updateSection = async (req, res) => {
     const section = await HowToReachSection.findByIdAndUpdate(
       req.params.id,
       { $set: payload },
-      { new: true, runValidators: true, context: "query" }
+      { new: true, runValidators: true, context: "query" },
     );
 
     if (!section) {
-      return res.status(404).json({ success: false, message: "How To Reach section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "How To Reach section not found" });
     }
 
     res.json({ success: true, data: section });
@@ -108,14 +97,13 @@ exports.updateSection = async (req, res) => {
   }
 };
 
-/* ===========================
-   DELETE /how-to-reach-section/:id
-=========================== */
 exports.deleteSection = async (req, res) => {
   try {
     const section = await HowToReachSection.findByIdAndDelete(req.params.id);
     if (!section) {
-      return res.status(404).json({ success: false, message: "How To Reach section not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "How To Reach section not found" });
     }
     res.json({ success: true, message: "How To Reach section deleted" });
   } catch (error) {

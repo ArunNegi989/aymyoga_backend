@@ -12,17 +12,30 @@ const parseLinks = (raw) => {
   }
 };
 
-// Build a clean update object — never spread req.body directly
 const buildCourseFields = (body, file) => {
   const {
-    title, imageAlt, duration, level, description,
-    enrollHref, exploreLabel, exploreHref,
-    priceUSD, totalSeats, order,
+    title,
+    imageAlt,
+    duration,
+    level,
+    description,
+    enrollHref,
+    exploreLabel,
+    exploreHref,
+    priceUSD,
+    totalSeats,
+    order,
   } = body;
 
   const data = {
-    title, imageAlt, duration, level, description,
-    enrollHref, exploreLabel, exploreHref,
+    title,
+    imageAlt,
+    duration,
+    level,
+    description,
+    enrollHref,
+    exploreLabel,
+    exploreHref,
     priceUSD,
     totalSeats: Number(totalSeats),
     order: order !== undefined ? Number(order) : 0,
@@ -44,7 +57,7 @@ const createCourse = async (req, res) => {
     const fields = buildCourseFields(req.body, req.file);
 
     const newCourse = new Course(fields);
-    await newCourse.save(); // pre("save") hook sets availableSeats here
+    await newCourse.save();
 
     res.status(201).json({
       success: true,
@@ -75,7 +88,9 @@ const getSingleCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
     res.json({ success: true, data: course });
   } catch (error) {
@@ -90,10 +105,11 @@ const updateCourse = async (req, res) => {
   try {
     const fields = buildCourseFields(req.body, req.file);
 
-    // If totalSeats changed and availableSeats was never set, sync it
     const existing = await Course.findById(req.params.id);
     if (!existing) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
 
     if (existing.availableSeats == null) {
@@ -102,8 +118,8 @@ const updateCourse = async (req, res) => {
 
     const updated = await Course.findByIdAndUpdate(
       req.params.id,
-      { $set: fields },   // ✅ use $set instead of replacing the whole doc
-      { new: true, runValidators: true }
+      { $set: fields },
+      { new: true, runValidators: true },
     );
 
     res.json({
@@ -123,7 +139,9 @@ const deleteCourse = async (req, res) => {
   try {
     const deleted = await Course.findByIdAndDelete(req.params.id);
     if (!deleted) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
     res.json({ success: true, message: "Course deleted" });
   } catch (error) {
@@ -139,11 +157,15 @@ const bookSeat = async (req, res) => {
     const course = await Course.findById(req.params.id);
 
     if (!course) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
 
     if (course.availableSeats <= 0) {
-      return res.status(400).json({ success: false, message: "No seats available" });
+      return res
+        .status(400)
+        .json({ success: false, message: "No seats available" });
     }
 
     course.availableSeats -= 1;
@@ -159,12 +181,11 @@ const bookSeat = async (req, res) => {
   }
 };
 
-
 module.exports = {
   createCourse,
   getAllCourses,
   getSingleCourse,
   updateCourse,
   deleteCourse,
-  bookSeat, 
+  bookSeat,
 };

@@ -1,15 +1,11 @@
 const mongoose = require("mongoose");
 
-/* =========================
-   SUB SCHEMA (CERT / AWARD)
-========================= */
 const certSchema = new mongoose.Schema({
   label: { type: String, required: true },
   tag: { type: String, required: true },
   alt: { type: String },
   image: { type: String },
 
-  /* ===== AWARD EXTRA FIELDS ===== */
   descPara1: String,
   descPara2: String,
 

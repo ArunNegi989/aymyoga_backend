@@ -37,23 +37,33 @@ const buildData = (body, files) => {
     courseInfoBookBtnText: body.courseInfoBookBtnText || "BOOK NOW",
     courseInfoUsdPrice: parseFloat(body.courseInfoUsdPrice) || 699,
     courseInfoInrPrice: parseFloat(body.courseInfoInrPrice) || 58000,
-    courseInfoOriginalUsdPrice: parseFloat(body.courseInfoOriginalUsdPrice) || 1250,
-    courseInfoOriginalInrPrice: parseFloat(body.courseInfoOriginalInrPrice) || 105000,
+    courseInfoOriginalUsdPrice:
+      parseFloat(body.courseInfoOriginalUsdPrice) || 1250,
+    courseInfoOriginalInrPrice:
+      parseFloat(body.courseInfoOriginalInrPrice) || 105000,
     courseInfoDetails: parseJSON(body.courseInfoDetails),
 
-    courseDetailsImageAlt: body.courseDetailsImageAlt || "Ashtanga Vinyasa Yoga Teacher Training",
-    certTeachersImageAlt: body.certTeachersImageAlt || "Certified Yoga Teachers Rishikesh",
+    courseDetailsImageAlt:
+      body.courseDetailsImageAlt || "Ashtanga Vinyasa Yoga Teacher Training",
+    certTeachersImageAlt:
+      body.certTeachersImageAlt || "Certified Yoga Teachers Rishikesh",
     communityImageAlt: body.communityImageAlt || "Yoga Community Rishikesh",
-    accommodationImageAlt: body.accommodationImageAlt || "Yoga Accommodation Rishikesh",
+    accommodationImageAlt:
+      body.accommodationImageAlt || "Yoga Accommodation Rishikesh",
   };
 
   if (files?.heroImage) data.heroImage = getFile(files, "heroImage");
   if (files?.promoImage) data.promoImage = getFile(files, "promoImage");
-  if (files?.courseDetailsImage) data.courseDetailsImage = getFile(files, "courseDetailsImage");
-  if (files?.whoCanApplyVideo) data.whoCanApplyVideo = getFile(files, "whoCanApplyVideo");
-  if (files?.certTeachersImage) data.certTeachersImage = getFile(files, "certTeachersImage");
-  if (files?.communityImage) data.communityImage = getFile(files, "communityImage");
-  if (files?.accommodationImage) data.accommodationImage = getFile(files, "accommodationImage");
+  if (files?.courseDetailsImage)
+    data.courseDetailsImage = getFile(files, "courseDetailsImage");
+  if (files?.whoCanApplyVideo)
+    data.whoCanApplyVideo = getFile(files, "whoCanApplyVideo");
+  if (files?.certTeachersImage)
+    data.certTeachersImage = getFile(files, "certTeachersImage");
+  if (files?.communityImage)
+    data.communityImage = getFile(files, "communityImage");
+  if (files?.accommodationImage)
+    data.accommodationImage = getFile(files, "accommodationImage");
 
   return data;
 };
@@ -97,7 +107,9 @@ exports.update = async (req, res) => {
       });
     }
     const data = buildData(req.body, req.files);
-    const updated = await Model.findByIdAndUpdate(existing._id, data, { new: true });
+    const updated = await Model.findByIdAndUpdate(existing._id, data, {
+      new: true,
+    });
     res.json({ success: true, message: "Updated successfully", data: updated });
   } catch (err) {
     console.error("Update error:", err);

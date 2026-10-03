@@ -22,7 +22,7 @@ const TravelCardSchema = new mongoose.Schema(
     },
     title: { type: String, required: true, trim: true },
     subtitle: { type: String, required: true, trim: true },
-    desc: { type: String, required: true }, // rich text (HTML from Jodit)
+    desc: { type: String, required: true },
 
     headerCol1: { type: String, required: true, trim: true },
     headerCol2: { type: String, required: true, trim: true },

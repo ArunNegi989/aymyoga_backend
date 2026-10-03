@@ -9,9 +9,7 @@ const {
   deleteSection,
 } = require("../controllers/howToReachController");
 
-/* ===========================
-   HOW TO REACH SECTION ROUTES
-=========================== */
+
 router.get("/", getSections);
 router.get("/:id", getSectionById);
 router.post("/", createSection);

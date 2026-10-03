@@ -7,7 +7,6 @@ exports.create = async (req, res) => {
   try {
     const data = req.body;
 
-    // ✅ convert date string to Date
     if (data.date) {
       data.date = new Date(data.date);
     }
@@ -72,11 +71,9 @@ exports.update = async (req, res) => {
       data.date = new Date(data.date);
     }
 
-    const review = await Model.findByIdAndUpdate(
-      req.params.id,
-      data,
-      { new: true }
-    );
+    const review = await Model.findByIdAndUpdate(req.params.id, data, {
+      new: true,
+    });
 
     if (!review) {
       return res.status(404).json({ message: "Review not found" });

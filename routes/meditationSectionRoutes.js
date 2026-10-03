@@ -1,4 +1,4 @@
-// FILE: routes/meditationSectionRoutes.js
+
 const express = require("express");
 const router = express.Router();
 
@@ -11,10 +11,8 @@ const {
   deleteSection,
 } = require("../controllers/meditationSectionController");
 
-// Agar admin routes protect karne hain to apna auth middleware laga do
-// const { verifyAdmin } = require("../middleware/authMiddleware");
 
-const MAX_METHOD_CARDS = 10; // apni actual max method-card limit ke hisaab se adjust kar lena
+const MAX_METHOD_CARDS = 10; 
 
 const methodImageFields = Array.from({ length: MAX_METHOD_CARDS }, (_, i) => ({
   name: `methodImage${i}`,
