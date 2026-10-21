@@ -4,13 +4,14 @@ const bannerSchema = new mongoose.Schema(
   {
     bannerName: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
     link: {
       type: String,
-      required: true,
+      default: "",
+      trim: true,
     },
 
     image: {
